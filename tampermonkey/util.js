@@ -1,8 +1,9 @@
 import {scriptName} from './const';
-import {util as commonUtil} from '../common/util';
 export const util = {
     debug(...c) {
-        commonUtil.printDebug(scriptName, ...c);
+        console.group(`[${scriptName}]`);
+        console.debug(...c);
+        console.groupEnd();
     },
     get(url, headers, responseType) {
         return new Promise((resolve, reject) => {

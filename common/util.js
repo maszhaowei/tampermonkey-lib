@@ -1,5 +1,5 @@
 export let util = {
-    printDebug(grouName, ...c) {
+    debug(grouName, ...c) {
         console.group(`[${grouName}]`);
         console.debug(...c);
         console.groupEnd();
