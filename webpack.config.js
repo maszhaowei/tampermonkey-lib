@@ -3,13 +3,14 @@ var path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    bundle: __dirname + "/app/index.js"
+    commonlib: path.join(__dirname, "common/common.js"),
+    tampermonkeylib: "./index.js",
   },
   output: {
     path: __dirname + "/public",
     filename: "[name].js",
     library: {
-      name: "TampermonkeyLib",
+      name: "[name]",
       type: "umd"
     }
   },
