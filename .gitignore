@@ -3,5 +3,3 @@ package-lock.json
 .eslintrc.json
 public/index.html
 build/*
-package.json
-webpack.config.js
