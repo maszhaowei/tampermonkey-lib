@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
+    "build": "webpack --mode=development -o ./build",
+    "prepublish": "webpack --mode=production -o ./public",
     "server": "webpack serve"
   },
   "author": "maszhaowei@gmail.com",

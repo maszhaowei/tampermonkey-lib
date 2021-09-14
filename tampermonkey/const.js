@@ -1,3 +1,4 @@
+let GM_info;
 export const scriptInfo = GM_info && GM_info.script;
 export const scriptName = scriptInfo && scriptInfo.name;
 /**
@@ -155,7 +156,7 @@ export const scriptName = scriptInfo && scriptInfo.name;
  */
  export const MessageType= {
     SITE_INFO: 'site_info',
-    VIDEO_ATTR_INITIALIZED: 'video__attr_initialized',
+    VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
     SWITCH_PLAYING_VIDEO: 'switch_playing_video',
     READY_FOR_MESSAGE: 'ready_for_message',
@@ -169,7 +170,7 @@ export const scriptName = scriptInfo && scriptInfo.name;
  * @enum {string}
  */
  export const CallbackType= {
-    VIDEO_ATTR_INITIALIZED: 'video__attr_initialized',
+    VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
     PLAY: 'play',
     KEYDOWN: 'keydown',

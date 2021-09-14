@@ -4,7 +4,7 @@ module.exports = {
   mode: 'production',
   entry: {
     commonlib: path.join(__dirname, "common/common.js"),
-    tampermonkeylib: "./index.js",
+    tampermonkeylib: path.join(__dirname, "index.js"),
   },
   output: {
     path: __dirname + "/public",
@@ -16,11 +16,11 @@ module.exports = {
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, 'public')
+      directory: path.join(__dirname, 'build')
     },
-    hot: false,
-    liveReload: false,
     compress: true,
     port: 9000,
+    liveReload: true,
+    hot: false
   }
 }
