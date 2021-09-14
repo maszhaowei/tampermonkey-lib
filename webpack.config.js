@@ -1,15 +1,17 @@
 var path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
     bundle: __dirname + "/app/index.js"
   },
   output: {
     path: __dirname + "/public",
     filename: "[name].js",
-    library: "tampermonkeyLib",
-    libraryTarget: "umd"
+    library: {
+      name: "TampermonkeyLib",
+      type: "umd"
+    }
   },
   devServer: {
     static: {

@@ -1,8 +1,12 @@
+import {scriptName} from './const';
 export let util = {
-    debug(grouName, ...c) {
+    printDebug(grouName, ...c) {
         console.group(`[${grouName}]`);
         console.debug(...c);
         console.groupEnd();
+    },
+    debug(...c) {
+        util.printDebug(scriptName, ...c);
     },
     /**
      * 
