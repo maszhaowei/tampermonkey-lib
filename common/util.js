@@ -1,5 +1,5 @@
 export let util = {
-    debug(grouName, ...c) {
+    printGroupDebug(grouName, ...c) {
         console.group(`[${grouName}]`);
         console.debug(...c);
         console.groupEnd();
@@ -13,16 +13,6 @@ export let util = {
             }
         }
         return '';
-    },
-    /**
-     * 
-     * @param {MessageEvent} event 
-     */
-    printReceiveMessage(event) {
-        util.debug(`From: ${event.origin}, To: ${window.location.origin}, Message:`, event.data);
-    },
-    printSendMessage(targetOrigin, message) {
-        util.debug(`To: ${targetOrigin}, From: ${window.location.origin}, Message:`, message);
     },
     getQueryVariable(variable)
     {

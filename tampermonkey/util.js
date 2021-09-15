@@ -34,4 +34,14 @@ export const util = {
             });
         });
     },
+    /**
+     * 
+     * @param {MessageEvent} event 
+     */
+    printReceiveMessage(event) {
+        util.debug(`From: ${event.origin}, To: ${window.location.origin}, Message:`, event.data);
+    },
+    printSendMessage(targetOrigin, message) {
+        util.debug(`To: ${targetOrigin}, From: ${window.location.origin}, Message:`, message);
+    },
 };
