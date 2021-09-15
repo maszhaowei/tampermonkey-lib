@@ -1,4 +1,4 @@
-import './tooltip.css';
+import '../css/tooltip.css';
 export const ui = {
     /**
      * jQuery.fn.offset的js实现，不支持IE11以下浏览器
