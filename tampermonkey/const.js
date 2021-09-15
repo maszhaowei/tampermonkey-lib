@@ -38,7 +38,13 @@ export const scriptName = scriptInfo && scriptInfo.name;
     DIOUS: 'DIOUS',
     YOUTUBE_EMBED: 'YOUTUBE_EMBED',
     BILIBILI: 'BILIBILI',
-    BILIBILI_BANGUMI: 'BILIBILI_BANGUMI'
+    BILIBILI_BANGUMI: 'BILIBILI_BANGUMI',
+    MINGTIAN6: 'MINGTIAN6',
+    WUKONGMEIJU: 'WUKONGMEIJU',
+    '7MM': '7MM',
+    MEIJUTTB: 'MEIJUTTB',
+    MEIJUBS: 'MEIJUBS',
+    NEXUSMODS: 'NEXUSMODS'
 };
 /**
  * containerSelector必须是video和controlsSelector的祖先元素,controlsSelector的层级必须比video高
@@ -149,6 +155,36 @@ export const scriptName = scriptInfo && scriptInfo.name;
         videoCategory: VideoCategories.VIDEO_SHARING,
         containerSelector: "div.bpx-player-video-area",
         controlsSelector: '.bpx-player-control-wrap'
+    },
+    MINGTIAN6: {
+        origin: "https://www.mingtian6.com",
+        id: SiteID.MINGTIAN6,
+        videoOriginWhitelist: ["https://www.qingbeiban.com"]
+    },
+    WUKONGMEIJU: {
+        origin: "https://m.wukongmeiju.com",
+        id: SiteID.WUKONGMEIJU,
+        videoOriginWhitelist: ["https://code.qxwk.net"]
+    },
+    "7MM": {
+        origin: "https://7mmtv.tv",
+        id: SiteID["7MM"],
+        videoOriginWhitelist: ["https://mm9842.com", "https://avgle.com"]
+    },
+    MEIJUTTB: {
+        origin: "https://www.meijuttb.com",
+        id: SiteID.MEIJUTTB,
+        videoOriginWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn"]
+    },
+    MEIJUBS: {
+        origin: "https://www.meijubs.com",
+        id: SiteID.MEIJUBS,
+        videoOriginWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]
+    },
+    NEXUSMODS: {
+        origin: "https://www.nexusmods.com",
+        id: SiteID.NEXUSMODS,
+        videoOriginWhitelist: ["https://www.youtube.com"]
     }
 };
 /**
