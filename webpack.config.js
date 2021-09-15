@@ -3,8 +3,9 @@ var path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    commonlib: path.join(__dirname, "common/common.js"),
+    commonlib: path.join(__dirname, "common/main.js"),
     tampermonkeylib: path.join(__dirname, "tampermonkey/main.js"),
+    playerlib: path.join(__dirname, "player/main.js"),
     zwlib: path.join(__dirname, "index.js"),
   },
   output: {
