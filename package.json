@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=development --devtool eval-source-map -o ./build",
+    "build": "webpack --mode=development --devtool eval-source-map --output-pathinfo -o ./build",
     "prepublish": "webpack --mode=production -o ./public",
     "server": "webpack serve",
     "eslint": "eslint common/** tampermonkey/**"
