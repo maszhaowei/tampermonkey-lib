@@ -13,7 +13,8 @@ module.exports = {
     library: {
       name: "[name]",
       type: "umd"
-    }
+    },
+    compareBeforeEmit: true
   },
   module: {
     rules: [
