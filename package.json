@@ -4,9 +4,10 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=development -o ./build",
+    "build": "webpack --mode=development --devtool eval-source-map -o ./build",
     "prepublish": "webpack --mode=production -o ./public",
-    "server": "webpack serve"
+    "server": "webpack serve",
+    "eslint": "eslint common/** tampermonkey/**"
   },
   "repository": {
     "type": "git",
@@ -19,11 +20,17 @@
     "@babel/eslint-parser": "^7.15.4",
     "css-loader": "^6.2.0",
     "eslint": "^7.32.0",
+    "husky": "^7.0.2",
     "mini-css-extract-plugin": "^2.3.0",
     "react": "^17.0.2",
     "style-loader": "^3.2.1",
     "webpack": "^5.52.1",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run eslint"
+    }
   }
 }
