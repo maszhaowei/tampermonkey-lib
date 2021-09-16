@@ -20,7 +20,7 @@ export const VideoSites = {
 /**
  * @enum {string}
  */
-export const MessageType = {
+export const MessageTypes = {
     SITE_INFO: 'site_info',
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
@@ -35,7 +35,7 @@ export const MessageType = {
  * @readonly
  * @enum {string}
  */
-export const CallbackType = {
+export const CallbackTypes = {
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
     PLAY: 'play',
