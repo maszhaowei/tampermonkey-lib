@@ -333,7 +333,10 @@ export const ui = {
      * 
      * @param {string} tooltip 
      * @param {Element} target 
-     * @param {object} param2 
+     * @param {object} [options]
+     * @param {string} options.position
+     * @param {number} options.left 
+     * @param {number} options.top 
      * @returns 
      */
     showTooltip(tooltip, target, {position = "center-center", left = 0, top = 0}={}) {
