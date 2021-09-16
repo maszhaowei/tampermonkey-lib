@@ -2,7 +2,6 @@
 const gmInfo = (typeof GM_info === 'undefined'?{}:GM_info);
 export const scriptInfo = gmInfo && gmInfo.script;
 export const scriptName = scriptInfo && scriptInfo.name;
-
 /**
  * @enum {string}
  */
@@ -32,11 +31,12 @@ export const SiteID = {
     WUKONGMEIJU: 'WUKONGMEIJU',
     YOUTUBE_EMBED: 'YOUTUBE_EMBED'
 };
-/**
+/** typedef SiteCategory
  * @typedef {object} SiteCategory 
  * @property {string} categoryName 
  * @property {RegExp} [titleRegEx] 
  */
+
 /**
  * @enum {SiteCategory}
  */
@@ -58,6 +58,16 @@ export const SiteCategories = {
     VIDEO_HOSTING: { categoryName: "Video Hosting" },
     VIDEO_SHARING: { categoryName: "Video Sharing" }
 };
+/**
+ * @typedef {object} Site
+ * @property {string} id 
+ * @property {string} origin
+ * @property {RegExp} hrefRegEx
+ * @property {SiteCategory[]} siteCategories
+ * @property {SiteCategory} currentPageCategory
+ * @property {string[]} originWhitelist
+ * @property {function} isMessageOriginAllowed
+ */
 class Site {
     #id;
     get id() { return this.#id }
@@ -67,6 +77,17 @@ class Site {
     get hrefRegEx() { return this.#hrefRegEx }
     #siteCategories;
     get siteCategories() { return this.#siteCategories }
+    get currentPageCategory() {
+        let siteCategories = this.#siteCategories;
+        if(!Array.isArray(siteCategories)) return;
+        else if(siteCategories.length == 1) return siteCategories[0];
+        else {
+            for(let siteCategory of siteCategories) {
+                if(siteCategory.titleRegEx && siteCategory.titleRegEx.test(document.title)) return siteCategory;
+            }
+            if(siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
+        }
+    }
     #originWhitelist;
     get originWhitelist() { return this.#originWhitelist }
     /**
@@ -126,9 +147,10 @@ const Sites = {
     WUKONGMEIJU: new Site(SiteID.WUKONGMEIJU, "https://m.wukongmeiju.com", undefined, [SiteCategories.TV_SERIES], ["https://code.qxwk.net"]),
     YOUTUBE_EMBED: new Site(SiteID.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com'])
 };
+/** @type {Site} */
 let site;
-for(let site in Sites) {
-    if(Sites[site].test()) site = Sites[site];
+for(let s in Sites) {
+    if(Sites[s].test()) site = Sites[s];
 }
 export const currentSite = site;
 /**
@@ -141,17 +163,6 @@ class VideoSite extends Site {
     get controlsSelector() { return this.#controlsSelector }
     #topOverlaySelector;
     get topOverlaySelector() { return this.#topOverlaySelector }
-    get currentPageCategory() {
-        let siteCategories = super.siteCategories;
-        if(!Array.isArray(siteCategories)) return;
-        else if(siteCategories.length == 1) return siteCategories[0];
-        else {
-            for(let siteCategory of siteCategories) {
-                if(siteCategory.titleRegEx && siteCategory.titleRegEx.test(document.title)) return siteCategory;
-            }
-            if(siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
-        }
-    }
     /**
      * 
      * @param {Site} site 
