@@ -341,7 +341,7 @@ export const ui = {
      */
     showTooltip(tooltip, target, {position = "center-center", left = 0, top = 0}={}) {
         if(!tooltip || tooltip.trim() == "") {
-            console1.debug("Tooltip is empty: " + tooltip);
+            console.debug("Tooltip is empty: " + tooltip);
             return;
         }
         new ui.Tooltip({
