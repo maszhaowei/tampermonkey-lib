@@ -1,4 +1,5 @@
 import '../css/tooltip.css';
+import { Sites } from './enum';
 export const ui = {
 
     /**
@@ -346,4 +347,11 @@ ui.showTooltip = function (tooltip, target, { position = "center-center", left =
         left: left,
         top: top
     });
+}
+
+for (let s in Sites) {
+    if (Sites[s].test()) {
+        ui.currentSite = Sites[s];
+        break;
+    }
 }

@@ -1,5 +1,5 @@
-import { Site } from "common/class";
-import { SiteCategories } from "common/enum";
+import { Site } from "../common/class";
+import { SiteCategories } from "../common/enum";
 /**
  * containerSelector必须是video和controlsSelector的祖先元素,controlsSelector的层级必须比video高
  * @extends Site
@@ -14,8 +14,7 @@ export class VideoSite extends Site {
     get currentPageCategory() {
         let siteCategory = super.currentPageCategory;
         if (siteCategory) return siteCategory;
-        else if(!super.siteCategories) return;
-        else if (super.siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
+        else if (super.siteCategories && super.siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
     }
     /**
      * 
