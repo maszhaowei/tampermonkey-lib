@@ -59,6 +59,7 @@ export class Site {
      * @returns {boolean} 
      */
     test() {
-        return (this.#hrefRegEx && this.#hrefRegEx.test(window.location.href)) || (this.#origin && this.#origin == window.location.origin);
+        if(this.#hrefRegEx) return this.#hrefRegEx.test(window.location.href);
+        else if(this.#origin) return this.#origin == window.location.origin;
     }
 }
