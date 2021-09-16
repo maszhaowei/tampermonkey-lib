@@ -110,6 +110,11 @@ export const ui = {
                 if (findElement) return findElement;
             }
         }
+    },
+    getCurrentSite() {
+        for (let site in Sites) {
+            if (Sites[site].test()) return Sites[site];
+        }
     }
 };
 class Tooltip {
@@ -347,11 +352,4 @@ ui.showTooltip = function (tooltip, target, { position = "center-center", left =
         left: left,
         top: top
     });
-}
-
-for (let s in Sites) {
-    if (Sites[s].test()) {
-        ui.currentSite = Sites[s];
-        break;
-    }
 }
