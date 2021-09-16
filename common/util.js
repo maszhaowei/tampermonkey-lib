@@ -106,5 +106,8 @@ export let util = {
                 return zhNumber[digits.charAt(0)] + '十' + zhNumber[digits.charAt(1)].replace('零', '');
             }
         }
+    },
+    isHttpSuccess(httpcode) {
+        return !!httpcode && httpcode >= 200 && httpcode < 300;
     }
 };
