@@ -30,5 +30,6 @@ export const KeyboardKeyCode = {
     Numpad6: { code: 'Numpad6', key: '6' },
     Numpad7: { code: 'Numpad7', key: '7' },
     Numpad8: { code: 'Numpad8', key: '8' },
-    Numpad9: { code: 'Numpad9', key: '9' }
+    Numpad9: { code: 'Numpad9', key: '9' },
+    F8: {code: 'F8', key: 'F8'}
 };
