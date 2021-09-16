@@ -1,5 +1,6 @@
-const GM_info = GM_info || {};
-export const scriptInfo = GM_info && GM_info.script;
+// eslint-disable-next-line no-use-before-define
+const gmInfo = (typeof GM_info === 'undefined'?{}:GM_info);
+export const scriptInfo = gmInfo && gmInfo.script;
 export const scriptName = scriptInfo && scriptInfo.name;
 
 /**
@@ -57,33 +58,6 @@ export const SiteCategories = {
     VIDEO_HOSTING: { categoryName: "Video Hosting" },
     VIDEO_SHARING: { categoryName: "Video Sharing" }
 };
-/** @enum {Site} */
-const Sites = {
-    "7MM": new Site(SiteID["7MM"], "https://7mmtv.tv", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.AV], ["https://mm9842.com", "https://avgle.com"]),
-    AVGLE: new Site(SiteID.AVGLE, "https://avgle.com", /^https:\/\/avgle\.com\/video\/\w+/, [SiteCategories.AV], ["https://7mmtv.tv"]),
-    AVGLE_EMBED: new Site(SiteID.AVGLE_EMBED, "https://avgle.com", /^https:\/\/avgle\.com\/embed\/\w+$/, [SiteCategories.AV], ["https://7mmtv.tv"]),
-    BILIBILI: new Site(SiteID.BILIBILI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.VIDEO_SHARING]),
-    BILIBILI_BANGUMI: new Site(SiteID.BILIBILI_BANGUMI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/, [SiteCategories.VIDEO_SHARING]),
-    BILIBILI_LIVE: new Site(SiteID.BILIBILI_LIVE, "https://live.bilibili.com", /^https:\/\/live\.bilibili\.com\/.*/, [SiteCategories.LIVE_STREAMING]),
-    BILIBILI_VIDEO: new Site(SiteID.BILIBILI_VIDEO, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/video\/.+/, [SiteCategories.VIDEO_SHARING]),
-    BUYCAR5: new Site(SiteID.BUYCAR5, "https://vod3.buycar5.cn", /^https:\/\/vod\d+\.buycar5\.cn/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
-    DIOUS: new Site(SiteID.DIOUS, "https://v7.dious.cc", /^https:\/\/v7.dious.cc/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
-    JABLE: new Site(SiteID.JABLE, "https://jable.tv", /^https:\/\/jable.tv/, [SiteCategories.AV]),
-    JAVLIBRARY: new Site(SiteID.JAVLIBRARY, "https://www.javlibrary.com", /^https:\/\/www\.javlibrary\.com\/.*/, [SiteCategories.AV]),
-    JX444662: new Site(SiteID.JX444662, "https://jx.444662.cn", /^https:\/\/jx.444662.cn/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
-    MEIJUBS: new Site(SiteID.MEIJUBS, "https://www.meijubs.com", undefined, [SiteCategories.TV_SERIES], ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]),
-    MEIJUTTB: new Site(SiteID.MEIJUTTB, "https://www.meijuttb.com", undefined, [SiteCategories.TV_SERIES], ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn"]),
-    MINGTIAN6: new Site(SiteID.MINGTIAN6, "https://www.mingtian6.com", undefined, [SiteCategories.TV_SERIES], ["https://www.qingbeiban.com"]),
-    MM9842: new Site(SiteID.MM9842, "https://mm9842.com", /^https:\/\/mm9842.com/, [SiteCategories.AV], ["https://7mmtv.tv"]),
-    NEXUSMODS: new Site(SiteID.NEXUSMODS,"https://www.nexusmods.com",undefined,[SiteCategories.MODDING],["https://www.youtube.com"]),
-    QINGBEIBAN: new Site(SiteID.QINGBEIBAN, "https://www.qingbeiban.com", /^https:\/\/www.qingbeiban.com/, [SiteCategories.VIDEO_HOSTING], ["https://www.mingtian6.com"]),
-    QXWK: new Site(SiteID.QXWK, "https://code.qxwk.net", /^https:\/\/code.qxwk.net/, [SiteCategories.VIDEO_HOSTING], ["https://m.wukongmeiju.com"]),
-    STEAM_COMMUNITY_REVIEW: new Site(SiteID.STEAM_COMMUNITY_REVIEW, "https://steamcommunity.com", /^https:\/\/steamcommunity\.com\/app\/\d+\/reviews\/.+/, [SiteCategories.GAME]),
-    STEAM_STORE: new Site(SiteID.STEAM_STORE, "https://store.steampowered.com", /^https:\/\/store\.steampowered\.com\/.*/, [SiteCategories.GAME]),
-    WALLHAVEN: new Site(SiteID.WALLHAVEN, "https://wallhaven.cc", /^https:\/\/wallhaven\.cc\/.*/, [SiteCategories.IMAGE_HOSTING]),
-    WUKONGMEIJU: new Site(SiteID.WUKONGMEIJU, "https://m.wukongmeiju.com", undefined, [SiteCategories.TV_SERIES], ["https://code.qxwk.net"]),
-    YOUTUBE_EMBED: new Site(SiteID.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com'])
-};
 class Site {
     #id;
     get id() { return this.#id }
@@ -122,34 +96,39 @@ class Site {
     test() {
         return (this.#hrefRegEx && this.#hrefRegEx.test(window.location.href)) || (this.#origin && this.#origin == window.location.origin);
     }
-    /**
-     * 
-     * @returns {Site} 
-     */
-    static getSite() {
-        for(let site in Sites) {
-            if(Sites[site].test()) return Sites[site];
-        }
-    }
 }
-export const currentSite = Site.getSite();
-/**
- * @enum {VideoSite} 
- */
-const VideoSites = {
-    AVGLE: new VideoSite(Sites.AVGLE, "div#video-player","div.vjs-control-bar"),
-    AVGLE_EMBED: new VideoSite(Sites.AVGLE_EMBED,"div#video-player","div.vjs-control-bar"),
-    BILIBILI_VIDEO: new VideoSite(Sites.BILIBILI_VIDEO,"div.bilibili-player-video-wrap",".bilibili-player-video-control-wrap"),
-    BILIBILI_BANGUMI: new VideoSite(Sites.BILIBILI_BANGUMI,"div.bpx-player-video-area",".bpx-player-control-wrap"),
-    BUYCAR5: new VideoSite(Sites.BUYCAR5,"div#dplayer,div#mvideo"),
-    DIOUS: new VideoSite(Sites.DIOUS,"div#mvideo",".dplayer-controller"),
-    JABLE: new VideoSite(Sites.JABLE,"div.plyr.plyr--video","div.plyr__controls"),
-    JX444662: new VideoSite(Sites.JX444662,"div#playerCnt","div.prism-controlbar"),
-    MM9842: new VideoSite(Sites.MM9842,"div.jw-wrapper","div.jw-controls"),
-    QINGBEIBAN: new VideoSite(Sites.QINGBEIBAN,"div#dplayer,div#mvideo"),
-    QXWK: new VideoSite(Sites.QXWK,"div#dplayer,div#mvideo"),
-    YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED,"div#player",".ytp-chrome-bottom",".ytp-pause-overlay"),
+/** @enum {Site} */
+const Sites = {
+    "7MM": new Site(SiteID["7MM"], "https://7mmtv.tv", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.AV], ["https://mm9842.com", "https://avgle.com"]),
+    AVGLE: new Site(SiteID.AVGLE, "https://avgle.com", /^https:\/\/avgle\.com\/video\/\w+/, [SiteCategories.AV], ["https://7mmtv.tv"]),
+    AVGLE_EMBED: new Site(SiteID.AVGLE_EMBED, "https://avgle.com", /^https:\/\/avgle\.com\/embed\/\w+$/, [SiteCategories.AV], ["https://7mmtv.tv"]),
+    BILIBILI: new Site(SiteID.BILIBILI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.VIDEO_SHARING]),
+    BILIBILI_BANGUMI: new Site(SiteID.BILIBILI_BANGUMI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/, [SiteCategories.VIDEO_SHARING]),
+    BILIBILI_LIVE: new Site(SiteID.BILIBILI_LIVE, "https://live.bilibili.com", /^https:\/\/live\.bilibili\.com\/.*/, [SiteCategories.LIVE_STREAMING]),
+    BILIBILI_VIDEO: new Site(SiteID.BILIBILI_VIDEO, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/video\/.+/, [SiteCategories.VIDEO_SHARING]),
+    BUYCAR5: new Site(SiteID.BUYCAR5, "https://vod3.buycar5.cn", /^https:\/\/vod\d+\.buycar5\.cn/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
+    DIOUS: new Site(SiteID.DIOUS, "https://v7.dious.cc", /^https:\/\/v7.dious.cc/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
+    JABLE: new Site(SiteID.JABLE, "https://jable.tv", /^https:\/\/jable.tv/, [SiteCategories.AV]),
+    JAVLIBRARY: new Site(SiteID.JAVLIBRARY, "https://www.javlibrary.com", /^https:\/\/www\.javlibrary\.com\/.*/, [SiteCategories.AV]),
+    JX444662: new Site(SiteID.JX444662, "https://jx.444662.cn", /^https:\/\/jx.444662.cn/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
+    MEIJUBS: new Site(SiteID.MEIJUBS, "https://www.meijubs.com", undefined, [SiteCategories.TV_SERIES], ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]),
+    MEIJUTTB: new Site(SiteID.MEIJUTTB, "https://www.meijuttb.com", undefined, [SiteCategories.TV_SERIES], ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn"]),
+    MINGTIAN6: new Site(SiteID.MINGTIAN6, "https://www.mingtian6.com", undefined, [SiteCategories.TV_SERIES], ["https://www.qingbeiban.com"]),
+    MM9842: new Site(SiteID.MM9842, "https://mm9842.com", /^https:\/\/mm9842.com/, [SiteCategories.AV], ["https://7mmtv.tv"]),
+    NEXUSMODS: new Site(SiteID.NEXUSMODS,"https://www.nexusmods.com",undefined,[SiteCategories.MODDING],["https://www.youtube.com"]),
+    QINGBEIBAN: new Site(SiteID.QINGBEIBAN, "https://www.qingbeiban.com", /^https:\/\/www.qingbeiban.com/, [SiteCategories.VIDEO_HOSTING], ["https://www.mingtian6.com"]),
+    QXWK: new Site(SiteID.QXWK, "https://code.qxwk.net", /^https:\/\/code.qxwk.net/, [SiteCategories.VIDEO_HOSTING], ["https://m.wukongmeiju.com"]),
+    STEAM_COMMUNITY_REVIEW: new Site(SiteID.STEAM_COMMUNITY_REVIEW, "https://steamcommunity.com", /^https:\/\/steamcommunity\.com\/app\/\d+\/reviews\/.+/, [SiteCategories.GAME]),
+    STEAM_STORE: new Site(SiteID.STEAM_STORE, "https://store.steampowered.com", /^https:\/\/store\.steampowered\.com\/.*/, [SiteCategories.GAME]),
+    WALLHAVEN: new Site(SiteID.WALLHAVEN, "https://wallhaven.cc", /^https:\/\/wallhaven\.cc\/.*/, [SiteCategories.IMAGE_HOSTING]),
+    WUKONGMEIJU: new Site(SiteID.WUKONGMEIJU, "https://m.wukongmeiju.com", undefined, [SiteCategories.TV_SERIES], ["https://code.qxwk.net"]),
+    YOUTUBE_EMBED: new Site(SiteID.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com'])
 };
+let site;
+for(let site in Sites) {
+    if(Sites[site].test()) site = Sites[site];
+}
+export const currentSite = site;
 /**
  * containerSelector必须是video和controlsSelector的祖先元素,controlsSelector的层级必须比video高
  */
@@ -184,17 +163,29 @@ class VideoSite extends Site {
         this.#controlsSelector = controlsSelector;
         this.#topOverlaySelector = topOverlaySelector;
     }
-    /**
-     * 
-     * @returns {VideoSite}
-     */
-    static getSite() {
-        for(let site in VideoSites) {
-            if(VideoSites[site].test()) return VideoSites[site];
-        }
-    }
 }
-export const currentVideoSite = VideoSite.getSite();
+/**
+ * @enum {VideoSite} 
+ */
+const VideoSites = {
+    AVGLE: new VideoSite(Sites.AVGLE, "div#video-player","div.vjs-control-bar"),
+    AVGLE_EMBED: new VideoSite(Sites.AVGLE_EMBED,"div#video-player","div.vjs-control-bar"),
+    BILIBILI_VIDEO: new VideoSite(Sites.BILIBILI_VIDEO,"div.bilibili-player-video-wrap",".bilibili-player-video-control-wrap"),
+    BILIBILI_BANGUMI: new VideoSite(Sites.BILIBILI_BANGUMI,"div.bpx-player-video-area",".bpx-player-control-wrap"),
+    BUYCAR5: new VideoSite(Sites.BUYCAR5,"div#dplayer,div#mvideo"),
+    DIOUS: new VideoSite(Sites.DIOUS,"div#mvideo",".dplayer-controller"),
+    JABLE: new VideoSite(Sites.JABLE,"div.plyr.plyr--video","div.plyr__controls"),
+    JX444662: new VideoSite(Sites.JX444662,"div#playerCnt","div.prism-controlbar"),
+    MM9842: new VideoSite(Sites.MM9842,"div.jw-wrapper","div.jw-controls"),
+    QINGBEIBAN: new VideoSite(Sites.QINGBEIBAN,"div#dplayer,div#mvideo"),
+    QXWK: new VideoSite(Sites.QXWK,"div#dplayer,div#mvideo"),
+    YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED,"div#player",".ytp-chrome-bottom",".ytp-pause-overlay"),
+};
+let videoSite;
+for(let site in VideoSites) {
+    if(VideoSites[site].test()) videoSite = VideoSites[site];
+}
+export const currentVideoSite = videoSite;
 /**
  * @enum {string}
  */
