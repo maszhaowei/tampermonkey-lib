@@ -82,14 +82,14 @@ export const ui = {
     /**
      * 
      * @param {string} selector 
-     * @param {Element} context 
+     * @param {Element|Document} context 
      */
     hide(selector, context = document) {
         context.querySelectorAll(selector).forEach((element) => ui.hideElement(element));
     },
     /**
      * 
-     * @param {Element} element 
+     * @param {HTMLElement} element 
      */
     hideElement(element) {
         if (element) element.style.display = 'none';

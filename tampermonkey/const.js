@@ -97,7 +97,9 @@ class Site {
         return (this.#hrefRegEx && this.#hrefRegEx.test(window.location.href)) || (this.#origin && this.#origin == window.location.origin);
     }
 }
-/** @enum {Site} */
+/** 
+ * @enum {Site} 
+ */
 const Sites = {
     "7MM": new Site(SiteID["7MM"], "https://7mmtv.tv", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.AV], ["https://mm9842.com", "https://avgle.com"]),
     AVGLE: new Site(SiteID.AVGLE, "https://avgle.com", /^https:\/\/avgle\.com\/video\/\w+/, [SiteCategories.AV], ["https://7mmtv.tv"]),
@@ -213,3 +215,6 @@ export const CallbackType = {
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
     EVENT_DELEGATE_SELECTOR: 'event+delegate_selector'
 }
+export const iframeFullscreenClass = 'player-fullscreen-fix';
+export const eventDelegateClass = 'zw-event-delegate';
+export const topOverlayClass = 'zw-top-overlay';
