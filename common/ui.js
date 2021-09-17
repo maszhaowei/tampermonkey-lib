@@ -1,6 +1,217 @@
 import { Sites } from './enum';
 import { util } from './util';
 import '../css/tooltip.css';
+export const ui = {
+    /* #region General */
+    /**
+     * jQuery.fn.offset的js实现，不支持IE11以下浏览器
+     * @param {Element} node 
+     * @returns 
+     */
+    offset2(node) {
+        let offset = {
+            top: 0,
+            left: 0
+        };
+        // 当前为IE11以下, 直接返回{top: 0, left: 0}
+        if (!node.getClientRects().length) {
+            return offset;
+        }
+        // 当前DOM节点的 display === 'node' 时, 直接返回{top: 0, left: 0}
+        if (window.getComputedStyle(node)['display'] === 'none') {
+            return offset;
+        }
+        // Element.getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
+        // 返回值包含了一组用于描述边框的只读属性——left、top、right和bottom，单位为像素。除了 width 和 height 外的属性都是相对于视口的左上角位置而言的。
+        // 返回如{top: 8, right: 1432, bottom: 548, left: 8, width: 1424…}
+        offset = node.getBoundingClientRect();
+        let docElement = node.ownerDocument.documentElement;
+        return {
+            top: offset.top + window.pageYOffset - docElement.clientTop,
+            left: offset.left + window.pageXOffset - docElement.clientLeft
+        };
+    },
+    /**
+     * 
+     * @param {HTMLElement} element 
+     */
+    scrollToElement(element) {
+        if (!element) return;
+        let html = element.ownerDocument.documentElement;
+        html.scrollTo(0, ui.offset2(element).top - (html.clientHeight - element.getBoundingClientRect().height) / 2);
+    },
+    /**
+     * 
+     * @param {KeyboardEvent} e 
+     * @returns 
+     */
+    isInputEvent(e) {
+        if (!e.target) return false;
+        return e.target.tagName.toUpperCase() == "TEXTAREA" || (e.target.tagName.toUpperCase() == "INPUT" && e.target.type == "text")
+            || e.isComposing || e.keyCode === 229;
+    },
+    /**
+     * 
+     * @param {EventTarget} ele 
+     * @param {string} eventType 
+     * @param {object} params 
+     */
+    dispatchMouseEvent(ele, eventType, params) {
+        params = params || { bubbles: false, cancelable: false };
+        let mouseEvent = document.createEvent('MouseEvent');
+        mouseEvent.initMouseEvent(eventType,
+            params.bubbles,
+            params.cancelable,
+            unsafeWindow,
+            0,
+            params.screenX || 0,
+            params.screenY || 0,
+            params.clientX || 0,
+            params.clientY || 0,
+            params.ctrlKey || false,
+            params.altKey || false,
+            params.shiftKey || false,
+            params.metaKey || false,
+            params.button || 0,
+            params.relatedTarget || null
+        )
+        ele.dispatchEvent(mouseEvent);
+    },
+    /**
+     * 
+     * @param {EventTarget} ele 
+     * @param {object} params 
+     */
+    dispatchClickEvent(ele, params) {
+        ui.dispatchMouseEvent(ele, 'click', params);
+    },
+    /**
+     * 
+     * @param {Event} e 
+     * @returns 
+     */
+    isEventFromThisDoc(e) {
+        return e.target && e.target.getRootNode() == document;
+    },
+    /**
+     * 
+     * @param {string} selector 
+     * @param {Element|Document} context 
+     */
+    hide(selector, context = document) {
+        context.querySelectorAll(selector).forEach((element) => ui.hideElement(element));
+    },
+    /**
+     * 
+     * @param {HTMLElement} element 
+     */
+    hideElement(element) {
+        if (element) element.style.display = 'none';
+    },
+    /**
+     * Find the first {@link selector} in the context of {@link contexts}.
+     * @param {string} selector 
+     * @param {...string|Element|Document} contexts 
+     * @returns 
+     */
+    querySelectorFirst(selector, ...contexts) {
+        if(!selector) {
+            util.printGroupDebug("Common", "selector is empty");
+            return;
+        }
+        for (let i = 0; i < contexts.length; i++) {
+            let context = contexts[i];
+            if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
+            else {
+                for (let contextElement of document.querySelectorAll(context)) {
+                    let findElement = contextElement.querySelector(selector);
+                    if (findElement) return findElement;
+                }
+            }
+        }
+    },
+    showTooltip: null,
+    /* #endregion */
+    /* #region Business */
+    /**
+     * 
+     * @returns {import('./class').Site} 
+     * @throws 
+     */
+    getCurrentSite() {
+        for (let site in Sites) {
+            if (Sites[site].test()) return Sites[site];
+        }
+        throw "No match for current site";
+    },
+    /* #endregion */
+    /* #region Video/Audio */
+    isFullscreen() {
+        return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+    },
+    isFullscreenEnabled() {
+        // return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
+        return util.anyMemberNotEmpty(['fullscreenEnabled',
+            'webkitFullscreenEnabled',
+            'mozFullScreenEnabled',
+            'msFullscreenEnabled'], document)
+    },
+    /**
+     * Returns the Element that is currently being presented in full-screen mode in this document.
+     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot.
+     * @returns {Element} 
+     */
+    getFullscreenElement(tryShadowRoot) {
+        tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
+        var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
+            'webkitFullscreenElement',
+            'mozFullScreenElement',
+            'msFullscreenElement'], document);
+        if (tryShadowRoot) for (; fsEle && fsEle.shadowRoot;) fsEle = fsEle.shadowRoot.fullscreenElement;
+        return fsEle ? fsEle : null;
+    },
+    /**
+     * 
+     * @param {Element} element 
+     * @returns 
+     */
+    requestFullscreen(element = document.documentElement) {
+        let p;
+        if (element.requestFullscreen) p = element.requestFullscreen(void 0);
+        else if (element.webkitRequestFullscreen) p = element.webkitRequestFullscreen();
+        else if (element.mozRequestFullScreen) p = element.mozRequestFullScreen();
+        else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
+        else if (element.webkitEnterFullscreen) p = element.webkitEnterFullscreen();
+        else return Promise.reject(Error('Fullscreen API unavailable'));
+        return p instanceof Promise ? p : Promise.resolve();
+    },
+    /**
+     * 
+     * @param {Element} element 
+     * @returns 
+     */
+    exitFullscreen(element = document.documentElement) {
+        let targetElement;
+        ui.isFullscreenEnabled() ? ui.getFullscreenElement() == element && (targetElement = document) : targetElement = element;
+        let exitFsFunction;
+        if (targetElement) exitFsFunction = util.anyMemberNotEmpty(['exitFullscreen',
+            'webkitExitFullscreen',
+            'mozCancelFullScreen',
+            'msExitFullscreen'], targetElement);
+        let p;
+        if (exitFsFunction) p = exitFsFunction.call(targetElement);
+        return p instanceof Promise ? p : Promise.resolve();
+    },
+    /**
+     * 
+     * @param {Element} element 
+     */
+    toggleFullscreen(element = document.documentElement) {
+        if (ui.isFullscreen()) return ui.exitFullscreen(element);
+        else return ui.requestFullscreen(element);
+    }
+    /* #endregion */
+};
 class Tooltip {
     constructor(i) {
         this.options = Object.assign({
@@ -213,235 +424,25 @@ class Tooltip {
         this.$zwtooltips.style.left = (e + r.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
     }
 }
-export const ui = {
-    /* #region General */
-    /**
-     * jQuery.fn.offset的js实现，不支持IE11以下浏览器
-     * @param {Element} node 
-     * @returns 
-     */
-    offset2(node) {
-        let offset = {
-            top: 0,
-            left: 0
-        };
-        // 当前为IE11以下, 直接返回{top: 0, left: 0}
-        if (!node.getClientRects().length) {
-            return offset;
-        }
-        // 当前DOM节点的 display === 'node' 时, 直接返回{top: 0, left: 0}
-        if (window.getComputedStyle(node)['display'] === 'none') {
-            return offset;
-        }
-        // Element.getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
-        // 返回值包含了一组用于描述边框的只读属性——left、top、right和bottom，单位为像素。除了 width 和 height 外的属性都是相对于视口的左上角位置而言的。
-        // 返回如{top: 8, right: 1432, bottom: 548, left: 8, width: 1424…}
-        offset = node.getBoundingClientRect();
-        let docElement = node.ownerDocument.documentElement;
-        return {
-            top: offset.top + window.pageYOffset - docElement.clientTop,
-            left: offset.left + window.pageXOffset - docElement.clientLeft
-        };
-    },
-    /**
-     * 
-     * @param {HTMLElement} element 
-     */
-    scrollToElement(element) {
-        if (!element) return;
-        let html = element.ownerDocument.documentElement;
-        html.scrollTo(0, ui.offset2(element).top - (html.clientHeight - element.getBoundingClientRect().height) / 2);
-    },
-    /**
-     * 
-     * @param {KeyboardEvent} e 
-     * @returns 
-     */
-    isInputEvent(e) {
-        if (!e.target) return false;
-        return e.target.tagName.toUpperCase() == "TEXTAREA" || (e.target.tagName.toUpperCase() == "INPUT" && e.target.type == "text")
-            || e.isComposing || e.keyCode === 229;
-    },
-    /**
-     * 
-     * @param {EventTarget} ele 
-     * @param {string} eventType 
-     * @param {object} params 
-     */
-    dispatchMouseEvent(ele, eventType, params) {
-        params = params || { bubbles: false, cancelable: false };
-        let mouseEvent = document.createEvent('MouseEvent');
-        mouseEvent.initMouseEvent(eventType,
-            params.bubbles,
-            params.cancelable,
-            unsafeWindow,
-            0,
-            params.screenX || 0,
-            params.screenY || 0,
-            params.clientX || 0,
-            params.clientY || 0,
-            params.ctrlKey || false,
-            params.altKey || false,
-            params.shiftKey || false,
-            params.metaKey || false,
-            params.button || 0,
-            params.relatedTarget || null
-        )
-        ele.dispatchEvent(mouseEvent);
-    },
-    /**
-     * 
-     * @param {EventTarget} ele 
-     * @param {object} params 
-     */
-    dispatchClickEvent(ele, params) {
-        ui.dispatchMouseEvent(ele, 'click', params);
-    },
-    /**
-     * 
-     * @param {Event} e 
-     * @returns 
-     */
-    isEventFromThisDoc(e) {
-        return e.target && e.target.getRootNode() == document;
-    },
-    /**
-     * 
-     * @param {string} selector 
-     * @param {Element|Document} context 
-     */
-    hide(selector, context = document) {
-        context.querySelectorAll(selector).forEach((element) => ui.hideElement(element));
-    },
-    /**
-     * 
-     * @param {HTMLElement} element 
-     */
-    hideElement(element) {
-        if (element) element.style.display = 'none';
-    },
-    /**
-     * Find the first {@link selector} in the context of {@link contexts}.
-     * @param {string} selector 
-     * @param {...string|Element|Document} contexts 
-     * @returns 
-     */
-    querySelectorFirst(selector, ...contexts) {
-        if(!selector) {
-            util.printGroupDebug()
-            return;
-        }
-        for (let i = 0; i < contexts.length; i++) {
-            let context = contexts[i];
-            if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
-            else {
-                for (let contextElement of document.querySelectorAll(context)) {
-                    let findElement = contextElement.querySelector(selector);
-                    if (findElement) return findElement;
-                }
-            }
-        }
-    },
-    /**
-     * 
-     * @param {string} tooltip 
-     * @param {Element} target 
-     * @param {object} [options]
-     * @param {string} options.position
-     * @param {number} options.left 
-     * @param {number} options.top 
-     */
-    showTooltip(tooltip, target, { position = "center-center", left = 0, top = 0 } = {}) {
-        if (!tooltip || tooltip.trim() == "") {
-            console.debug("Tooltip is empty: " + tooltip);
-            return;
-        }
-        new Tooltip({
-            text: tooltip,
-            target: target,
-            position: position,
-            left: left,
-            top: top
-        });
-    },
-    /* #endregion */
-    /* #region Business */
-    /**
-     * 
-     * @returns {import('./class').Site} 
-     * @throws 
-     */
-    getCurrentSite() {
-        for (let site in Sites) {
-            if (Sites[site].test()) return Sites[site];
-        }
-        throw "No match for current site";
-    },
-    /* #endregion */
-    /* #region Video/Audio */
-    isFullscreen() {
-        return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
-    },
-    isFullscreenEnabled() {
-        // return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
-        return util.anyMemberNotEmpty(['fullscreenEnabled',
-            'webkitFullscreenEnabled',
-            'mozFullScreenEnabled',
-            'msFullscreenEnabled'], document)
-    },
-    /**
-     * Returns the Element that is currently being presented in full-screen mode in this document.
-     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot.
-     * @returns {Element} 
-     */
-    getFullscreenElement(tryShadowRoot) {
-        tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
-        var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
-            'webkitFullscreenElement',
-            'mozFullScreenElement',
-            'msFullscreenElement'], document);
-        if (tryShadowRoot) for (; fsEle && fsEle.shadowRoot;) fsEle = fsEle.shadowRoot.fullscreenElement;
-        return fsEle ? fsEle : null;
-    },
-    /**
-     * 
-     * @param {Element} element 
-     * @returns 
-     */
-    requestFullscreen(element = document.documentElement) {
-        let p;
-        if (element.requestFullscreen) p = element.requestFullscreen(void 0);
-        else if (element.webkitRequestFullscreen) p = element.webkitRequestFullscreen();
-        else if (element.mozRequestFullScreen) p = element.mozRequestFullScreen();
-        else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
-        else if (element.webkitEnterFullscreen) p = element.webkitEnterFullscreen();
-        else return Promise.reject(Error('Fullscreen API unavailable'));
-        return p instanceof Promise ? p : Promise.resolve();
-    },
-    /**
-     * 
-     * @param {Element} element 
-     * @returns 
-     */
-    exitFullscreen(element = document.documentElement) {
-        let targetElement;
-        ui.isFullscreenEnabled() ? ui.getFullscreenElement() == element && (targetElement = document) : targetElement = element;
-        let exitFsFunction;
-        if (targetElement) exitFsFunction = util.anyMemberNotEmpty(['exitFullscreen',
-            'webkitExitFullscreen',
-            'mozCancelFullScreen',
-            'msExitFullscreen'], targetElement);
-        let p;
-        if (exitFsFunction) p = exitFsFunction.call(targetElement);
-        return p instanceof Promise ? p : Promise.resolve();
-    },
-    /**
-     * 
-     * @param {Element} element 
-     */
-    toggleFullscreen(element = document.documentElement) {
-        if (ui.isFullscreen()) return ui.exitFullscreen(element);
-        else return ui.requestFullscreen(element);
+/**
+ * 
+ * @param {string} tooltip 
+ * @param {Element} target 
+ * @param {object} [options]
+ * @param {string} options.position
+ * @param {number} options.left 
+ * @param {number} options.top 
+ */
+ui.showTooltip = function(tooltip, target, { position = "center-center", left = 0, top = 0 } = {}) {
+    if (!tooltip || tooltip.trim() == "") {
+        console.debug("Tooltip is empty: " + tooltip);
+        return;
     }
-    /* #endregion */
-};
+    new Tooltip({
+        text: tooltip,
+        target: target,
+        position: position,
+        left: left,
+        top: top
+    });
+}
