@@ -1,5 +1,4 @@
 import { VideoSites } from './enum';
-import { ui as cui } from '../common/ui';
 import '../css/video.css';
 export const ui = {
     /**
