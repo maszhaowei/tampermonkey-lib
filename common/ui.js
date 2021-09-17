@@ -327,6 +327,10 @@ export const ui = {
      * @returns 
      */
     querySelectorFirst(selector, ...contexts) {
+        if(!selector) {
+            util.printGroupDebug()
+            return;
+        }
         for (let i = 0; i < contexts.length; i++) {
             let context = contexts[i];
             if (context instanceof Element || context instanceof Document) return context.querySelector(selector);

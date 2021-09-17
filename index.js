@@ -1,19 +1,7 @@
-import * as CommonClass from './common/class.js';
-import * as TClass from './tampermonkey/class.js';
-export const Class = Object.assign({}, CommonClass, TClass);
-
-import * as CommonEnum from './common/enum.js';
-import * as TEnum from './tampermonkey/enum.js';
-export const Enum = Object.assign({}, CommonEnum, TEnum);
-
-
-import * as TConst from './tampermonkey/const.js';
-export const Const = Object.assign({}, TConst);
-
-import { util as commonUtil } from './common/util.js';
-import { util as tUtil } from './tampermonkey/util.js';
-export const util = Object.assign({}, commonUtil, tUtil);
-
-import { ui as commonUI } from './common/ui.js';
-import { ui as tUI } from './tampermonkey/ui.js';
-export const ui = Object.assign({}, commonUI, tUI);
+import * as clib from './common/main';
+import * as tlib from './tampermonkey/main';
+export const Class = Object.assign({}, clib.Class, tlib.Class);
+export const Enum = Object.assign({}, clib.Enum, tlib.Enum);
+export const Const = Object.assign({}, clib.Const, tlib.Const);
+export const util = Object.assign({}, clib.util, tlib.util);
+export const ui = Object.assign({}, clib.ui, tlib.ui);
