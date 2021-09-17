@@ -138,7 +138,7 @@ export const ui = {
     },
     /* #endregion */
     /* #region Video/Audio */
-    isVideoInFullScreen() {
+    isFullscreen() {
         return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
     },
     isFullscreenEnabled() {
@@ -165,7 +165,7 @@ export const ui = {
     /**
      * 
      * @param {Element} element 
-     * @returns {Element|Promise}
+     * @returns 
      */
     requestFullscreen(element = document.documentElement) {
         let p;
@@ -175,12 +175,12 @@ export const ui = {
         else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
         else if (element.webkitEnterFullscreen) p = element.webkitEnterFullscreen();
         else return Promise.reject(Error('Fullscreen API unavailable'));
-        return p instanceof Promise ? element : Promise.resolve();
+        return p instanceof Promise ? p : Promise.resolve();
     },
     /**
      * 
      * @param {Element} element 
-     * @returns {Promise}
+     * @returns 
      */
     exitFullscreen(element = document.documentElement) {
         let targetElement;
@@ -193,6 +193,14 @@ export const ui = {
         let p;
         if(exitFsFunction) p = exitFsFunction.call(targetElement);
         return p instanceof Promise ? p : Promise.resolve();
+    },
+    /**
+     * 
+     * @param {Element} element 
+     */
+    toggleFullscreen(element = document.documentElement) {
+        if(ui.isFullscreen()) return ui.exitFullscreen(element);
+        else return ui.requestFullscreen(element);
     }
     /* #endregion */
 };
