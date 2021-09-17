@@ -1,8 +1,3 @@
-/** typedef KeyboardKeyCode
- * @typedef {object} KeyboardKeyCode
- * @property {string} code
- * @property {string} key
- */
 /**
  * @enum {KeyboardKeyCode}
  */
@@ -45,16 +40,6 @@ export class Site {
     get hrefRegEx() { return this.#hrefRegEx }
     #siteCategories;
     get siteCategories() { return this.#siteCategories }
-    get currentPageCategory() {
-        let siteCategories = this.#siteCategories;
-        if (!Array.isArray(siteCategories)) return;
-        else if (siteCategories.length == 1) return siteCategories[0];
-        else {
-            for (let siteCategory of siteCategories) {
-                if (siteCategory.titleRegEx && siteCategory.titleRegEx.test(document.title)) return siteCategory;
-            }
-        }
-    }
     #originWhitelist;
     get originWhitelist() { return this.#originWhitelist }
     /**

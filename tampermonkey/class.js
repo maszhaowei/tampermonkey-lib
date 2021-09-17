@@ -1,5 +1,4 @@
 import { Site } from "../common/class";
-import { SiteCategories } from "../common/enum";
 /**
  * 
  * @extends Site
@@ -21,14 +20,6 @@ export class VideoSite extends Site {
      * 处于最上方的元素选择器，防止被遮罩遮挡
      */
     get topElementSelectors() { return this.#topElementSelectors }
-    /**
-     * {@link Site.currentPageCategory}
-    */
-    get currentPageCategory() {
-        let siteCategory = super.currentPageCategory;
-        if (siteCategory) return siteCategory;
-        else if (super.siteCategories && super.siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
-    }
     /**
      * 
      * @param {Site} site 
