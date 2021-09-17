@@ -178,7 +178,7 @@ export const ui = {
      */
     requestFullscreen(element = document.documentElement) {
         let p;
-        if (element.requestFullscreen) p = element.requestFullscreen(void 0);
+        if (element.requestFullscreen) p = element.requestFullscreen();
         else if (element.webkitRequestFullscreen) p = element.webkitRequestFullscreen();
         else if (element.mozRequestFullScreen) p = element.mozRequestFullScreen();
         else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
@@ -186,21 +186,13 @@ export const ui = {
         else return Promise.reject(Error('Fullscreen API unavailable'));
         return p instanceof Promise ? p : Promise.resolve();
     },
-    /**
-     * 
-     * @param {Element} element 
-     * @returns 
-     */
-    exitFullscreen(element = document.documentElement) {
-        let targetElement;
-        ui.isFullscreenEnabled() ? ui.getFullscreenElement() == element && (targetElement = document) : targetElement = element;
-        let exitFsFunction;
-        if (targetElement) exitFsFunction = util.anyMemberNotEmpty(['exitFullscreen',
-            'webkitExitFullscreen',
-            'mozCancelFullScreen',
-            'msExitFullscreen'], targetElement);
+    exitFullscreen() {
         let p;
-        if (exitFsFunction) p = exitFsFunction.call(targetElement);
+        if(document.exitFullscreen) p = document.exitFullscreen();
+        else if(document.webkitExitFullscreen) p = document.webkitExitFullscreen();
+        else if(document.mozCancelFullScreen) p = document.mozCancelFullScreen();
+        else if(document.msExitFullscreen) p = document.msExitFullscreen();
+        else return Promise.reject(Error('Exit fullscreen API unavailable'));
         return p instanceof Promise ? p : Promise.resolve();
     },
     /**
