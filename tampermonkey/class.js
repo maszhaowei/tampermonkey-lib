@@ -1,21 +1,9 @@
 import { Site } from "../common/class";
 import { SiteCategories } from "../common/enum";
-/** typedef VideoSite
- * @typedef {object} VideoSite
- * @property {string} id 
- * @property {string} origin
- * @property {RegExp} hrefRegEx
- * @property {SiteCategory[]} siteCategories
- * @property {SiteCategory} currentPageCategory
- * @property {string[]} originWhitelist
- * @property {function} isMessageOriginAllowed
- * @property {string} containerSelector
- * @property {string} controlsSelector
- * @property {string} topOverlaySelector
- */
 /**
  * containerSelector必须是video和controlsSelector的祖先元素,controlsSelector的层级必须比video高
  * @extends Site
+ * {@link Site} 
  */
 export class VideoSite extends Site {
     #containerSelector;
@@ -24,7 +12,9 @@ export class VideoSite extends Site {
     get controlsSelector() { return this.#controlsSelector }
     #topOverlaySelector;
     get topOverlaySelector() { return this.#topOverlaySelector }
-    /** @override */
+    /**
+     * {@link Site.currentPageCategory}
+    */
     get currentPageCategory() {
         let siteCategory = super.currentPageCategory;
         if (siteCategory) return siteCategory;
