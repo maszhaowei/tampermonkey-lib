@@ -1,5 +1,5 @@
 import '../css/tooltip.css';
-import { Sites } from './enum';
+import { Sites, SiteCategories } from './enum';
 import { util } from './util';
 export const ui = {
     /* #region General */
@@ -143,6 +143,20 @@ export const ui = {
             if (Sites[site].test()) return Sites[site];
         }
         throw "No match for current site";
+    },
+    /**
+     * 
+     * @param {import('./class').Site} [site] 
+     * @returns {import('./class').SiteCategory|undefined} 返回网站类型或undefine(无法确定)
+     * @throws
+     */
+    getCurrentPageCategory(site) {
+        if(!site) site = ui.getCurrentSite();
+        let siteCategories = site.siteCategories;
+        if (!Array.isArray(siteCategories) || siteCategories.length == 0) throw 'Init site categories is empty.';
+        else if (siteCategories.length == 1) return siteCategories[0];
+        else if (siteCategories.includes(SiteCategories.TV_SERIES) && SiteCategories.TV_SERIES.titleRegEx.test(document.title)) return siteCategories.TV_SERIES;
+        else if (super.siteCategories && super.siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
     },
     /* #endregion */
     /* #region Video/Audio */
