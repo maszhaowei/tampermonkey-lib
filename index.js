@@ -7,9 +7,8 @@ import * as TEnum from './tampermonkey/enum.js';
 export const Enum = Object.assign({}, CommonEnum, TEnum);
 
 
-import * as CommonConst from './common/const.js';
 import * as TConst from './tampermonkey/const.js';
-export const Const = Object.assign({}, CommonConst, TConst);
+export const Const = Object.assign({}, TConst);
 
 import { util as commonUtil } from './common/util.js';
 import { util as tUtil } from './tampermonkey/util.js';
