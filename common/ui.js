@@ -163,6 +163,7 @@ export const ui = {
      */
     getFullscreenElement(tryShadowRoot) {
         tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
+        /** @type {Element} */
         var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
             'webkitFullscreenElement',
             'mozFullScreenElement',

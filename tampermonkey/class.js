@@ -7,11 +7,19 @@ import { SiteCategories } from "../common/enum";
  */
 export class VideoSite extends Site {
     #containerSelector;
+    /**
+     * 视频容器选择器
+     */
     get containerSelector() { return this.#containerSelector }
     #controlsSelector;
+    /**
+     * 视频控件组选择器
+     */
     get controlsSelector() { return this.#controlsSelector }
-    /** 处于最上方的元素选择器，防止被遮罩遮挡 */
     #topElementSelectors;
+    /**
+     * 处于最上方的元素选择器，防止被遮罩遮挡
+     */
     get topElementSelectors() { return this.#topElementSelectors }
     /**
      * {@link Site.currentPageCategory}

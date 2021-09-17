@@ -155,7 +155,7 @@ export let util = {
      * 返回{obj}的{members}中第一个trueable成员，否则返回最后一个成员
      * @param {string[]} members 
      * @param {object} obj
-     * @returns 
+     * @returns {object} 
      */
     anyMemberNotEmpty(members, obj) {
         let value;
