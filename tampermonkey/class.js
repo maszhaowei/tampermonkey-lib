@@ -10,8 +10,9 @@ export class VideoSite extends Site {
     get containerSelector() { return this.#containerSelector }
     #controlsSelector;
     get controlsSelector() { return this.#controlsSelector }
-    #topOverlaySelector;
-    get topOverlaySelector() { return this.#topOverlaySelector }
+    /** 处于最上方的元素选择器，防止被遮罩遮挡 */
+    #topElementSelectors;
+    get topElementSelectors() { return this.#topElementSelectors }
     /**
      * {@link Site.currentPageCategory}
     */
@@ -25,12 +26,12 @@ export class VideoSite extends Site {
      * @param {Site} site 
      * @param {string} containerSelector 
      * @param {string} controlsSelector 
-     * @param {string} [topOverlaySelector] 
+     * @param {string[]} [topElementSelectors] 
      */
-    constructor(site, containerSelector, controlsSelector, topOverlaySelector) {
+    constructor(site, containerSelector, controlsSelector, topElementSelectors) {
         super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
         this.#containerSelector = containerSelector;
         this.#controlsSelector = controlsSelector;
-        this.#topOverlaySelector = topOverlaySelector;
+        this.#topElementSelectors = topElementSelectors;
     }
 }

@@ -8,14 +8,14 @@ export const VideoSites = {
     AVGLE_EMBED: new VideoSite(Sites.AVGLE_EMBED, "div#video-player", "div.vjs-control-bar"),
     BILIBILI_VIDEO: new VideoSite(Sites.BILIBILI_VIDEO, "div.bilibili-player-video-wrap", ".bilibili-player-video-control-wrap"),
     BILIBILI_BANGUMI: new VideoSite(Sites.BILIBILI_BANGUMI, "div.bpx-player-video-area", ".bpx-player-control-wrap"),
-    BUYCAR5: new VideoSite(Sites.BUYCAR5, "div#dplayer,div#mvideo"),
+    BUYCAR5: new VideoSite(Sites.BUYCAR5, "div#dplayer, div#mvideo"),
     DIOUS: new VideoSite(Sites.DIOUS, "div#mvideo", ".dplayer-controller"),
     JABLE: new VideoSite(Sites.JABLE, "div.plyr.plyr--video", "div.plyr__controls"),
     JX444662: new VideoSite(Sites.JX444662, "div#playerCnt", "div.prism-controlbar"),
     MM9842: new VideoSite(Sites.MM9842, "div.jw-wrapper", "div.jw-controls"),
-    QINGBEIBAN: new VideoSite(Sites.QINGBEIBAN, "div#dplayer,div#mvideo"),
-    QXWK: new VideoSite(Sites.QXWK, "div#dplayer,div#mvideo"),
-    YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED, "div#player", ".ytp-chrome-bottom", ".ytp-pause-overlay"),
+    QINGBEIBAN: new VideoSite(Sites.QINGBEIBAN, "div#dplayer, div#mvideo"),
+    QXWK: new VideoSite(Sites.QXWK, "div#dplayer, div#mvideo"),
+    YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED, "div#player", ".ytp-chrome-bottom", [".ytp-pause-overlay"]),
 };
 /**
  * @enum {string}
