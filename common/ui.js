@@ -1,7 +1,8 @@
 import '../css/tooltip.css';
 import { Sites } from './enum';
+import { util } from './util';
 export const ui = {
-
+    /* #region General */
     /**
      * jQuery.fn.offset的js实现，不支持IE11以下浏览器
      * @param {Element} node 
@@ -79,7 +80,7 @@ export const ui = {
      * @returns 
      */
     isEventFromThisDoc(e) {
-        return e.target && e.target.getRootNode().isSameNode(document);
+        return e.target && e.target.getRootNode() == document;
     },
     /**
      * 
@@ -111,11 +112,78 @@ export const ui = {
             }
         }
     },
+    /* #endregion */
+    /* #region Business */
+    /**
+     * 
+     * @returns {Site} 
+     * @throws 
+     */
     getCurrentSite() {
         for (let site in Sites) {
             if (Sites[site].test()) return Sites[site];
         }
+        throw "No match for current site";
+    },
+    /* #endregion */
+    /* #region Video/Audio */
+    isVideoInFullScreen() {
+        return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+    },
+    isFullscreenEnabled() {
+        // return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
+        return util.anyMemberNotEmpty(['fullscreenEnabled',
+            'webkitFullscreenEnabled',
+            'mozFullScreenEnabled',
+            'msFullscreenEnabled'], document)
+    },
+    /**
+     * Returns the Element that is currently being presented in full-screen mode in this document.
+     * @param {boolean} [tryShadowRoot] Whether or not to get full-screen element from ShadowRoot.
+     * @returns {Element} 
+     */
+    getFullscreenElement(tryShadowRoot) {
+        tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
+        var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
+            'webkitFullscreenElement',
+            'mozFullScreenElement',
+            'msFullscreenElement'], document);
+        if (tryShadowRoot) for (; fsEle && fsEle.shadowRoot;) fsEle = fsEle.shadowRoot.fullscreenElement;
+        return fsEle ? fsEle : null;
+    },
+    /**
+     * 
+     * @param {Element} element 
+     * @returns {Element|Promise}
+     */
+    requestFullscreen(element = document.documentElement) {
+        let p;
+        if (element.requestFullscreen) p = element.requestFullscreen(void 0);
+        else if (element.webkitRequestFullscreen) p = element.webkitRequestFullscreen();
+        else if (element.mozRequestFullScreen) p = element.mozRequestFullScreen();
+        else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
+        else if (element.webkitEnterFullscreen) p = element.webkitEnterFullscreen();
+        else return Promise.reject(Error('Fullscreen API unavailable'));
+        return p instanceof Promise ? element : Promise.resolve();
+    },
+    /**
+     * 
+     * @param {Element} element 
+     * @returns {Promise}
+     */
+    exitFullscreen(element = document.documentElement) {
+        let targetElement;
+        ui.isFullscreenEnabled() ? ui.getFullscreenElement() == element && (targetElement = document) : targetElement = element;
+        let exitFsFunction;
+        if (targetElement) exitFsFunction = util.anyMemberNotEmpty(['exitFullscreen',
+            'webkitExitFullscreen',
+            'mozCancelFullScreen',
+            'msExitFullscreen'], targetElement);
+        let p;
+        if(exitFsFunction) p = exitFsFunction.call(targetElement);
+        return p instanceof Promise ? p : Promise.resolve();
     }
+    /* #endregion */
 };
 class Tooltip {
     constructor(i) {
@@ -171,7 +239,7 @@ class Tooltip {
                         /** @type {Node} */
                         let ele;
                         for (ele of e.target.parentElement.children) {
-                            if (ele.isSameNode(e.target))
+                            if (ele == e.target)
                                 continue;
                             return setTimeout((function () {
                                 ele.hasClass(i.triggerClass) && ele.is(':visible') && ele.dispatchEvent(new MouseEvent('mouseenter'));

@@ -109,5 +109,19 @@ export let util = {
     },
     isHttpSuccess(httpcode) {
         return !!httpcode && httpcode >= 200 && httpcode < 300;
+    },
+    /**
+     * 返回{obj}的{members}中第一个trueable成员，否则返回最后一个成员
+     * @param {string[]} members 
+     * @param {object} obj
+     * @returns 
+     */
+    anyMemberNotEmpty(members, obj) {
+        let value;
+        members.some((member)=>{
+            value = obj[member];
+            return !!value;
+        })
+        return value;
     }
 };
