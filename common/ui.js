@@ -1,6 +1,6 @@
+import '../css/tooltip.css';
 import { Sites } from './enum';
 import { util } from './util';
-import '../css/tooltip.css';
 export const ui = {
     /* #region General */
     /**
@@ -112,7 +112,7 @@ export const ui = {
      * Find the first {@link selector} in the context of {@link contexts}.
      * @param {string} selector 
      * @param {...string|Element|Document} contexts 
-     * @returns 
+     * @returns {HTMLElement}
      */
     querySelectorFirst(selector, ...contexts) {
         if(!selector) {
@@ -174,7 +174,7 @@ export const ui = {
     /**
      * 
      * @param {Element} element 
-     * @returns 
+     * @returns {Promise<undefined|Error>}
      */
     requestFullscreen(element = document.documentElement) {
         let p;
@@ -186,6 +186,10 @@ export const ui = {
         else return Promise.reject(Error('Fullscreen API unavailable'));
         return p instanceof Promise ? p : Promise.resolve();
     },
+    /**
+     * 
+     * @returns {Promise<undefined|Error>}
+     */
     exitFullscreen() {
         let p;
         if(document.exitFullscreen) p = document.exitFullscreen();
