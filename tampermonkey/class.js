@@ -1,19 +1,19 @@
 import { Site } from "../common/class";
 import { SiteCategories } from "../common/enum";
 /**
- * containerSelector必须是video和controlsSelector的祖先元素,controlsSelector的层级必须比video高
+ * 
  * @extends Site
  * {@link Site} 
  */
 export class VideoSite extends Site {
     #containerSelector;
     /**
-     * 视频容器选择器
+     * 视频容器选择器. 必须是video和{@link controlsSelector}的祖先元素.
      */
     get containerSelector() { return this.#containerSelector }
     #controlsSelector;
     /**
-     * 视频控件组选择器
+     * 视频控件组选择器. 层级必须比video高.
      */
     get controlsSelector() { return this.#controlsSelector }
     #topElementSelectors;
