@@ -15,7 +15,7 @@ export const ui = {
     },
     /**
      * 
-     * @param {import('./class').VideoSite} site 
+     * @param {import('./class').VideoSite} [site] 
      * @returns {import('../common/class').SiteCategory}
      * @throws
      */
