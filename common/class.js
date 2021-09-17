@@ -1,18 +1,41 @@
-/** typedef SiteCategory
- * @typedef {object} SiteCategory 
- * @property {string} categoryName 
- * @property {RegExp} [titleRegEx] 
+/** typedef KeyboardKeyCode
+ * @typedef {object} KeyboardKeyCode
+ * @property {string} code
+ * @property {string} key
  */
-/** typedef Site
- * @typedef {object} Site
- * @property {string} id 
- * @property {string} origin
- * @property {RegExp} hrefRegEx
- * @property {SiteCategory[]} siteCategories
- * @property {SiteCategory} currentPageCategory
- * @property {string[]} originWhitelist
- * @property {function} isMessageOriginAllowed
+/**
+ * @enum {KeyboardKeyCode}
  */
+export class KeyboardKeyCode {
+    /** @readonly */
+    code;
+    /** @readonly */
+    key;
+    /**
+     * 
+     * @param {string} code 
+     * @param {string} key 
+     */
+    constructor(code, key) {
+        this.code = code;
+        this.key = key;
+    }
+}
+export class SiteCategory {
+    /** @readonly */
+    categoryName;
+    /** @readonly */
+    titleRegEx;
+    /**
+     * 
+     * @param {string} categoryName 
+     * @param {RegExp} [titleRegEx] 
+     */
+    constructor(categoryName, titleRegEx) {
+        this.categoryName = categoryName;
+        this.titleRegEx = titleRegEx;
+    }
+}
 export class Site {
     #id;
     get id() { return this.#id }
@@ -49,6 +72,11 @@ export class Site {
         this.#siteCategories = siteCategories;
         this.#originWhitelist = originWhitelist;
     }
+    /**
+     * Check if {targetOrigin} is allowed to act as the origin of Window.postMessage.
+     * @param {string} targetOrigin 
+     * @returns {boolean} 
+     */
     isMessageOriginAllowed(targetOrigin) {
         if (!targetOrigin) return false;
         if (targetOrigin === window.location.origin) return true;

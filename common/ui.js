@@ -1,6 +1,6 @@
-import '../css/tooltip.css';
 import { Sites } from './enum';
 import { util } from './util';
+import '../css/tooltip.css';
 export const ui = {
     /* #region General */
     /**
@@ -50,6 +50,12 @@ export const ui = {
         return e.target.tagName.toUpperCase() == "TEXTAREA" || (e.target.tagName.toUpperCase() == "INPUT" && e.target.type == "text")
             || e.isComposing || e.keyCode === 229;
     },
+    /**
+     * 
+     * @param {EventTarget} ele 
+     * @param {string} eventType 
+     * @param {object} params 
+     */
     dispatchMouseEvent(ele, eventType, params) {
         params = params || { bubbles: false, cancelable: false };
         let mouseEvent = document.createEvent('MouseEvent');
@@ -71,6 +77,11 @@ export const ui = {
         )
         ele.dispatchEvent(mouseEvent);
     },
+    /**
+     * 
+     * @param {EventTarget} ele 
+     * @param {object} params 
+     */
     dispatchClickEvent(ele, params) {
         ui.dispatchMouseEvent(ele, 'click', params);
     },
@@ -98,16 +109,16 @@ export const ui = {
         if (element) element.style.display = 'none';
     },
     /**
-     * 
+     * Find {@link selector} in the context of {@link context}.
      * @param {string} selector 
-     * @param {string|Element} context 
+     * @param {string|Element|Document} context 
      * @returns 
      */
     querySelectorFirst(selector, context) {
-        if (context instanceof Element) return context.querySelector(selector);
+        if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
         else {
-            for (let element of document.querySelectorAll(context)) {
-                let findElement = element.querySelector(selector);
+            for (let contextElement of document.querySelectorAll(context)) {
+                let findElement = contextElement.querySelector(selector);
                 if (findElement) return findElement;
             }
         }
@@ -116,7 +127,7 @@ export const ui = {
     /* #region Business */
     /**
      * 
-     * @returns {Site} 
+     * @returns {import('./class').Site} 
      * @throws 
      */
     getCurrentSite() {
@@ -139,7 +150,7 @@ export const ui = {
     },
     /**
      * Returns the Element that is currently being presented in full-screen mode in this document.
-     * @param {boolean} [tryShadowRoot] Whether or not to get full-screen element from ShadowRoot.
+     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot.
      * @returns {Element} 
      */
     getFullscreenElement(tryShadowRoot) {
@@ -406,7 +417,6 @@ class Tooltip {
  * @param {string} options.position
  * @param {number} options.left 
  * @param {number} options.top 
- * @returns 
  */
 ui.showTooltip = function (tooltip, target, { position = "center-center", left = 0, top = 0 } = {}) {
     if (!tooltip || tooltip.trim() == "") {

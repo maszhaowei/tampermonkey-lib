@@ -1,9 +1,19 @@
 export let util = {
+    /**
+     * 
+     * @param {string} grouName 
+     * @param  {...any} c 
+     */
     printGroupDebug(grouName, ...c) {
         console.group(`[${grouName}]`);
         console.debug(...c);
         console.groupEnd();
     },
+    /**
+     * 
+     * @param {string} name 
+     * @returns 
+     */
     getCookie(name) {
         let arr = document.cookie.replace(/\s/g, "").split(';');
         for (let i = 0, l = arr.length; i < l; i++) {
@@ -14,6 +24,11 @@ export let util = {
         }
         return '';
     },
+    /**
+     * 
+     * @param {string} variable 
+     * @returns 
+     */
     getQueryVariable(variable)
     {
         let query = window.location.search.substring(1);
@@ -27,7 +42,7 @@ export let util = {
     /**
      * 
      * @param {object} context 
-     * @param {Function} fn 
+     * @param {function} fn 
      * @param {Array} args 
      * @param {number} delay
      * @returns 
@@ -43,6 +58,7 @@ export let util = {
     /**
      * 
      * @param {string} s 
+     * @returns 
      */
     isInteger(s) {
         if(isNaN(s)) return false;
@@ -57,9 +73,19 @@ export let util = {
     isNumeric(s) {
         return !isNaN(parseFloat(s)) && isFinite(s);
     },
+    /**
+     * 
+     * @param {string} str 
+     * @returns 
+     */
     isZH(str) {
         return /^[\u4e00-\u9fa5]+$/.test(str);
     },
+    /**
+     * 
+     * @param {string} str 
+     * @returns 
+     */
     isChineseDigits(str) {
         let cDigits = Object.keys(this._common_used_numerals);
         for(const s of str) {
@@ -67,6 +93,11 @@ export let util = {
         }
         return true;
     },
+    /**
+     * 
+     * @param {string} zhstr 
+     * @returns {number|undefined}
+     */
     zh2Digits(zhstr) {
         if(util.isInteger(zhstr)) return zhstr;
         else if(!this.isChineseDigits(zhstr)) return;
@@ -89,6 +120,11 @@ export let util = {
         }
         return total;
     },
+    /**
+     * 
+     * @param {number} digits 
+     * @returns {(string|undefined)}
+     */
     digits2ZH(digits) {
         if(this.isZH(digits)) return digits;
         else if(!util.isInteger(digits)) return;
@@ -107,6 +143,11 @@ export let util = {
             }
         }
     },
+    /**
+     * 
+     * @param {number} httpcode 
+     * @returns 
+     */
     isHttpSuccess(httpcode) {
         return !!httpcode && httpcode >= 200 && httpcode < 300;
     },

@@ -1,69 +1,51 @@
-import { Site } from "./class";
-/** typedef KeyboardKeyCode
- * @typedef {object} KeyboardKeyCode
- * @property {string} code
- * @property {string} key
- */
-/**
- * @enum {KeyboardKeyCode}
- */
- export const KeyboardKeyCodes = {
-    Space: { code: 'Space', key: ' ' },
-    Enter: { code: 'Enter', key: 'Enter' },
-    Escape: { code: 'Escape', key: 'Escape' },
-    KeyC: { code: 'KeyC', key: 'c' },
-    KeyD: { code: 'KeyD', key: 'd' },
-    KeyF: { code: 'KeyF', key: 'f' },
-    KeyG: { code: 'KeyG', key: 'g' },
-    KeyI: { code: 'KeyI', key: 'i' },
-    KeyQ: { code: 'KeyQ', key: 'q' },
-    KeyR: { code: 'KeyR', key: 'r' },
-    KeyS: { code: 'KeyS', key: 's' },
-    KeyV: { code: 'KeyV', key: 'v' },
-    KeyW: { code: 'KeyW', key: 'w' },
-    BracketLeft: { code: 'BracketLeft', key: '[' },
-    BracketRight: { code: 'BracketRight', key: ']' },
-    ArrowLeft: { code: 'ArrowLeft', key: 'ArrowLeft' },
-    ArrowRight: { code: 'ArrowRight', key: 'ArrowRight' },
-    ArrowUp: { code: 'ArrowUp', key: 'ArrowUp' },
-    ArrowDown: { code: 'ArrowDown', key: 'ArrowDown' },
-    Numpad0: { code: 'Numpad0', key: '0' },
-    Numpad1: { code: 'Numpad1', key: '1' },
-    Numpad2: { code: 'Numpad2', key: '2' },
-    Numpad3: { code: 'Numpad3', key: '3' },
-    Numpad4: { code: 'Numpad4', key: '4' },
-    Numpad5: { code: 'Numpad5', key: '5' },
-    Numpad6: { code: 'Numpad6', key: '6' },
-    Numpad7: { code: 'Numpad7', key: '7' },
-    Numpad8: { code: 'Numpad8', key: '8' },
-    Numpad9: { code: 'Numpad9', key: '9' },
-    F8: { code: 'F8', key: 'F8' }
+import { KeyboardKeyCode, Site, SiteCategory } from "./class";
+
+export const KeyboardKeyCodes = {
+    Space: new KeyboardKeyCode('Space', ' '),
+    Enter: new KeyboardKeyCode('Enter', 'Enter'),
+    Escape: new KeyboardKeyCode('Escape', 'Escape'),
+    KeyC: new KeyboardKeyCode('KeyC', 'c'),
+    KeyD: new KeyboardKeyCode('KeyD', 'd'),
+    KeyF: new KeyboardKeyCode('KeyF', 'f'),
+    KeyG: new KeyboardKeyCode('KeyG', 'g'),
+    KeyI: new KeyboardKeyCode('KeyI', 'i'),
+    KeyQ: new KeyboardKeyCode('KeyQ', 'q'),
+    KeyR: new KeyboardKeyCode('KeyR', 'r'),
+    KeyS: new KeyboardKeyCode('KeyS', 's'),
+    KeyV: new KeyboardKeyCode('KeyV', 'v'),
+    KeyW: new KeyboardKeyCode('KeyW', 'w'),
+    BracketLeft: new KeyboardKeyCode('BracketLeft', '['),
+    BracketRight: new KeyboardKeyCode('BracketRight', ']'),
+    ArrowLeft: new KeyboardKeyCode('ArrowLeft', 'ArrowLeft'),
+    ArrowRight: new KeyboardKeyCode('ArrowRight', 'ArrowRight'),
+    ArrowUp: new KeyboardKeyCode('ArrowUp', 'ArrowUp'),
+    ArrowDown: new KeyboardKeyCode('ArrowDown', 'ArrowDown'),
+    Numpad0: new KeyboardKeyCode('Numpad0', '0'),
+    Numpad1: new KeyboardKeyCode('Numpad1', '1'),
+    Numpad2: new KeyboardKeyCode('Numpad2', '2'),
+    Numpad3: new KeyboardKeyCode('Numpad3', '3'),
+    Numpad4: new KeyboardKeyCode('Numpad4', '4'),
+    Numpad5: new KeyboardKeyCode('Numpad5', '5'),
+    Numpad6: new KeyboardKeyCode('Numpad6', '6'),
+    Numpad7: new KeyboardKeyCode('Numpad7', '7'),
+    Numpad8: new KeyboardKeyCode('Numpad8', '8'),
+    Numpad9: new KeyboardKeyCode('Numpad9', '9'),
+    F8: new KeyboardKeyCode('F8', 'F8')
 };
-/** typedef SiteCategory
- * @typedef {object} SiteCategory 
- * @property {string} categoryName 
- * @property {RegExp} [titleRegEx] 
- */
 /**
  * @enum {SiteCategory}
  */
 export const SiteCategories = {
-    AV: {
-        categoryName: "AV",
-        titleRegEx: /([a-zA-Z]+-\d+)(-(\w+))?/
-    },
-    DB: { categoryName: "DB" },
-    GAME: { categoryName: "Game" },
-    IMAGE_HOSTING: { categoryName: "Image Hosting" },
-    LIVE_STREAMING: { categoryName: "Live Streaming" },
-    MODDING: { categoryName: "Modding" },
-    MOVIE: { categoryName: "Movie" },
-    TV_SERIES: {
-        categoryName: "TV Series",
-        titleRegEx: /([\u4e00-\u9fa5\w]+)第(.+)季.*第(.+)集/
-    },
-    VIDEO_HOSTING: { categoryName: "Video Hosting" },
-    VIDEO_SHARING: { categoryName: "Video Sharing" }
+    AV: new SiteCategory("AV", /([a-zA-Z]+-\d+)(-(\w+))?/),
+    DB: new SiteCategory("DB"),
+    GAME: new SiteCategory("Game"),
+    IMAGE_HOSTING: new SiteCategory("Image Hosting"),
+    LIVE_STREAMING: new SiteCategory("Live Streaming"),
+    MODDING: new SiteCategory("Modding"),
+    MOVIE: new SiteCategory("Movie"),
+    TV_SERIES: new SiteCategory("TV Series", /([\u4e00-\u9fa5\w]+)第(.+)季.*第(.+)集/),
+    VIDEO_HOSTING: new SiteCategory("Video Hosting"),
+    VIDEO_SHARING: new SiteCategory("Video Sharing")
 };
 /**
  * @enum {string}
@@ -94,16 +76,6 @@ export const SiteIDs = {
     WUKONGMEIJU: 'WUKONGMEIJU',
     YOUTUBE_EMBED: 'YOUTUBE_EMBED'
 };
-/**
- * @typedef {object} Site
- * @property {string} id 
- * @property {string} origin
- * @property {RegExp} hrefRegEx
- * @property {SiteCategory[]} siteCategories
- * @property {SiteCategory} currentPageCategory
- * @property {string[]} originWhitelist
- * @property {function} isMessageOriginAllowed
- */
 /** 
  * @enum {Site} 
  */
