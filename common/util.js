@@ -122,7 +122,7 @@ export let util = {
     },
     /**
      * 
-     * @param {number} digits 
+     * @param {string} digits 
      * @returns {(string|undefined)}
      */
     digits2ZH(digits) {
