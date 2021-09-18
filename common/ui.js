@@ -367,7 +367,7 @@ class Tooltip {
 
         if (options.arrow) {
             var l = '<div class="arrow" style="' + arrowLeft + '"></div>';
-            this.$zwtooltips.append(l);
+            this.$zwtooltips.insertAdjacentHTML('beforeend', l);
         }
         this.$zwtooltips.style.top = (top + options.top + document.documentElement.clientTop - window.pageYOffset) + 'px';
         this.$zwtooltips.style.left = (left + options.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
