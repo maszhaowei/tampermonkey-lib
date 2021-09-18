@@ -164,7 +164,7 @@ export const ui = {
     getCurrentPageCategory(site) {
         if (!site) site = ui.getCurrentSite();
         let siteCategories = site.siteCategories;
-        if (!Array.isArray(siteCategories) || siteCategories.length == 0) throw 'Init site categories is empty.';
+        if (!Array.isArray(siteCategories) || siteCategories.length == 0) throw 'Site categories is empty.';
         else if (siteCategories.length == 1) return siteCategories[0];
         else if (siteCategories.includes(SiteCategories.TV_SERIES) && SiteCategories.TV_SERIES.titleRegEx.test(document.title)) return siteCategories.TV_SERIES;
         else if (super.siteCategories && super.siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
