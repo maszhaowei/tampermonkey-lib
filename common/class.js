@@ -58,7 +58,7 @@ export class Site {
         this.#originWhitelist = originWhitelist;
     }
     /**
-     * Check if {targetOrigin} is allowed to act as the origin of Window.postMessage.
+     * Check if {@link targetOrigin} is allowed to act as the origin of Window.postMessage.
      * @param {string} targetOrigin 
      * @returns {boolean} 
      */
