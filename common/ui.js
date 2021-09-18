@@ -121,6 +121,7 @@ export const ui = {
         }
         for (let i = 0; i < contexts.length; i++) {
             let context = contexts[i];
+            if(!context) continue;
             if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
             else {
                 for (let contextElement of document.querySelectorAll(context)) {
