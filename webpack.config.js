@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     commonlib: path.join(__dirname, "common/main.js"),
     tampermonkeylib: path.join(__dirname, "tampermonkey/main.js"),
+    playerlib: path.join(__dirname, 'player/main.js'),
     zwlib: path.join(__dirname, "index.js"),
   },
   output: {
