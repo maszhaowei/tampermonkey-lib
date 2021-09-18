@@ -1,5 +1,5 @@
 import '../css/tooltip.css';
-import { Sites, SiteCategories } from './enum';
+import { Sites, SiteCategories, TooltipPosition } from './enum';
 import { util } from './util';
 export const ui = {
     /* #region General */
@@ -115,7 +115,7 @@ export const ui = {
      * @returns {HTMLElement}
      */
     querySelectorFirst(selector, ...contexts) {
-        if(!selector) {
+        if (!selector) {
             util.printGroupDebug("Common", "selector is empty");
             return;
         }
@@ -140,7 +140,7 @@ export const ui = {
      * @param {number} options.top
      * @returns {void}
      */
-    showTooltip: (tooltip, target, options) => {console.debug(tooltip, target, options)},
+    showTooltip: (tooltip, target, options) => { console.debug(tooltip, target, options) },
     /* #endregion */
     /* #region Business */
     /**
@@ -161,7 +161,7 @@ export const ui = {
      * @throws
      */
     getCurrentPageCategory(site) {
-        if(!site) site = ui.getCurrentSite();
+        if (!site) site = ui.getCurrentSite();
         let siteCategories = site.siteCategories;
         if (!Array.isArray(siteCategories) || siteCategories.length == 0) throw 'Init site categories is empty.';
         else if (siteCategories.length == 1) return siteCategories[0];
@@ -216,10 +216,10 @@ export const ui = {
      */
     exitFullscreen() {
         let p;
-        if(document.exitFullscreen) p = document.exitFullscreen();
-        else if(document.webkitExitFullscreen) p = document.webkitExitFullscreen();
-        else if(document.mozCancelFullScreen) p = document.mozCancelFullScreen();
-        else if(document.msExitFullscreen) p = document.msExitFullscreen();
+        if (document.exitFullscreen) p = document.exitFullscreen();
+        else if (document.webkitExitFullscreen) p = document.webkitExitFullscreen();
+        else if (document.mozCancelFullScreen) p = document.mozCancelFullScreen();
+        else if (document.msExitFullscreen) p = document.msExitFullscreen();
         else return Promise.reject(Error('Exit fullscreen API unavailable'));
         return p instanceof Promise ? p : Promise.resolve();
     },
@@ -233,8 +233,32 @@ export const ui = {
     }
     /* #endregion */
 };
+/**
+ * @typedef {object} TooltipOptions
+ * @property {string} type 
+ * @property {Element} target 
+ * @property {string} position 
+ * @property {number} left 
+ * @property {number} top 
+ * @property {number} margin 
+ * @property {boolean} arrow 
+ * @property {number} changeMode
+ * @property {boolean} singleMode
+ * @property {boolean} animation
+ * @property {boolean} supportShow
+ * @property {boolean} autoShow
+ * @property {boolean} autoHide
+ * @property {number} hideTime
+ * @property {boolean} autoRemove
+ * @property {boolean} game
+ */
 class Tooltip {
+    /**
+     * 
+     * @param {TooltipOptions} i 
+     */
     constructor(i) {
+        /** @type {TooltipOptions} */
         this.options = Object.assign({
             name: 'player-tooltip',
             target: document.body,
@@ -378,65 +402,32 @@ class Tooltip {
     }
     updatePos() {
         var left, top, arrowLeft, options = this.options, targetPositions = this.getElemPos(options.target), tooltipWH = this.getElemPos(this.$zwtooltips);
-        switch (options.position || options.target.getAttribute('data-position')) {
-            case 'top-left':
-                left = targetPositions.x,
-                    top = targetPositions.y - options.margin - tooltipWH.h,
-                    arrowLeft = 'left:' + targetPositions.w / 2 + 'px;';
-                break;
-            case 'top-center':
-                left = targetPositions.x + targetPositions.w / 2 - tooltipWH.w / 2,
-                    top = targetPositions.y + options.margin + 10,
-                    arrowLeft = 'left:' + tooltipWH.w / 2 + 'px;';
-                break;
-            case 'top-right':
-                left = targetPositions.x + targetPositions.w - tooltipWH.w,
-                    top = targetPositions.y - options.margin - tooltipWH.h + 10,
-                    arrowLeft = 'left:' + (tooltipWH.w - targetPositions.w / 2) + 'px;';
-                break;
-            case 'bottom-left':
-                left = targetPositions.x,
-                    top = targetPositions.y + targetPositions.h + options.margin - 10,
-                    arrowLeft = 'left:' + targetPositions.w / 2 + 'px;';
-                break;
-            case 'bottom-center':
-                left = targetPositions.x + targetPositions.w / 2 - tooltipWH.w / 2,
-                    top = targetPositions.y + targetPositions.h + options.margin - 10,
-                    arrowLeft = 'left:' + tooltipWH.w / 2 + 'px;';
-                break;
-            case 'bottom-right':
-                left = targetPositions.x + targetPositions.w - tooltipWH.w,
-                    top = targetPositions.y + targetPositions.h + options.margin - 10,
-                    arrowLeft = 'left:' + (tooltipWH.w - targetPositions.w / 2) + 'px;';
-                break;
-            case 'left-top':
-                left = targetPositions.x - options.margin - tooltipWH.w + 10,
-                    top = targetPositions.y;
-                break;
-            case 'left-center':
-                left = targetPositions.x - options.margin - tooltipWH.w + 10,
-                    top = targetPositions.y + targetPositions.h / 2 - tooltipWH.h / 2;
-                break;
-            case 'left-bottom':
-                left = targetPositions.x - options.margin - tooltipWH.w + 10,
-                    top = targetPositions.y + targetPositions.h - tooltipWH.h;
-                break;
-            case 'right-top':
-                left = targetPositions.x + options.margin + targetPositions.w - 10,
-                    top = targetPositions.y;
-                break;
-            case 'right-center':
-                left = targetPositions.x + options.margin + targetPositions.w - 10,
-                    top = targetPositions.y + targetPositions.h / 2 - tooltipWH.h / 2;
-                break;
-            case 'right-bottom':
-                left = targetPositions.x + options.margin + targetPositions.w - 10,
-                    top = targetPositions.y + targetPositions.h - tooltipWH.h;
-                break;
-            case 'center-center':
-                left = targetPositions.x + targetPositions.w / 2 - tooltipWH.w / 2,
-                    top = targetPositions.y + targetPositions.h / 2 - tooltipWH.h / 2 + 10;
+        let position = options.position || options.target.getAttribute('data-position');
+        left = targetPositions.x, top = targetPositions.y;
+        if (position.startsWith('top')) {
+            top += options.margin;
+            if (position.endsWith('center')) left += targetPositions.w / 2 - tooltipWH.w / 2;
         }
+        else if (position.startsWith('bottom')) {
+            top += targetPositions.h - tooltipWH.h - options.margin;
+            if (position.endsWith('center')) left += targetPositions.w / 2 - tooltipWH.w / 2;
+        }
+        else if (position.startsWith('left')) {
+            left += options.margin;
+            if (position.endsWith('center')) top += targetPositions.h / 2 - tooltipWH.h / 2;
+        }
+        else if (position.startsWith('right')) {
+            left += targetPositions.w - tooltipWH.w - options.margin;
+            if (position.endsWith('center')) top += targetPositions.h / 2 - tooltipWH.h / 2;
+        }
+        else if (position == TooltipPosition.CENTER_CENTER) {
+            left += targetPositions.w / 2 - tooltipWH.w / 2;
+            top += targetPositions.h / 2 - tooltipWH.h / 2;
+        }
+
+        if (position.endsWith('right')) left += targetPositions.w - tooltipWH.w;
+        else if (position.endsWith('bottom')) top += targetPositions.h - tooltipWH.h;
+
         if (options.arrow) {
             var l = '<div class="arrow" style="' + arrowLeft + '"></div>';
             this.$zwtooltips.append(l);
@@ -445,7 +436,7 @@ class Tooltip {
         this.$zwtooltips.style.left = (left + options.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
     }
 }
-ui.showTooltip = function(tooltip, target, { position = "center-center", left = 0, top = 0 } = {}) {
+ui.showTooltip = function (tooltip, target, { position = "center-center", left = 0, top = 0 } = {}) {
     if (!tooltip || tooltip.trim() == "") {
         console.debug("Tooltip is empty: " + tooltip);
         return;

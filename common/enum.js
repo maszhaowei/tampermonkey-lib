@@ -105,3 +105,21 @@ export const Sites = {
     WUKONGMEIJU: new Site(SiteIDs.WUKONGMEIJU, "https://m.wukongmeiju.com", undefined, [SiteCategories.TV_SERIES], ["https://code.qxwk.net"]),
     YOUTUBE_EMBED: new Site(SiteIDs.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com'])
 };
+/**
+ * @enum {string}
+ */
+export const TooltipPosition = {
+    TOP_LEFT: 'top-left',
+    TOP_CENTER: 'top-center',
+    TOP_RIGHT: 'top-right',
+    BOTTOM_LEFT: 'bottom-left',
+    BOTTOM_CENTER: 'bottom-center',
+    BOTTOM_RIGHT: 'bottom-right',
+    LEFT_TOP: 'left-top',
+    LEFT_CENTER: 'left-center',
+    LEFT_BOTTOM: 'left-bottom',
+    RIGHT_TOP: 'right-top',
+    RIGHT_CENTER: 'right-center',
+    RIGHT_BOTTOM: 'right-bottom',
+    CENTER_CENTER: 'center-center',
+}
