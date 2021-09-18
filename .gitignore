@@ -6,3 +6,4 @@ build/*
 .eslintrc.js
 jsconfig.json
 dist
+*.LICENSE.txt
