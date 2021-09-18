@@ -9,17 +9,17 @@ export class VideoSite extends Site {
     get parent() { return this.#parent }
     #containerSelector;
     /**
-     * 视频容器选择器. 必须是video和{@link controlsSelector}的祖先元素.
+     * Selector for video container. Must be ancestor of video.
      */
     get containerSelector() { return this.#containerSelector }
     #controlsSelector;
     /**
-     * 视频控件组选择器. 层级必须比video高.
+     * Selector for video controls. Should be higher than video in the stacking context.
      */
     get controlsSelector() { return this.#controlsSelector }
     #topElementSelectors;
     /**
-     * 处于最上方的元素选择器，防止被遮罩遮挡
+     * Selectors that should be on the top of stacking context to avoid being blocked by other elements.
      */
     get topElementSelectors() { return this.#topElementSelectors }
     /**
