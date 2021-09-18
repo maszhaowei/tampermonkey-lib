@@ -80,7 +80,7 @@ export const SiteIDs = {
  * @enum {Site} 
  */
 export const Sites = {
-    "7MM": new Site(SiteIDs["7MM"], "https://7mmtv.tv", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.AV], ["https://mm9842.com", "https://avgle.com"]),
+    "7MM": new Site(SiteIDs["7MM"], "https://7mmtv.tv", /^https:\/\/7mmtv\.tv\/.*/, [SiteCategories.AV], ["https://mm9842.com", "https://avgle.com"]),
     AVGLE: new Site(SiteIDs.AVGLE, "https://avgle.com", /^https:\/\/avgle\.com\/video\/\w+/, [SiteCategories.AV], ["https://7mmtv.tv"]),
     AVGLE_EMBED: new Site(SiteIDs.AVGLE_EMBED, "https://avgle.com", /^https:\/\/avgle\.com\/embed\/\w+$/, [SiteCategories.AV], ["https://7mmtv.tv"]),
     BILIBILI: new Site(SiteIDs.BILIBILI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.VIDEO_SHARING]),
