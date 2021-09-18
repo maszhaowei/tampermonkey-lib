@@ -130,7 +130,17 @@ export const ui = {
             }
         }
     },
-    showTooltip: null,
+    /**
+     * Show {@link tooltip} of white color on black background on {@link target}. Default to be at center position.
+     * @param {string} tooltip
+     * @param {Element} target
+     * @param {object} [options]
+     * @param {string} options.position
+     * @param {number} options.left
+     * @param {number} options.top
+     * @returns {void}
+     */
+    showTooltip: (tooltip, target, options) => {console.debug(tooltip, target, options)},
     /* #endregion */
     /* #region Business */
     /**
@@ -367,83 +377,74 @@ class Tooltip {
         return document.createRange().createContextualFragment(o).firstElementChild;
     }
     updatePos() {
-        var e, t, a, r = this.options, o = this.getElemPos(r.target), n = this.getElemPos(this.$zwtooltips);
-        switch (r.position || r.target.getAttribute('data-position')) {
+        var left, top, arrowLeft, options = this.options, targetPositions = this.getElemPos(options.target), tooltipWH = this.getElemPos(this.$zwtooltips);
+        switch (options.position || options.target.getAttribute('data-position')) {
             case 'top-left':
-                e = o.x,
-                    t = o.y - r.margin - n.h + 10,
-                    a = 'left:' + o.w / 2 + 'px;';
+                left = targetPositions.x,
+                    top = targetPositions.y - options.margin - tooltipWH.h,
+                    arrowLeft = 'left:' + targetPositions.w / 2 + 'px;';
                 break;
             case 'top-center':
-                e = o.x + o.w / 2 - n.w / 2,
-                    t = o.y + r.margin + 10,
-                    a = 'left:' + n.w / 2 + 'px;';
+                left = targetPositions.x + targetPositions.w / 2 - tooltipWH.w / 2,
+                    top = targetPositions.y + options.margin + 10,
+                    arrowLeft = 'left:' + tooltipWH.w / 2 + 'px;';
                 break;
             case 'top-right':
-                e = o.x + o.w - n.w,
-                    t = o.y - r.margin - n.h + 10,
-                    a = 'left:' + (n.w - o.w / 2) + 'px;';
+                left = targetPositions.x + targetPositions.w - tooltipWH.w,
+                    top = targetPositions.y - options.margin - tooltipWH.h + 10,
+                    arrowLeft = 'left:' + (tooltipWH.w - targetPositions.w / 2) + 'px;';
                 break;
             case 'bottom-left':
-                e = o.x,
-                    t = o.y + o.h + r.margin - 10,
-                    a = 'left:' + o.w / 2 + 'px;';
+                left = targetPositions.x,
+                    top = targetPositions.y + targetPositions.h + options.margin - 10,
+                    arrowLeft = 'left:' + targetPositions.w / 2 + 'px;';
                 break;
             case 'bottom-center':
-                e = o.x + o.w / 2 - n.w / 2,
-                    t = o.y + o.h + r.margin - 10,
-                    a = 'left:' + n.w / 2 + 'px;';
+                left = targetPositions.x + targetPositions.w / 2 - tooltipWH.w / 2,
+                    top = targetPositions.y + targetPositions.h + options.margin - 10,
+                    arrowLeft = 'left:' + tooltipWH.w / 2 + 'px;';
                 break;
             case 'bottom-right':
-                e = o.x + o.w - n.w,
-                    t = o.y + o.h + r.margin - 10,
-                    a = 'left:' + (n.w - o.w / 2) + 'px;';
+                left = targetPositions.x + targetPositions.w - tooltipWH.w,
+                    top = targetPositions.y + targetPositions.h + options.margin - 10,
+                    arrowLeft = 'left:' + (tooltipWH.w - targetPositions.w / 2) + 'px;';
                 break;
             case 'left-top':
-                e = o.x - r.margin - n.w + 10,
-                    t = o.y;
+                left = targetPositions.x - options.margin - tooltipWH.w + 10,
+                    top = targetPositions.y;
                 break;
             case 'left-center':
-                e = o.x - r.margin - n.w + 10,
-                    t = o.y + o.h / 2 - n.h / 2;
+                left = targetPositions.x - options.margin - tooltipWH.w + 10,
+                    top = targetPositions.y + targetPositions.h / 2 - tooltipWH.h / 2;
                 break;
             case 'left-bottom':
-                e = o.x - r.margin - n.w + 10,
-                    t = o.y + o.h - n.h;
+                left = targetPositions.x - options.margin - tooltipWH.w + 10,
+                    top = targetPositions.y + targetPositions.h - tooltipWH.h;
                 break;
             case 'right-top':
-                e = o.x + r.margin + o.w - 10,
-                    t = o.y;
+                left = targetPositions.x + options.margin + targetPositions.w - 10,
+                    top = targetPositions.y;
                 break;
             case 'right-center':
-                e = o.x + r.margin + o.w - 10,
-                    t = o.y + o.h / 2 - n.h / 2;
+                left = targetPositions.x + options.margin + targetPositions.w - 10,
+                    top = targetPositions.y + targetPositions.h / 2 - tooltipWH.h / 2;
                 break;
             case 'right-bottom':
-                e = o.x + r.margin + o.w - 10,
-                    t = o.y + o.h - n.h;
+                left = targetPositions.x + options.margin + targetPositions.w - 10,
+                    top = targetPositions.y + targetPositions.h - tooltipWH.h;
                 break;
             case 'center-center':
-                e = o.x + o.w / 2 - n.w / 2,
-                    t = o.y + o.h / 2 - n.h / 2 + 10;
+                left = targetPositions.x + targetPositions.w / 2 - tooltipWH.w / 2,
+                    top = targetPositions.y + targetPositions.h / 2 - tooltipWH.h / 2 + 10;
         }
-        if (r.arrow) {
-            var l = '<div class="arrow" style="' + a + '"></div>';
-            this.$zwtooltips.insertAdjacentHTML('beforeend', l);
+        if (options.arrow) {
+            var l = '<div class="arrow" style="' + arrowLeft + '"></div>';
+            this.$zwtooltips.append(l);
         }
-        this.$zwtooltips.style.top = (t + r.top + document.documentElement.clientTop - window.pageYOffset) + 'px';
-        this.$zwtooltips.style.left = (e + r.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
+        this.$zwtooltips.style.top = (top + options.top + document.documentElement.clientTop - window.pageYOffset) + 'px';
+        this.$zwtooltips.style.left = (left + options.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
     }
 }
-/**
- * 
- * @param {string} tooltip 
- * @param {Element} target 
- * @param {object} [options]
- * @param {string} options.position
- * @param {number} options.left 
- * @param {number} options.top 
- */
 ui.showTooltip = function(tooltip, target, { position = "center-center", left = 0, top = 0 } = {}) {
     if (!tooltip || tooltip.trim() == "") {
         console.debug("Tooltip is empty: " + tooltip);
