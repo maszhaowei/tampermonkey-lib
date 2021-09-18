@@ -1,4 +1,3 @@
-import '../css/video.css';
 import { VideoSites } from './enum';
 export const ui = {
     /**

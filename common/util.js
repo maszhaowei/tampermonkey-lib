@@ -1,12 +1,17 @@
 export let util = {
     /**
-     * 
+     * Output message to web console in gourp {@link grouName}.
      * @param {string} grouName 
-     * @param  {...any} c 
+     * @param  {...any} objs 
      */
-    printGroupDebug(grouName, ...c) {
+    printGroupDebug(grouName, ...objs) {
         console.group(`[${grouName}]`);
-        console.debug(...c);
+        let arr = [];
+        for(let i=0;i<objs.length;i++) {
+            /** Prevent browsers to output live value of objs. {@link https://developer.mozilla.org/en-US/docs/Web/API/console/log#logging_objects} */
+            arr.push(JSON.parse(JSON.stringify(objs[i])));
+        }
+        console.debug(...arr);
         console.groupEnd();
     },
     /**

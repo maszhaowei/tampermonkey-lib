@@ -1,9 +1,12 @@
 import {scriptName} from './const';
+import { util as cutil } from '../common/util';
 export const util = {
-    debug(...c) {
-        console.group(`[${scriptName}]`);
-        console.debug(...c);
-        console.groupEnd();
+    /**
+     * Output message to web console in gourp {@link scriptName}.
+     * @param  {...any} objs 
+     */
+    debug(...objs) {
+        cutil.printGroupDebug(`[${scriptName}]`, ...objs)
     },
     get(url, headers, responseType) {
         return new Promise((resolve, reject) => {

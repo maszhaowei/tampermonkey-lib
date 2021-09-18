@@ -5,6 +5,8 @@ import { Site } from "../common/class";
  * {@link Site} 
  */
 export class VideoSite extends Site {
+    #parent;
+    get parent() { return this.#parent }
     #containerSelector;
     /**
      * 视频容器选择器. 必须是video和{@link controlsSelector}的祖先元素.
@@ -24,11 +26,12 @@ export class VideoSite extends Site {
      * 
      * @param {Site} site 
      * @param {string} containerSelector 
-     * @param {string} controlsSelector 
+     * @param {string} [controlsSelector] 
      * @param {string[]} [topElementSelectors] 
      */
     constructor(site, containerSelector, controlsSelector, topElementSelectors) {
         super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
+        this.#parent = site;
         this.#containerSelector = containerSelector;
         this.#controlsSelector = controlsSelector;
         this.#topElementSelectors = topElementSelectors;
