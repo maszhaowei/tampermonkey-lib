@@ -17,3 +17,15 @@ export const VideoInstances = {
     QXWK: new VideoInstance(VideoSites.QXWK),
     YOUTUBE_EMBED: new VideoInstance(VideoSites.YOUTUBE_EMBED),
 };
+
+/**
+ * @enum {string}
+ */
+export const CallbackTypes = {
+    VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
+    VIDEO_READY: 'video_ready',
+    PLAY: 'play',
+    KEYDOWN: 'keydown',
+    REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
+    EXIT_WEBFULLSCREEN: 'exit_webfullscreen'
+}

@@ -2,6 +2,7 @@
  * @enum {string}
  */
 export const MessageTypes = {
+    GENERAL: 'general',
     SITE_INFO: 'site_info',
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
@@ -11,14 +12,3 @@ export const MessageTypes = {
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
     KEYDOWN: 'keydown'
 };
-/**
- * @enum {string}
- */
-export const CallbackTypes = {
-    VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
-    VIDEO_READY: 'video_ready',
-    PLAY: 'play',
-    KEYDOWN: 'keydown',
-    REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
-    EXIT_WEBFULLSCREEN: 'exit_webfullscreen'
-}
