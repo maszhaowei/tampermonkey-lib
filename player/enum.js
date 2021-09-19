@@ -1,19 +1,19 @@
 import { VideoInstance } from "./class";
+import { VideoSites } from '../site/enum';
 /**
  * @enum {VideoInstance}
  */
 export const VideoInstances = {
-    AVGLE: new VideoInstance("button.vjs-play-control", undefined, "button.vjs-fullscreen-control"),
-    AVGLE_EMBED: new VideoInstance("button.vjs-play-control", undefined, "button.vjs-fullscreen-control"),
-    BILIBILI: new VideoInstance("div.bilibili-player-video-btn-start", "button.bilibili-player-iconfont-volume",
-        "div.bilibili-player-video-btn-fullscreen button", "div.bilibili-player-video-web-fullscreen button"),
-    BILIBILI_BANGUMI: new VideoInstance("div.squirtle-video-start", "div.squirtle-volume-icon",
-        "div.squirtle-video-fullscreen", "div.squirtle-video-pagefullscreen"),
-    BUYCAR5: new VideoInstance("button.dplayer-play-icon", "button.dplayer-volume-icon", "button.dplayer-full-icon"),
-    DIOUS: new VideoInstance("button.dplayer-play-icon", "button.dplayer-volume-icon", "button.dplayer-full-icon"),
-    JABLE: new VideoInstance(undefined, "button[data-plyr=mute]", "button[data-plyr=fullscreen]"),
-    MM9842: new VideoInstance(undefined, "div.jw-icon-volume", "div.jw-icon-fullscreen"),
-    QINGBEIBAN: new VideoInstance("button.dplayer-play-icon", "button.dplayer-volume-icon", "button.dplayer-full-icon"),
-    QXWK: new VideoInstance("button.dplayer-play-icon", "button.dplayer-volume-icon", "button.dplayer-full-icon"),
-    YOUTUBE_EMBED: new VideoInstance("button.ytp-play-button", "button.ytp-mute-button", "button.ytp-fullscreen-button"),
+    AVGLE: new VideoInstance(VideoSites.AVGLE),
+    AVGLE_EMBED: new VideoInstance(VideoSites.AVGLE_EMBED),
+    BILIBILI: new VideoInstance(VideoSites.BILIBILI_VIDEO),
+    BILIBILI_BANGUMI: new VideoInstance(VideoSites.BILIBILI_BANGUMI),
+    BUYCAR5: new VideoInstance(VideoSites.BUYCAR5),
+    DIOUS: new VideoInstance(VideoSites.DIOUS),
+    JABLE: new VideoInstance(VideoSites.JABLE),
+    JX444662: new VideoInstance(VideoSites.JX444662),
+    MM9842: new VideoInstance(VideoSites.MM9842),
+    QINGBEIBAN: new VideoInstance(VideoSites.QINGBEIBAN),
+    QXWK: new VideoInstance(VideoSites.QXWK),
+    YOUTUBE_EMBED: new VideoInstance(VideoSites.YOUTUBE_EMBED),
 };

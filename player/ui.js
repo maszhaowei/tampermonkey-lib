@@ -1,21 +1,6 @@
-import '../css/video.css';
-import { VideoInstances } from './enum';
 import { util } from '../common/util';
 export const ui = {
-    /**
-     * 
-     * @returns {import('./class').VideoInstance} 
-     * @throws
-     */
-    getCurrentVideoInstance() {
-        for (let name in VideoInstances) {
-            /** @type {import('./class').VideoInstance}  */
-            let videoInstance = VideoInstances[name];
-            if (videoInstance.test()) return videoInstance;
-        }
-        throw 'No match for current video instance';
-    },
-    /* #region Video/Audio */
+    /* #region Fullscreen/Webfullscreen */
     isFullscreen() {
         return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
     },

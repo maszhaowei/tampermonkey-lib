@@ -1,8 +1,19 @@
 import * as clib from './common/main';
 import * as tlib from './tampermonkey/main';
+import * as slib from './site/main';
 import * as plib from './player/main';
-export const Class = Object.assign({}, clib.Class, tlib.Class, plib.Class);
-export const Enum = Object.assign({}, clib.Enum, tlib.Enum, plib.Enum);
-export const Const = Object.assign({}, clib.Const, tlib.Const, plib.Const);
-export const util = Object.assign({}, clib.util, tlib.util);
-export const ui = Object.assign({}, clib.ui, tlib.ui, plib.ui);
+
+let libs = [clib, tlib, slib, plib];
+function mergeMember(member) {
+    let result = {};
+    for (let i = 0; i < libs.length; i++) {
+        let lib = libs[i];
+        if (lib[member]) Object.assign(result, lib[member]);
+    }
+    return result;
+}
+export const Class = mergeMember('Class');
+export const Enum = mergeMember('Enum');
+export const Const = mergeMember('Const');
+export const util = mergeMember('util');
+export const ui = mergeMember('ui');
