@@ -8,7 +8,7 @@ export const util = {
      * @returns 
      * @throws
      */
-    getVideoInstance(video, container, playerMetadata) {
+    getVideoInstance: function (video, container, playerMetadata) {
         for (let name in VideoInstances) {
             /** @type {import('./class').VideoInstance} */
             let videoInstance = VideoInstances[name];

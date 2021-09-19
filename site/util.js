@@ -4,7 +4,7 @@ export const util = {
      * 
      * @throws 
      */
-    getCurrentSite() {
+    getCurrentSite: function () {
         for (let s in Sites) {
             /** @type {import('./class').Site}  */
             const site = Sites[s];
@@ -16,7 +16,7 @@ export const util = {
      * 
      * @throws 
      */
-    getCurrentVideoSite() {
+    getCurrentVideoSite: function () {
         for (let s in VideoSites) {
             /** @type {import('./class').VideoSite} */
             const videoSite = VideoSites[s];
@@ -30,7 +30,8 @@ export const util = {
      * @returns {import('./class').SiteCategory|undefined} 返回页面分类或undefine(无法确定)
      * @throws
      */
-    getCurrentPageCategory(site = util.getCurrentSite()) {
+    getCurrentPageCategory: function (site) {
+        site = site || util.getCurrentSite();
         let siteCategories = site.siteCategories;
         if (!Array.isArray(siteCategories) || siteCategories.length == 0) throw 'Site categories is empty.';
         else if (siteCategories.length == 1) return siteCategories[0];

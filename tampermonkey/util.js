@@ -1,14 +1,14 @@
-import {scriptName} from './const';
+import { scriptName } from './const';
 import { util as cutil } from '../common/util';
 export const util = {
     /**
      * Output message to web console in gourp {@link scriptName}.
      * @param  {...any} objs 
      */
-    debug(...objs) {
+    debug: function (...objs) {
         cutil.printGroupDebug(`[${scriptName}]`, ...objs)
     },
-    get(url, headers, responseType) {
+    get: function (url, headers, responseType) {
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET", url, headers,
@@ -22,7 +22,7 @@ export const util = {
             });
         });
     },
-    post(url, headers, data, responseType) {
+    post: function (url, headers, data, responseType) {
         headers = headers || { "Content-Type": "application/x-www-form-urlencoded" };
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
@@ -41,10 +41,10 @@ export const util = {
      * 
      * @param {MessageEvent} event 
      */
-    printReceiveMessage(event) {
+    printReceiveMessage: function (event) {
         util.debug(`From: ${event.origin}, To: ${window.location.origin}, Message:`, event.data);
     },
-    printSendMessage(targetOrigin, message) {
+    printSendMessage: function (targetOrigin, message) {
         util.debug(`To: ${targetOrigin}, From: ${window.location.origin}, Message:`, message);
     },
 };

@@ -4,10 +4,10 @@ export let util = {
      * @param {string} grouName 
      * @param  {...any} objs 
      */
-    printGroupDebug(grouName, ...objs) {
+    printGroupDebug: function (grouName, ...objs) {
         console.group(`[${grouName}]`);
         let arr = [];
-        for(let i=0;i<objs.length;i++) {
+        for (let i = 0; i < objs.length; i++) {
             /** Prevent browsers to output live value of objs. {@link https://developer.mozilla.org/en-US/docs/Web/API/console/log#logging_objects} */
             arr.push(JSON.parse(JSON.stringify(objs[i])));
         }
@@ -19,7 +19,7 @@ export let util = {
      * @param {string} name 
      * @returns 
      */
-    getCookie(name) {
+    getCookie: function (name) {
         let arr = document.cookie.replace(/\s/g, "").split(';');
         for (let i = 0, l = arr.length; i < l; i++) {
             let tempArr = arr[i].split('=');
@@ -34,15 +34,14 @@ export let util = {
      * @param {string} variable 
      * @returns 
      */
-    getQueryVariable(variable)
-    {
+    getQueryVariable: function (variable) {
         let query = window.location.search.substring(1);
         let vars = query.split("&");
-        for (let i=0;i<vars.length;i++) {
+        for (let i = 0; i < vars.length; i++) {
             let pair = vars[i].split("=");
-            if(pair[0] == variable){return pair[1];}
+            if (pair[0] == variable) { return pair[1]; }
         }
-        return(false);
+        return (false);
     },
     /**
      * 
@@ -52,10 +51,10 @@ export let util = {
      * @param {number} delay
      * @returns 
      */
-    asyncDelayedFn(context, fn, args, delay=0) {
-        return new Promise((resolve, reject)=>setTimeout(()=>{
-            if(args === undefined) resolve(fn.apply(context));
-            else if(Array.isArray(args)) resolve(fn.apply(context, args));
+    asyncDelayedFn: function (context, fn, args, delay = 0) {
+        return new Promise((resolve, reject) => setTimeout(() => {
+            if (args === undefined) resolve(fn.apply(context));
+            else if (Array.isArray(args)) resolve(fn.apply(context, args));
             else reject(args);
             resolve(true);
         }, delay));
@@ -65,17 +64,17 @@ export let util = {
      * @param {string} s 
      * @returns 
      */
-    isInteger(s) {
-        if(isNaN(s)) return false;
+    isInteger: function (s) {
+        if (isNaN(s)) return false;
         let value = parseFloat(s);
-        return (value|0)===value;
+        return (value | 0) === value;
     },
     /**
      * 
      * @param {string} s 
      * @returns 
      */
-    isNumeric(s) {
+    isNumeric: function (s) {
         return !isNaN(parseFloat(s)) && isFinite(s);
     },
     /**
@@ -83,7 +82,7 @@ export let util = {
      * @param {string} str 
      * @returns 
      */
-    isZH(str) {
+    isZH: function (str) {
         return /^[\u4e00-\u9fa5]+$/.test(str);
     },
     /**
@@ -91,10 +90,10 @@ export let util = {
      * @param {string} str 
      * @returns 
      */
-    isChineseDigits(str) {
+    isChineseDigits: function (str) {
         let cDigits = Object.keys(this._common_used_numerals);
-        for(const s of str) {
-            if(!cDigits.includes(s)) return false;
+        for (const s of str) {
+            if (!cDigits.includes(s)) return false;
         }
         return true;
     },
@@ -103,22 +102,22 @@ export let util = {
      * @param {string} zhstr 
      * @returns {number|undefined}
      */
-    zh2Digits(zhstr) {
-        if(util.isInteger(zhstr)) return zhstr;
-        else if(!this.isChineseDigits(zhstr)) return;
+    zh2Digits: function (zhstr) {
+        if (util.isInteger(zhstr)) return zhstr;
+        else if (!this.isChineseDigits(zhstr)) return;
 
         let total = 0, weight = 1;
-        for(let i=zhstr.length-1;i>=0;i--) {
+        for (let i = zhstr.length - 1; i >= 0; i--) {
             let val = this._common_used_numerals[zhstr[i]];
-            if(val >= 10 && i == 0) {
-                if(val > weight) {
+            if (val >= 10 && i == 0) {
+                if (val > weight) {
                     weight = val;
                     total += val;
                 }
                 else weight *= val;
             }
-            else if(val >= 10) {
-                if(val > weight) weight = val;
+            else if (val >= 10) {
+                if (val > weight) weight = val;
                 else weight *= val;
             }
             else total += weight * val;
@@ -130,15 +129,15 @@ export let util = {
      * @param {string} digits 
      * @returns {(string|undefined)}
      */
-    digits2ZH(digits) {
-        if(this.isZH(digits)) return digits;
-        else if(!util.isInteger(digits)) return;
+    digits2ZH: function (digits) {
+        if (this.isZH(digits)) return digits;
+        else if (!util.isInteger(digits)) return;
 
         let zhNumber = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '百', '千', '万', '亿'];
         var length = digits.length;
-        if (length == 1){
+        if (length == 1) {
             return zhNumber[digits];
-        }else if(length == 2){
+        } else if (length == 2) {
             if (digits == 10) {
                 return zhNumber[digits];
             } else if (digits > 10 && digits < 20) {
@@ -153,7 +152,7 @@ export let util = {
      * @param {number} httpcode 
      * @returns 
      */
-    isHttpSuccess(httpcode) {
+    isHttpSuccess: function (httpcode) {
         return !!httpcode && httpcode >= 200 && httpcode < 300;
     },
     /**
@@ -162,9 +161,9 @@ export let util = {
      * @param {object} obj
      * @returns {object} 
      */
-    anyMemberNotEmpty(members, obj) {
+    anyMemberNotEmpty: function (members, obj) {
         let value;
-        members.some((member)=>{
+        members.some((member) => {
             value = obj[member];
             return !!value;
         })
