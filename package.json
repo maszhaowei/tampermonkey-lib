@@ -7,7 +7,7 @@
     "build": "webpack --mode=development --devtool eval-source-map --output-pathinfo -o ./build",
     "prepublish": "npm run eslint && webpack --mode=production -o ./public",
     "server": "webpack serve",
-    "eslint": "eslint common/** tampermonkey/**"
+    "eslint": "eslint common/** tampermonkey/** site/** player/**"
   },
   "repository": {
     "type": "git",
