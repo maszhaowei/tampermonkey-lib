@@ -26,7 +26,7 @@ export const util = {
     },
     /**
      * 
-     * @param {import('./class').Site} site 
+     * @param {import('./class').Site} [site] 
      * @returns {import('./class').SiteCategory|undefined} 返回页面分类或undefine(无法确定)
      * @throws
      */
