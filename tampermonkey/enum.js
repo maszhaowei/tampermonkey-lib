@@ -10,5 +10,11 @@ export const MessageTypes = {
     READY_FOR_MESSAGE: 'ready_for_message',
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
-    KEYDOWN: 'keydown'
+    KEYDOWN: 'keydown',
+    test: function (value) {
+        for (let i in MessageTypes) {
+            if (this[i] === value) return true;
+        }
+        return false;
+    }
 };
