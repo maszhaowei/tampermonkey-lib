@@ -9,8 +9,7 @@ export const MessageTypes = {
     READY_FOR_MESSAGE: 'ready_for_message',
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
-    KEYDOWN: 'keydown',
-    EVENT_DELEGATE_SELECTOR: 'event+delegate_selector'
+    KEYDOWN: 'keydown'
 };
 /**
  * @enum {string}
@@ -21,6 +20,5 @@ export const CallbackTypes = {
     PLAY: 'play',
     KEYDOWN: 'keydown',
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
-    EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
-    EVENT_DELEGATE_SELECTOR: 'event+delegate_selector'
+    EXIT_WEBFULLSCREEN: 'exit_webfullscreen'
 }
