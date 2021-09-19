@@ -1,3 +1,4 @@
+import { util } from "../tampermonkey/util";
 export class SiteCategory {
     /** @readonly */
     categoryName;
@@ -95,6 +96,20 @@ export class Site {
         return this.#originWhitelist.includes(targetOrigin);
     }
     /**
+     * 
+     * @param {Window} targetWindow 
+     * @param {string} messageType 
+     * @param {*} [messageContent] 
+     * @param {string} targetOrigin 
+     * @returns 
+     */
+    postMessage(targetWindow, messageType, messageContent, targetOrigin) {
+        if (!messageType) return;
+        let message = { type: messageType, content: messageContent, src: window.location.href };
+        util.printSendMessage(targetOrigin, message);
+        targetWindow.postMessage(message, targetOrigin);
+    }
+    /**
      * Check if current site matches this.
      * @returns {boolean} 
      */
@@ -123,12 +138,4 @@ export class VideoSite extends Site {
         this.#parent = site;
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
     }
-}
-/**
- * 
- * @extends Site
- * {@link Site} 
- */
-export class VideoPortalSite extends Site {
-    
 }
