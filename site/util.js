@@ -1,4 +1,6 @@
 import { SiteCategories, Sites, VideoSites } from './enum';
+import { util as tutil } from '../tampermonkey/util';
+import { Enum } from '../tampermonkey/main';
 export const util = {
     /**
      * 
@@ -8,7 +10,15 @@ export const util = {
         for (let s in Sites) {
             /** @type {import('./class').Site}  */
             const site = Sites[s];
-            if (site.test()) return site;
+            if (site.test()) {
+                /** @todo 重复调用 */
+                window.addEventListener('message', (e) => {
+                    if (e.data && site.isMessageOriginAllowed(e.origin) && Enum.MessageTypes.test(e.data.type)) {
+                        tutil.printReceiveMessage(e);
+                    }
+                })
+                return site;
+            }
         }
         throw "No match for current site";
     },
@@ -20,7 +30,15 @@ export const util = {
         for (let s in VideoSites) {
             /** @type {import('./class').VideoSite} */
             const videoSite = VideoSites[s];
-            if (videoSite.test()) return videoSite;
+            if (videoSite.test()) {
+                /** @todo 重复调用 */
+                window.addEventListener('message', (e) => {
+                    if (e.data && videoSite.isMessageOriginAllowed(e.origin) && Enum.MessageTypes.test(e.data.type)) {
+                        tutil.printReceiveMessage(e);
+                    }
+                })
+                return videoSite;
+            }
         }
         throw "No match for current video site";
     },

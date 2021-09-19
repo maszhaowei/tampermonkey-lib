@@ -11,6 +11,11 @@ export const MessageTypes = {
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
     KEYDOWN: 'keydown',
+    /**
+     * 
+     * @param {string} value 
+     * @returns 
+     */
     test: function (value) {
         for (let i in MessageTypes) {
             if (this[i] === value) return true;
