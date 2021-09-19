@@ -168,5 +168,8 @@ export let util = {
             return !!value;
         })
         return value;
+    },
+    isObject: function(obj) {
+        return Object.prototype.toString.apply(obj) === "[object Object]"
     }
 };
