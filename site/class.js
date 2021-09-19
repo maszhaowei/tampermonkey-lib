@@ -13,6 +13,51 @@ export class SiteCategory {
         this.titleRegEx = titleRegEx;
     }
 }
+export class PlayerMetadata {
+    #containerSelector;
+    /**
+     * Selector for video container. Must be ancestor of video.
+     */
+    get containerSelector() { return this.#containerSelector }
+    #controlsSelector;
+    /**
+     * Selector for video controls. Should be higher than video in the stacking context.
+     */
+    get controlsSelector() { return this.#controlsSelector }
+    #topElementSelectors;
+    /**
+     * Selectors that should be on the top of stacking context to avoid being blocked by other elements.
+     */
+    get topElementSelectors() { return this.#topElementSelectors }
+    #playButtonSelector;
+    get playButtonSelector() { return this.#playButtonSelector }
+    #fullscreenButtonSelector;
+    get fullscreenButtonSelector() { return this.#fullscreenButtonSelector }
+    #webFullscreenButtonSelector;
+    get webFullscreenButtonSelector() { return this.#webFullscreenButtonSelector }
+    #volumeButtonSelector;
+    get volumeButtonSelector() { return this.#volumeButtonSelector }
+    /**
+     * 
+     * @param {string} containerSelector 
+     * @param {string} [controlsSelector] 
+     * @param {string[]} [topElementSelectors] 
+     * @param {string} [playButtonSelector] 
+     * @param {string} [volumeButtonSelector] 
+     * @param {string} [fullscreenButtonSelector] 
+     * @param {string} [webFullscreenButtonSelector] 
+     */
+    constructor(containerSelector, controlsSelector, topElementSelectors,
+        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector) {
+        this.#containerSelector = containerSelector;
+        this.#controlsSelector = controlsSelector;
+        this.#topElementSelectors = topElementSelectors;
+        this.#playButtonSelector = playButtonSelector;
+        this.#volumeButtonSelector = volumeButtonSelector;
+        this.#fullscreenButtonSelector = fullscreenButtonSelector;
+        this.#webFullscreenButtonSelector = webFullscreenButtonSelector;
+    }
+}
 export class Site {
     #id;
     get id() { return this.#id }
@@ -79,48 +124,11 @@ export class VideoSite extends Site {
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
     }
 }
-export class PlayerMetadata {
-    #containerSelector;
-    /**
-     * Selector for video container. Must be ancestor of video.
-     */
-    get containerSelector() { return this.#containerSelector }
-    #controlsSelector;
-    /**
-     * Selector for video controls. Should be higher than video in the stacking context.
-     */
-    get controlsSelector() { return this.#controlsSelector }
-    #topElementSelectors;
-    /**
-     * Selectors that should be on the top of stacking context to avoid being blocked by other elements.
-     */
-    get topElementSelectors() { return this.#topElementSelectors }
-    #playButtonSelector;
-    get playButtonSelector() { return this.#playButtonSelector }
-    #fullscreenButtonSelector;
-    get fullscreenButtonSelector() { return this.#fullscreenButtonSelector }
-    #webFullscreenButtonSelector;
-    get webFullscreenButtonSelector() { return this.#webFullscreenButtonSelector }
-    #volumeButtonSelector;
-    get volumeButtonSelector() { return this.#volumeButtonSelector }
-    /**
-     * 
-     * @param {string} containerSelector 
-     * @param {string} [controlsSelector] 
-     * @param {string[]} [topElementSelectors] 
-     * @param {string} [playButtonSelector] 
-     * @param {string} [volumeButtonSelector] 
-     * @param {string} [fullscreenButtonSelector] 
-     * @param {string} [webFullscreenButtonSelector] 
-     */
-    constructor(containerSelector, controlsSelector, topElementSelectors,
-        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector) {
-        this.#containerSelector = containerSelector;
-        this.#controlsSelector = controlsSelector;
-        this.#topElementSelectors = topElementSelectors;
-        this.#playButtonSelector = playButtonSelector;
-        this.#volumeButtonSelector = volumeButtonSelector;
-        this.#fullscreenButtonSelector = fullscreenButtonSelector;
-        this.#webFullscreenButtonSelector = webFullscreenButtonSelector;
-    }
+/**
+ * 
+ * @extends Site
+ * {@link Site} 
+ */
+export class VideoPortalSite extends Site {
+    
 }
