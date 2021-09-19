@@ -7,3 +7,4 @@ build/*
 jsconfig.json
 dist
 *.LICENSE.txt
+index.html
