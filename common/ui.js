@@ -1,4 +1,5 @@
 import '../css/tooltip.css';
+import { TooltipOption } from './class';
 import { TooltipPosition } from './enum';
 import { util } from './util';
 export const ui = {
@@ -101,68 +102,18 @@ export const ui = {
     },
     /**
      * Show {@link tooltip} of white color on black background on {@link target}. Default to be at center position.
-     * @param {string} tooltip
-     * @param {Element} target - Element to display the tooltip.
-     * @param {object} [options]
-     * @param {string} options.position - {@link TooltipPosition}
-     * @param {number} options.margin - Inside margin to the border of target.
-     * @param {number} options.left - Additional left offset.
-     * @param {number} options.top - Additional top offset.
-     * @returns {void}
+     * @param {TooltipOption} [option]
      */
-    showTooltip: (tooltip, target, options) => { console.debug(tooltip, target, options) },
+    showTooltip: (option) => { console.debug(option) },
     /* #endregion */
 };
-/**
- * @typedef {object} TooltipOptions
- * @property {string} type 
- * @property {Element} target 
- * @property {string} position 
- * @property {number} left 
- * @property {number} top 
- * @property {number} margin 
- * @property {boolean} arrow 
- * @property {number} changeMode
- * @property {boolean} singleMode
- * @property {boolean} animation
- * @property {boolean} supportShow
- * @property {boolean} autoShow
- * @property {boolean} autoHide
- * @property {number} hideTime
- * @property {boolean} autoRemove
- * @property {boolean} game
- */
 class Tooltip {
     /**
      * 
-     * @param {TooltipOptions} i 
+     * @param {TooltipOption} customOption 
      */
-    constructor(i) {
-        /** @type {TooltipOptions} */
-        this.options = Object.assign({
-            name: 'player-tooltip',
-            target: document.body,
-            type: 'info',
-            left: 0,
-            top: 0,
-            margin: 0,
-            arrow: !1,
-            changeMode: 0,
-            singleMode: !0,
-            animation: !0,
-            supportShow: !0,
-            autoShow: !0,
-            autoHide: !0,
-            hideTime: 1000,
-            autoRemove: !0,
-            game: !1,
-            callback: function () {
-            },
-            onShow: function () {
-            },
-            onHide: function () {
-            }
-        }, i),
+    constructor(customOption) {
+        this.options = util.assignNotUndefined(new TooltipOption(undefined, undefined, TooltipPosition.CENTER_CENTER), customOption),
             this.status = 0,
             this.prefix = 'zw-player-tooltips',
             this.triggerClass = this.prefix + '-trigger',
@@ -316,17 +267,15 @@ class Tooltip {
         this.$zwtooltips.style.left = (left + options.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
     }
 }
-ui.showTooltip = function (tooltip, target, { position = TooltipPosition.CENTER_CENTER, left = 0, top = 0, margin = 0 } = {}) {
-    if (!tooltip || tooltip.trim() == "") {
-        console.debug("Tooltip is empty: " + tooltip);
+/**
+ * 
+ * @param {TooltipOption} option 
+ * @returns 
+ */
+ui.showTooltip = function (option) {
+    if (!option || util.isBlank(option.tooltip)) {
+        console.debug("Tooltip is blank");
         return;
     }
-    new Tooltip({
-        text: tooltip,
-        target: target,
-        position: position,
-        left: left,
-        top: top,
-        margin: margin
-    });
+    new Tooltip(option);
 }

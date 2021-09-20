@@ -172,10 +172,30 @@ export let util = {
     isObject: function (obj) {
         return Object.prototype.toString.apply(obj) === "[object Object]"
     },
-    isBlank: function(str) {
-        if(str instanceof String || typeof str === 'string') {
+    /**
+     * 
+     * @param {string} str 
+     * @returns 
+     */
+    isBlank: function (str) {
+        if (str instanceof String || typeof str === 'string') {
             return str.trim() === '';
         }
         return str === undefined || str === null;
+    },
+    /**
+     * Copies all enumerable own properties that are not undefined from one or more source objects to a target object.
+     * @param {*} target 
+     * @param  {...any} sources 
+     * @returns The modified target object.
+     */
+    assignNotUndefined: function (target, ...sources) {
+        sources.forEach((source) => {
+            Object.keys(source).forEach((key) => {
+                let value = source[key];
+                if (value !== undefined) target[key] = value;
+            })
+        })
+        return target;
     }
 };

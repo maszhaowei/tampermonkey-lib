@@ -77,3 +77,47 @@ export class ObjectCacheHelper {
         else return false;
     }
 }
+
+export class TooltipOption {
+    name = 'player-tooltip';
+    /** Target element to display the tooltip. */
+    target = document.body;
+    type = 'info';
+    /** @type {string} */
+    position;
+    /** Additional left offset. */
+    left = 0;
+    /** Additional top offset. */
+    top = 0;
+    /** Inside margin to the border of target. */
+    margin = 0;
+    arrow = false;
+    changeMode = 0;
+    singleMode = true;
+    animation = true;
+    supportShow = true;
+    autoShow = true;
+    autoHide = true;
+    hideTime = 1000;
+    autoRemove = true;
+    game = false;
+    /** @callback */
+    callback;
+    /** @callback */
+    onShow;
+    /** @callback */
+    onHide;
+    /**
+     * 
+     * @param {string} text 
+     * @param {Element} [target] - Target element to display the tooltip. Default to document.body.
+     * @param {string} position - Position to display {@link text}. See {@link TooltipPosition} for value range.
+     * @param {number} [margin] - Inside margin to the border of {@link target}.
+     */
+    constructor(text, target, position, margin) {
+        this.text = text;
+        this.target = target || document.body;
+        this.position = position;
+        this.margin = margin ?? 0;
+    }
+}
