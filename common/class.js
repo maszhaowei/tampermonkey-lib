@@ -115,7 +115,7 @@ export class TooltipOption {
      * @param {string} text 
      * @param {Element} [target] - Target element to display the tooltip. Default to document.body.
      * @param {string} [position] - Position to display {@link text}. Default to "center-center". See TooltipPosition for value range.
-     * @param {number} [margin] - Inside margin to the border of {@link target}.
+     * @param {number} [margin] - Inside margin to the border of {@link target}. Default to 0.
      */
     constructor(text, target, position, margin) {
         this.text = text;
