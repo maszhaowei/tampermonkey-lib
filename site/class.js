@@ -5,7 +5,7 @@ export class SiteCategory {
     /** @readonly */
     titleRegEx;
     /**
-     * 
+     * @hideconstructor
      * @param {string} categoryName 
      * @param {RegExp} [titleRegEx] 
      */
@@ -71,7 +71,7 @@ export class Site {
     #originWhitelist;
     get originWhitelist() { return this.#originWhitelist }
     /**
-     * 
+     * @hideconstructor
      * @param {string} id 
      * @param {string} origin 
      * @param {RegExp} [hrefRegEx] 
@@ -129,7 +129,7 @@ export class VideoSite extends Site {
     #defaultPlayerMetadata;
     get defaultPlayerMetadata() { return this.#defaultPlayerMetadata }
     /**
-     * 
+     * @hideconstructor
      * @param {Site} site 
      * @param {PlayerMetadata} defaultPlayerMetadata 
      */

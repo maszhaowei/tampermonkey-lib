@@ -1,8 +1,8 @@
 import '../css/video.css';
 import * as Const from './const';
 import { ui } from './ui.js';
+import { TooltipOption } from '../common/class';
 import { ui as cui } from '../common/ui.js';
-import { TooltipPosition } from '../common/enum.js';
 import { util } from '../tampermonkey/util';
 
 export class VideoInstance {
@@ -54,6 +54,7 @@ export class VideoInstance {
     }
     /**
      * @private
+     * @hideconstructor
      * @param {import('../site/class').VideoSite} videoSite 
      */
     constructor(videoSite) {
@@ -100,8 +101,8 @@ export class VideoInstance {
         this.#playerMetadata = playerMetadata;
         return this.#initUI().then(() => this);
     }
-    showTooltip(tooltip, { position = TooltipPosition.CENTER_CENTER, left = 0, top = 0 } = {}) {
-        cui.showTooltip(tooltip, this.tooltipWrap, { position: position, left: left, top: top });
+    showTooltip(tooltip) {
+        cui.showTooltip(new TooltipOption(tooltip, this.tooltipWrap));
     }
 
     saveVideoFrame(fileName = document.title) {

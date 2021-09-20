@@ -35,7 +35,10 @@ export class ObjectCacheHelper {
     #site;
     /** @type {WeakMap<Element, Map<string, CacheItem>>} */
     static #cacheMap = new WeakMap();
-    /** @private */
+    /** 
+     * @private
+     * @hideconstructor
+     */
     constructor() { }
     /**
      * 
@@ -111,13 +114,14 @@ export class TooltipOption {
      * 
      * @param {string} text 
      * @param {Element} [target] - Target element to display the tooltip. Default to document.body.
-     * @param {string} position - Position to display {@link text}. See {@link TooltipPosition} for value range.
+     * @param {string} [position] - Position to display {@link text}. Default to "center-center". See TooltipPosition for value range.
      * @param {number} [margin] - Inside margin to the border of {@link target}.
      */
     constructor(text, target, position, margin) {
         this.text = text;
         this.target = target || document.body;
-        this.position = position;
+        /** @todo TooltipPosition.CENTER_CENTER will cause circular dependency */
+        this.position = position || 'center-center';
         this.margin = margin ?? 0;
     }
 }
