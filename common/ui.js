@@ -143,7 +143,7 @@ export const ui = {
      */
     showTooltip: (tooltip, target, options) => { console.debug(tooltip, target, options) },
     /* #endregion */
-    };
+};
 /**
  * @typedef {object} TooltipOptions
  * @property {string} type 
