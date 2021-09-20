@@ -102,11 +102,12 @@ export const ui = {
     /**
      * Show {@link tooltip} of white color on black background on {@link target}. Default to be at center position.
      * @param {string} tooltip
-     * @param {Element} target
+     * @param {Element} target - Element to display the tooltip.
      * @param {object} [options]
-     * @param {string} options.position
-     * @param {number} options.left
-     * @param {number} options.top
+     * @param {string} options.position - {@link TooltipPosition}
+     * @param {number} options.margin - Inside margin to the border of target.
+     * @param {number} options.left - Additional left offset.
+     * @param {number} options.top - Additional top offset.
      * @returns {void}
      */
     showTooltip: (tooltip, target, options) => { console.debug(tooltip, target, options) },
@@ -315,7 +316,7 @@ class Tooltip {
         this.$zwtooltips.style.left = (left + options.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
     }
 }
-ui.showTooltip = function (tooltip, target, { position = TooltipPosition.CENTER_CENTER, left = 0, top = 0 } = {}) {
+ui.showTooltip = function (tooltip, target, { position = TooltipPosition.CENTER_CENTER, left = 0, top = 0, margin = 0 } = {}) {
     if (!tooltip || tooltip.trim() == "") {
         console.debug("Tooltip is empty: " + tooltip);
         return;
@@ -325,6 +326,7 @@ ui.showTooltip = function (tooltip, target, { position = TooltipPosition.CENTER_
         target: target,
         position: position,
         left: left,
-        top: top
+        top: top,
+        margin: margin
     });
 }
