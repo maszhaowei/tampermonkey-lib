@@ -5,6 +5,7 @@ export const ui = {
     /* #region General */
     /**
      * jQuery.fn.offset的js实现，不支持IE11以下浏览器
+     * @see {@link https://api.jquery.com/offset/}
      * @param {Element} node 
      * @returns 
      */
@@ -38,7 +39,9 @@ export const ui = {
     scrollToElement(element) {
         if (!element) return;
         let html = element.ownerDocument.documentElement;
-        html.scrollTo(0, ui.offset2(element).top - (html.clientHeight - element.getBoundingClientRect().height) / 2);
+        const offset = ui.offset2(element);
+        const rect = element.getBoundingClientRect();
+        html.scrollTo(offset.left - (html.clientWidth - rect.width) / 2, offset.top - (html.clientHeight - rect.height) / 2);
     },
     /**
      * 
