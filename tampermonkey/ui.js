@@ -1,7 +1,6 @@
 import { ApplyMethodSignature } from './class';
 /**
  * 
- * @param {string} selector 
  * @param {ApplyMethodSignature} applySig 
  * @param {Array<ApplyMethodSignature>} restSigs 
  * @param {number} interval 
@@ -9,10 +8,10 @@ import { ApplyMethodSignature } from './class';
  * @returns {Promise<Element[]|Error>}
  */
 function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
-    let selector = applySig.contextSelector;
+    let context = applySig.context;
     return new Promise((resolve, reject) => {
-        document.arrive(selector, { existing: true, onceOnly: true }, function () {
-            try {
+        if (context instanceof String || typeof context === 'string') {
+            document.arrive(context, { existing: true, onceOnly: true }, function () {
                 applySig.fn.apply(this, applySig.args);
 
                 setTimeout(() => {
@@ -21,20 +20,27 @@ function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
                     }
                     else resolve([this]);
                 }, interval);
-            }
-            catch (e) {
-                reject(e);
-            }
-        });
+            });
+        }
+        else {
+            applySig.fn.apply(context, applySig.args);
+
+            setTimeout(() => {
+                if (restSigs.length > 0) {
+                    asyncRecursiveFn(restSigs.shift(), restSigs, interval, waitTimeout).then((result) => resolve([context].concat(result)), (result) => reject(result));
+                }
+                else resolve([context]);
+            }, interval);
+        }
         setTimeout(() => {
-            document.unbindArrive(selector);
-            reject(new Error(selector));
+            document.unbindArrive(context);
+            reject(new Error(context));
         }, (restSigs.length + 1) * waitTimeout + restSigs.length * interval);
     })
 }
 export const ui = {
     /**
-     * Apply functions on selectors in order.
+     * Apply functions on selectors or elements in order.
      * @param {Array<ApplyMethodSignature>} sigs 
      * @param {number} interval - Interval(ms) between each operation. Default to be 0.
      * @param {number} waitTimeout - Wait timeout(ms) for each step of the operation. Default to be 2000.
@@ -46,11 +52,11 @@ export const ui = {
     },
     /**
      * Click elements in order.
-     * @param {string[]} selectors 
+     * @param {any[]} contexts - Array of selectors or elements.
      * @param {number} interval - Interval(ms) between each click. Default to be 0.
      * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 2000.
      */
-    asyncChainClick: function (selectors, interval = 0, waitTimeout = 2000) {
-        return ui.asyncChainFn(selectors.map((selector) => new ApplyMethodSignature(selector, HTMLElement.prototype.click)), interval, waitTimeout);
+    asyncChainClick: function (contexts, interval = 0, waitTimeout = 2000) {
+        return ui.asyncChainFn(contexts.map((selector) => new ApplyMethodSignature(selector, HTMLElement.prototype.click)), interval, waitTimeout);
     }
 }

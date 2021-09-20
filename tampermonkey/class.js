@@ -1,15 +1,15 @@
 export class ApplyMethodSignature {
-    contextSelector;
+    context;
     fn;
     args;
     /**
      * 
-     * @param {string} contextSelector
+     * @param {string|Element} context
      * @param {function} fn 
      * @param {any[]} [args] 
      */
-    constructor(contextSelector, fn, args) {
-        this.contextSelector = contextSelector;
+    constructor(context, fn, args) {
+        this.context = context;
         this.fn = fn;
         this.args = args || [];
     }
