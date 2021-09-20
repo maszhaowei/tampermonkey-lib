@@ -102,9 +102,12 @@ export const ui = {
     },
     /**
      * Show {@link tooltip} of white color on black background on {@link target}. Default to be at center position.
-     * @param {TooltipOption} [option]
+     * @param {string} tooltip 
+     * @param {Element} target - Target element to display the tooltip.
+     * @param {*} [position] - Position to display {@link tooltip}. Default to "center-center". See TooltipPosition for value range.
+     * @param {*} [margin] - Inside margin to the border of {@link target}. Default to 0.
      */
-    showTooltip: (option) => { console.debug(option) },
+    showTooltip: (tooltip, target, position, margin) => { console.debug(tooltip, target, position, margin) },
     /* #endregion */
 };
 class Tooltip {
@@ -113,7 +116,7 @@ class Tooltip {
      * @param {TooltipOption} customOption 
      */
     constructor(customOption) {
-        this.options = util.assignNotUndefined(new TooltipOption(undefined, undefined, TooltipPosition.CENTER_CENTER), customOption),
+        this.options = util.assignNotUndefined(new TooltipOption(), customOption),
             this.status = 0,
             this.prefix = 'zw-player-tooltips',
             this.triggerClass = this.prefix + '-trigger',
@@ -269,13 +272,16 @@ class Tooltip {
 }
 /**
  * 
- * @param {TooltipOption} option 
+ * @param {string} tooltip 
+ * @param {Element} target 
+ * @param {string} [position] 
+ * @param {number} [margin] 
  * @returns 
  */
-ui.showTooltip = function (option) {
-    if (!option || util.isBlank(option.tooltip)) {
+ui.showTooltip = function (tooltip, target, position = TooltipOption.CENTER_CENTER, margin = 0) {
+    if (util.isBlank(tooltip)) {
         console.debug("Tooltip is blank");
         return;
     }
-    new Tooltip(option);
+    new Tooltip(new TooltipOption(tooltip, target, position, margin));
 }

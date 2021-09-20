@@ -101,8 +101,13 @@ export class VideoInstance {
         this.#playerMetadata = playerMetadata;
         return this.#initUI().then(() => this);
     }
-    showTooltip(tooltip) {
-        cui.showTooltip(new TooltipOption(tooltip, this.tooltipWrap));
+    /**
+     * 
+     * @param {string} tooltip 
+     * @param {number} [margin] 
+     */
+    showTooltip(tooltip, margin) {
+        cui.showTooltip(tooltip, this.tooltipWrap, undefined, margin);
     }
 
     saveVideoFrame(fileName = document.title) {
