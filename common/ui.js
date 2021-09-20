@@ -55,41 +55,6 @@ export const ui = {
     },
     /**
      * 
-     * @param {EventTarget} ele 
-     * @param {string} eventType 
-     * @param {object} params 
-     */
-    dispatchMouseEvent(ele, eventType, params) {
-        params = params || { bubbles: false, cancelable: false };
-        let mouseEvent = document.createEvent('MouseEvent');
-        mouseEvent.initMouseEvent(eventType,
-            params.bubbles,
-            params.cancelable,
-            unsafeWindow,
-            0,
-            params.screenX || 0,
-            params.screenY || 0,
-            params.clientX || 0,
-            params.clientY || 0,
-            params.ctrlKey || false,
-            params.altKey || false,
-            params.shiftKey || false,
-            params.metaKey || false,
-            params.button || 0,
-            params.relatedTarget || null
-        )
-        ele.dispatchEvent(mouseEvent);
-    },
-    /**
-     * 
-     * @param {EventTarget} ele 
-     * @param {object} params 
-     */
-    dispatchClickEvent(ele, params) {
-        ui.dispatchMouseEvent(ele, 'click', params);
-    },
-    /**
-     * 
      * @param {Event} e 
      * @returns 
      */
