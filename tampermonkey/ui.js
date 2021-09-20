@@ -52,11 +52,11 @@ export const ui = {
     },
     /**
      * Click elements in order.
-     * @param {any[]} contexts - Array of selectors or elements.
+     * @param {Array<string|Element>} contexts - Array of selectors or elements.
      * @param {number} interval - Interval(ms) between each click. Default to be 0.
      * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 2000.
      */
     asyncChainClick: function (contexts, interval = 0, waitTimeout = 2000) {
-        return ui.asyncChainFn(contexts.map((selector) => new ApplyMethodSignature(selector, HTMLElement.prototype.click)), interval, waitTimeout);
+        return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(context, HTMLElement.prototype.click)), interval, waitTimeout);
     }
 }
