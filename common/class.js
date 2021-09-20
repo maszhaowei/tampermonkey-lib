@@ -34,13 +34,9 @@ class CssCacheItem {
 export class CssCache {
     #site;
     /** @type {WeakMap<Element, Map<string, CssCacheItem>>} */
-    #cssMap = new WeakMap();
+    static #cssMap = new WeakMap();
     /** @private */
     constructor() { }
-    static #instance = new CssCache();
-    static getInstance() {
-        return this.#instance;
-    }
     /**
      * 
      * @param {Element} element 
@@ -48,15 +44,15 @@ export class CssCache {
      * @param {function} callback 
      * @param {any[]} [args] 
      */
-    saveCss(element, cssName, callback, args) {
+    static saveCss(element, cssName, callback, args) {
         /** @type {Map<string, CssCacheItem>} */
         let cssCacheMap;
-        if (this.#cssMap.has(element)) {
-            cssCacheMap = this.#cssMap.get(element);
+        if (CssCache.#cssMap.has(element)) {
+            cssCacheMap = CssCache.#cssMap.get(element);
         }
         else {
             cssCacheMap = new Map();
-            this.#cssMap.set(element, cssCacheMap);
+            CssCache.#cssMap.set(element, cssCacheMap);
         }
         cssCacheMap.set(cssName, new CssCacheItem(callback, args));
     }
@@ -65,11 +61,11 @@ export class CssCache {
      * @param {Element} element 
      * @param {string} cssName 
      */
-    restoreCss(element, cssName) {
-        let cssCacheMap = this.#cssMap.get(element);
+    static restoreCss(element, cssName) {
+        let cssCacheMap = CssCache.#cssMap.get(element);
         if (cssCacheMap) {
             let cacheItem = cssCacheMap.get(cssName);
-            if (cacheItem) cacheItem.callback.call(cacheItem.context || element, cacheItem.args);
+            if (cacheItem) cacheItem.callback.apply(cacheItem.context || element, cacheItem.args);
         }
     }
 }
