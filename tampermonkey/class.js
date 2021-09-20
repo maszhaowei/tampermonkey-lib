@@ -4,7 +4,7 @@ export class ApplyMethodSignature {
     args;
     /**
      * 
-     * @param {string|Element} context
+     * @param {*} context
      * @param {function} fn 
      * @param {any[]} [args] 
      */
