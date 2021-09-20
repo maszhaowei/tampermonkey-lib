@@ -44,7 +44,7 @@ export class ObjectCacheHelper {
      * @param {function} callback 
      * @param {any[]} [args] 
      */
-    static saveCss(obj, key, callback, args) {
+    static save(obj, key, callback, args) {
         /** @type {Map<string, CacheItem>} */
         let cacheItemMap;
         if (ObjectCacheHelper.#cacheMap.has(obj)) {
@@ -60,12 +60,20 @@ export class ObjectCacheHelper {
      * 
      * @param {object} obj 
      * @param {string} key 
+     * @param {boolean} clear - Whether to clear cache map after resotre.
+     * @returns {boolean} Whether the specified key exists in cache.
      */
-    static restoreCss(obj, key) {
+    static restore(obj, key, clear = false) {
         let cacheItemMap = ObjectCacheHelper.#cacheMap.get(obj);
         if (cacheItemMap) {
             let cacheItem = cacheItemMap.get(key);
             if (cacheItem) cacheItem.callback.apply(obj, cacheItem.args);
+            if (clear) {
+                cacheItemMap.delete(key);
+                if (cacheItemMap.size == 0) ObjectCacheHelper.#cacheMap.delete(obj);
+            }
+            return !!cacheItem;
         }
+        else return false;
     }
 }
