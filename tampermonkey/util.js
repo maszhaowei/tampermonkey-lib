@@ -42,9 +42,9 @@ export const util = {
      * @param {MessageEvent} event 
      */
     printReceiveMessage: function (event) {
-        util.debug(`From: ${event.origin}, To: ${window.location.origin}, Message:`, event.data);
+        util.debug(`>>> From: ${event.origin}, To: ${window.location.origin}, Message:`, event.data);
     },
     printSendMessage: function (targetOrigin, message) {
-        util.debug(`To: ${targetOrigin}, From: ${window.location.origin}, Message:`, message);
+        util.debug(`<<< To: ${targetOrigin}, From: ${window.location.origin}, Message:`, message);
     },
 };
