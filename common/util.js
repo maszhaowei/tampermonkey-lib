@@ -171,5 +171,11 @@ export let util = {
     },
     isObject: function (obj) {
         return Object.prototype.toString.apply(obj) === "[object Object]"
+    },
+    isBlank: function(str) {
+        if(str instanceof String || typeof str === 'string') {
+            return str.trim() === '';
+        }
+        return str === undefined || str === null;
     }
 };
