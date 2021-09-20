@@ -1,6 +1,39 @@
 import '../css/tooltip.css';
 import { TooltipPosition } from './enum';
 import { util } from './util';
+/**
+ * 
+ * @param {string} selector 
+ * @param {import('./class').ApplyMethodSignature} applySig 
+ * @param {Array<import('./class').ApplyMethodSignature>} restSigs 
+ * @param {number} interval 
+ * @param {number} waitTimeout 
+ * @returns {Promise<Element[]|Error>}
+ */
+function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
+    let selector = applySig.contextSelector;
+    return new Promise((resolve, reject) => {
+        document.arrive(selector, { existing: true, onceOnly: true }, function () {
+            try {
+                applySig.fn.apply(this, applySig.args);
+
+                setTimeout(() => {
+                    if (restSigs.length > 0) {
+                        asyncRecursiveFn(restSigs.shift(), restSigs, interval, waitTimeout).then((result) => resolve([this].concat(result)), (result) => reject(result));
+                    }
+                    else resolve([this]);
+                }, interval);
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
+        setTimeout(() => {
+            document.unbindArrive(selector);
+            reject(new Error(selector));
+        }, (restSigs.length + 1) * waitTimeout + restSigs.length * interval);
+    })
+}
 export const ui = {
     /* #region General */
     /**
@@ -143,6 +176,17 @@ export const ui = {
      */
     showTooltip: (tooltip, target, options) => { console.debug(tooltip, target, options) },
     /* #endregion */
+    /**
+     * Apply functions on selectors in order.
+     * @param {Array<import('./class').ApplyMethodSignature>} sigs 
+     * @param {number} interval - Interval(ms) between each operation. Default to be 0.
+     * @param {number} waitTimeout - Wait timeout(ms) for each step of the operation. Default to be 2000.
+     * @returns 
+     */
+    asyncChainFn: function (sigs, interval = 0, waitTimeout = 2000) {
+        if (!Array.isArray(sigs) || sigs.length == 0) return;
+        return asyncRecursiveFn(sigs.shift(), sigs, interval, waitTimeout);
+    }
 };
 /**
  * @typedef {object} TooltipOptions
