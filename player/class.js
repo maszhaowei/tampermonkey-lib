@@ -1,56 +1,75 @@
 import '../css/video.css';
 import * as Const from './const';
+import { PlayerCallbackTypes } from './enum';
 import { ui } from './ui.js';
-import { TooltipOption } from '../common/class';
+import { MediaReadyState, MediaEvents, TooltipPosition } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
-import { util } from '../tampermonkey/util';
-
+import { util as tutil } from '../tampermonkey/util';
+export class VideoInstanceData {
+    video;
+    container;
+    title;
+    progress;
+    volume;
+    /** @type {Map<string, import('../tampermonkey/class').ApplyMethodSignature>} */
+    callbacks = new Map();
+    constructor(video, container, title, progress, volume) {
+        this.video = video;
+        this.container = container;
+        this.title = title;
+        this.progress = progress;
+        this.volume = volume;
+    }
+}
 export class VideoInstance {
     #site;
     get site() { return this.#site }
-    /** @type {PlayerMetadata} */
+    /** @type {import('../site/class').PlayerMetadata} */
     #playerMetadata;
+    /** @type {VideoInstanceData} */
     get playerMetadata() { return this.#playerMetadata || this.#site.defaultPlayerMetadata }
-    /** @type {HTMLVideoElement} */
-    #videoElement;
-    /** @type {Element} */
-    #container;
+    /** @type {VideoInstanceData} */
+    #initData;
     /* #region Controls */
     /** @type {HTMLElement} */
     #playButton;
     get playButton() {
         if (this.#playButton) return this.#playButton;
         let playerMetadata = this.playerMetadata;
-        return this.#playButton = cui.querySelectorFirst(playerMetadata.playButtonSelector, playerMetadata.controlsSelector, this.#container);
+        return this.#playButton = cui.querySelectorFirst(playerMetadata.playButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /** @type {HTMLElement} */
     #volumeButton;
     get volumeButton() {
         if (this.#volumeButton) return this.#volumeButton;
         let playerMetadata = this.playerMetadata;
-        return this.#volumeButton = cui.querySelectorFirst(playerMetadata.volumeButtonSelector, playerMetadata.controlsSelector, this.#container);
+        return this.#volumeButton = cui.querySelectorFirst(playerMetadata.volumeButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /** @type {HTMLElement} */
     #fullscreenButton;
     get fullscreenButton() {
         if (this.#fullscreenButton) return this.#fullscreenButton;
         let playerMetadata = this.playerMetadata;
-        return this.#fullscreenButton = cui.querySelectorFirst(playerMetadata.fullscreenButtonSelector, playerMetadata.controlsSelector, this.#container);
+        return this.#fullscreenButton = cui.querySelectorFirst(playerMetadata.fullscreenButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /** @type {HTMLElement} */
     #webFullscreenButton;
     get webFullscreenButton() {
         if (this.#webFullscreenButton) return this.#webFullscreenButton;
         let playerMetadata = this.playerMetadata;
-        return this.#webFullscreenButton = cui.querySelectorFirst(playerMetadata.webFullscreenButtonSelector, playerMetadata.controlsSelector, this.#container);
+        return this.#webFullscreenButton = cui.querySelectorFirst(playerMetadata.webFullscreenButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /* #endregion */
     /** @type {HTMLElement} */
     #eventDelegate;
     get eventDelegate() { return this.#eventDelegate }
+    /** @type {HTMLVideoElement} */
+    get video() { return this.#initData.video }
+    /** @type {Element} */
+    get container() { return this.#initData.container }
 
     get tooltipWrap() {
-        return this.#container;
+        return this.container;
     }
     /**
      * @private
@@ -60,15 +79,38 @@ export class VideoInstance {
     constructor(videoSite) {
         this.#site = videoSite;
     }
-    async #initUI() {
-        // Create event delegate for video after controls if there isn't one.
+    /**
+     * 
+     * @param {string} messageType 
+     * @param {*} [messageContent] 
+     */
+    #postLocalMessage(messageType, messageContent) {
+        this.#site.postMessage(window, messageType, messageContent, window.location.origin);
+    }
+    #invokeCallback(callbackType) {
+        let sig = this.#initData.callbacks.get(callbackType);
+        if (sig) sig.fn.apply(sig.context, sig.args);
+    }
+    /**
+     * 
+     * @param {string} key 
+     * @param {import('../tampermonkey/class').ApplyMethodSignature} sig 
+     */
+    addCallback(key, sig) {
+        this.#initData.callbacks.set(key, sig);
+    }
+    /**
+     * Create event delegate for video after controls if there isn't one.
+     * @returns 
+     */
+    async #createEventDelegate() {
         let controlsSelector = this.controlsSelector;
+        let video = this.video;
         /** @type {Promise<Element>} */
         let p = controlsSelector ? new Promise((resolve) => {
-            let video = this.#videoElement;
             let topElementSelector = this.topElementSelectors.join(',');
             document.arrive(controlsSelector, { existing: true }, function () {
-                util.debug('Video:', video, 'Controls:', this);
+                tutil.debug('Video:', video, 'Controls:', this);
                 /** @type {HTMLDivElement} */
                 let eventDelegate = this.parentElement.querySelector(Const.eventDelegateSelector);
                 if (!eventDelegate) {
@@ -86,32 +128,67 @@ export class VideoInstance {
             });
         }) : Promise.resolve();
         return p.then((eventDelegate) => {
-            this.#eventDelegate = eventDelegate || this.#container;
+            this.#eventDelegate = eventDelegate || this.container;
+            tutil.debug('Video:', video, 'Event Delegate:', this.#eventDelegate);
         })
+    }
+    #initVideo() {
+        let initData = this.#initData;
+        this.showTooltip(initData.title);
+        let video = this.video;
+        video.removeAttribute('autoplay');
+        video.currentTime = initData.progress;
+        video.volume = initData.volume;
+        this.#invokeCallback(PlayerCallbackTypes.VIDEO_ATTR_INITIALIZED);
+    }
+    async #onLoadedMetadata() {
+        this.#initVideo();
+        return this.#createEventDelegate().then(() => {
+            this.#invokeCallback(PlayerCallbackTypes.VIDEO_READY);
+        });
+    }
+    async #bindEvent() {
+        let video = this.video;
+        video.addEventListener(MediaEvents.PLAY, () => {
+            this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
+            this.#invokeCallback(PlayerCallbackTypes.PLAY);
+        }, true);
+        video.addEventListener(MediaEvents.PAUSE, () => {
+            this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
+            this.#invokeCallback(PlayerCallbackTypes.PAUSE);
+        }, true);
+        return new Promise((resolve) => {
+            if (video.readyState >= MediaReadyState.HAVE_METADATA) return this.#onLoadedMetadata().then(() => resolve(this));
+            else {
+                // 使用箭头表达式将handler的上下文由e.target切换为Player
+                video.addEventListener(MediaEvents.LOADED_METADATA, () => {
+                    this.#onLoadedMetadata().then(() => resolve(this));
+                }, true);
+            }
+        });
     }
     /**
      * 
-     * @param {HTMLVideoElement} video
-     * @param {Element} videoContainer
+     * @param {VideoInstanceData} initData
      * @param {import('../site/class').PlayerMetadata} [playerMetadata]
      */
-    async init(video, videoContainer, playerMetadata) {
-        this.#videoElement = video;
-        this.#container = videoContainer;
+    async init(initData, playerMetadata) {
+        this.#initData = initData;
         this.#playerMetadata = playerMetadata;
-        return this.#initUI().then(() => this);
+        return this.#bindEvent();
     }
     /**
      * 
      * @param {string} tooltip 
+     * @param {string} [position]
      * @param {number} [margin] 
      */
-    showTooltip(tooltip, margin) {
-        cui.showTooltip(tooltip, this.tooltipWrap, undefined, margin);
+    showTooltip(tooltip, position, margin) {
+        cui.showTooltip(tooltip, this.tooltipWrap, position, margin);
     }
 
     saveVideoFrame(fileName = document.title) {
-        let video = this.#videoElement;
+        let video = this.video;
         let videoWidth = video.videoWidth;
         let videoHeight = video.videoHeight;
         let canvas = document.createElement('canvas');
@@ -134,7 +211,7 @@ export class VideoInstance {
      */
     togglePlay() {
         if (this.playButton) this.playButton.click();
-        else this.#videoElement.paused ? this.#videoElement.play() : this.#videoElement.pause();
+        else this.video.paused ? this.video.play() : this.video.pause();
     }
     /**
      * 
@@ -142,7 +219,7 @@ export class VideoInstance {
      */
     toggleMute() {
         if (this.volumeButton) this.volumeButton.click();
-        else this.#videoElement.muted = !this.#videoElement.muted;
+        else this.video.muted = !this.video.muted;
     }
     /**
      * @abstract
@@ -154,16 +231,18 @@ export class VideoInstance {
     requestWebFullscreen() {
         if (!this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
         else {
-            this.#container.classList.add(Const.containerWebFullscreenClassName);
+            this.container.classList.add(Const.containerWebFullscreenClassName);
             document.body.classList.add(Const.bodyWebFullscreenClassName);
         }
+        this.#invokeCallback(PlayerCallbackTypes.REQUEST_WEBFULLSCREEN);
     }
     exitWebFullscreen() {
         if (this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
         else {
-            this.#container.classList.remove(Const.containerWebFullscreenClassName);
+            this.container.classList.remove(Const.containerWebFullscreenClassName);
             document.body.classList.remove(Const.bodyWebFullscreenClassName);
         }
+        this.#invokeCallback(PlayerCallbackTypes.EXIT_WEBFULLSCREEN);
     }
     /**
      * 
@@ -177,7 +256,10 @@ export class VideoInstance {
         }
         else {
             let prevInWebFull = this.isVideoInWebFullScreen();
-            if (this.webFullscreenButton) this.webFullscreenButton.click();
+            if (this.webFullscreenButton) {
+                this.webFullscreenButton.click();
+                prevInWebFull ? this.#invokeCallback(PlayerCallbackTypes.EXIT_WEBFULLSCREEN) : this.#invokeCallback(PlayerCallbackTypes.REQUEST_WEBFULLSCREEN);
+            }
             else prevInWebFull ? this.exitWebFullscreen() : this.requestWebFullscreen();
             return !prevInWebFull;
         }
@@ -188,7 +270,7 @@ export class VideoInstance {
             this.fullscreenButton.click();
             return Promise.resolve();
         }
-        return ui.requestFullscreen(this.#container);
+        return ui.requestFullscreen(this.container);
     }
     cancelFullScreen(preferButton = true) {
         if (!ui.isFullscreen()) return Promise.resolve();
@@ -214,7 +296,7 @@ export class VideoInstance {
         return new VideoInstance(this.#site);
     }
     clean() {
-        this.#videoElement = this.#container = this.#playButton = this.#volumeButton = this.#webFullscreenButton 
-        = this.#fullscreenButton = this.#eventDelegate = null;
+        this.video = this.container = this.#playButton = this.#volumeButton = this.#webFullscreenButton
+            = this.#fullscreenButton = this.#eventDelegate = null;
     }
 }
