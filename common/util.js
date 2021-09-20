@@ -1,3 +1,30 @@
+/**
+ * 
+ * @param {string} selector 
+ * @param {import('./class').ApplyMethodSignature} applySig 
+ * @param {Array<import('./class').ApplyMethodSignature>} restSigs 
+ * @param {number} interval 
+ * @param {number} waitTimeout 
+ * @returns {Promise<boolean>}
+ */
+function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
+    let selector = applySig.contextSelector;
+    return new Promise((resolve) => {
+        document.arrive(selector, { existing: true, onceOnly: true }, function () {
+            applySig.fn.apply(this, applySig.args);
+            setTimeout(() => {
+                if (restSigs.length > 0) {
+                    asyncRecursiveFn(restSigs.shift(), restSigs, interval, waitTimeout).then((isSuccess) => resolve(isSuccess));
+                }
+                else resolve(true);
+            }, interval);
+        });
+        setTimeout(() => {
+            document.unbindArrive(selector);
+            resolve(false);
+        }, (restSigs.length + 1) * waitTimeout + restSigs.length * interval);
+    })
+}
 export let util = {
     /**
      * Output message to web console in gourp {@link grouName}.
@@ -169,7 +196,18 @@ export let util = {
         })
         return value;
     },
-    isObject: function(obj) {
+    isObject: function (obj) {
         return Object.prototype.toString.apply(obj) === "[object Object]"
+    },
+    /**
+     * 
+     * @param {Array<import('./class').ApplyMethodSignature>} sigs 
+     * @param {number} interval - Interval(ms) between each operation. Default to be 0.
+     * @param {number} waitTimeout - Wait timeout(ms) for each step of the operation. Default to be 2000.
+     * @returns 
+     */
+    asyncChainFn: function (sigs, interval = 0, waitTimeout = 2000) {
+        if (!Array.isArray(sigs) || sigs.length == 0) return;
+        return asyncRecursiveFn(sigs.shift(), sigs, interval, waitTimeout);
     }
 };

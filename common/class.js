@@ -36,7 +36,7 @@ export class CssCache {
     /** @type {WeakMap<Element, Map<string, CssCacheItem>>} */
     #cssMap = new WeakMap();
     /** @private */
-    constructor() {}
+    constructor() { }
     static #instance = new CssCache();
     static getInstance() {
         return this.#instance;
@@ -67,9 +67,26 @@ export class CssCache {
      */
     restoreCss(element, cssName) {
         let cssCacheMap = this.#cssMap.get(element);
-        if(cssCacheMap) {
+        if (cssCacheMap) {
             let cacheItem = cssCacheMap.get(cssName);
-            if(cacheItem) cacheItem.callback.call(cacheItem.context || element, cacheItem.args);
+            if (cacheItem) cacheItem.callback.call(cacheItem.context || element, cacheItem.args);
         }
+    }
+}
+
+export class ApplyMethodSignature {
+    contextSelector;
+    fn;
+    args;
+    /**
+     * 
+     * @param {string} contextSelector
+     * @param {function} fn 
+     * @param {any[]} [args] 
+     */
+    constructor(contextSelector, fn, args) {
+        this.contextSelector = contextSelector;
+        this.fn = fn;
+        this.args = args || [];
     }
 }
