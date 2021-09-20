@@ -21,10 +21,11 @@ export const VideoInstances = {
 /**
  * @enum {string}
  */
-export const CallbackTypes = {
+export const PlayerCallbackTypes = {
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
     PLAY: 'play',
+    PAUSE: 'pause',
     KEYDOWN: 'keydown',
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen'
