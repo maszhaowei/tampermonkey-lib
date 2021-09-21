@@ -9,7 +9,7 @@ export let util = {
         let arr = [];
         for (let i = 0; i < objs.length; i++) {
             /** Prevent browsers to output live value of objs. {@link https://developer.mozilla.org/en-US/docs/Web/API/console/log#logging_objects} */
-            arr.push(JSON.parse(JSON.stringify(objs[i])));
+            arr.push(util.isObject(objs[i]) ? JSON.parse(JSON.stringify(objs[i])) : objs[i]);
         }
         console.debug(...arr);
         console.groupEnd();
@@ -169,8 +169,13 @@ export let util = {
         })
         return value;
     },
+    /**
+     * Check if parameter is an instance of Object or an object literal.
+     * @param {*} obj 
+     * @returns 
+     */
     isObject: function (obj) {
-        return Object.prototype.toString.apply(obj) === "[object Object]"
+        return Object.prototype.toString.apply(obj) === "[object Object]" || obj instanceof Object;
     },
     isString: function (str) {
         return str instanceof String || typeof str === 'string';
