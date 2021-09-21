@@ -171,14 +171,6 @@ export class VideoInstance {
     constructor(videoSite) {
         this.#site = videoSite;
     }
-    /**
-     * 
-     * @param {string} messageType 
-     * @param {*} [messageContent] 
-     */
-    #postLocalMessage(messageType, messageContent) {
-        this.#site.postMessage(window, messageType, messageContent, window.location.origin);
-    }
     #triggerCustomEvent(eventType, data) {
         tutil.debug('CustomEvent:', eventType, data);
         this.video.dispatchEvent(new CustomEvent(eventType, { bubbles: false, detail: data }));
