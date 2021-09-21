@@ -16,24 +16,46 @@ export class KeyboardKeyCode {
         this.key = key;
     }
 }
-class CacheItem {
-    #callback;
-    get callback() { return this.#callback }
-    #args;
-    get args() { return this.#args }
+export class ApplyMethodSignature {
+    context;
+    fn;
+    args;
     /**
      * 
-     * @param {function} callback 
+     * @param {function} fn 
+     * @param {*} [context]
      * @param {any[]} [args] 
      */
-    constructor(callback, args) {
-        this.#callback = callback;
-        this.#args = args || [];
+    constructor(fn, context, args) {
+        this.fn = fn;
+        this.context = context;
+        this.args = args || [];
+    }
+}
+
+export class EventHandlerWrapper {
+    context;
+    fn;
+    /** @type {(Event)=>void} */
+    #handler;
+    /**
+     * Event handler ready to be used in removeEventListener.
+     */
+    get handler() { return this.#handler }
+    /**
+     * 
+     * @param {function} fn 
+     * @param {*} [context]
+     */
+    constructor(fn, context) {
+        this.fn = fn;
+        this.context = context;
+        this.#handler = (e) => this.fn.call(this.context, e);
     }
 }
 export class ObjectCacheHelper {
     #site;
-    /** @type {WeakMap<Element, Map<string, CacheItem>>} */
+    /** @type {WeakMap<Element, Map<string, ApplyMethodSignature>>} */
     static #cacheMap = new WeakMap();
     /** 
      * @private
@@ -48,7 +70,7 @@ export class ObjectCacheHelper {
      * @param {any[]} [args] 
      */
     static save(obj, key, callback, args) {
-        /** @type {Map<string, CacheItem>} */
+        /** @type {Map<string, ApplyMethodSignature>} */
         let cacheItemMap;
         if (ObjectCacheHelper.#cacheMap.has(obj)) {
             cacheItemMap = ObjectCacheHelper.#cacheMap.get(obj);
@@ -57,21 +79,21 @@ export class ObjectCacheHelper {
             cacheItemMap = new Map();
             ObjectCacheHelper.#cacheMap.set(obj, cacheItemMap);
         }
-        cacheItemMap.set(key, new CacheItem(callback, args));
+        cacheItemMap.set(key, new ApplyMethodSignature(callback, obj, args));
     }
     /**
      * 
      * @param {object} obj 
      * @param {string} key 
-     * @param {boolean} clear - Whether to clear cache map after resotre.
-     * @returns {boolean} Whether the specified key exists in cache.
+     * @param {boolean} clearAfterRestore
+     * @returns {boolean} Whether the specified obj and key exists in cache.
      */
-    static restore(obj, key, clear = false) {
+    static restore(obj, key, clearAfterRestore = false) {
         let cacheItemMap = ObjectCacheHelper.#cacheMap.get(obj);
         if (cacheItemMap) {
             let cacheItem = cacheItemMap.get(key);
-            if (cacheItem) cacheItem.callback.apply(obj, cacheItem.args);
-            if (clear) {
+            if (cacheItem) cacheItem.fn.apply(cacheItem.context, cacheItem.args);
+            if (clearAfterRestore) {
                 cacheItemMap.delete(key);
                 if (cacheItemMap.size == 0) ObjectCacheHelper.#cacheMap.delete(obj);
             }
@@ -123,43 +145,5 @@ export class TooltipOption {
         /** @todo TooltipPosition.CENTER_CENTER will cause circular dependency */
         this.position = position || 'center-center';
         this.margin = margin ?? 0;
-    }
-}
-
-export class ApplyMethodSignature {
-    context;
-    fn;
-    args;
-    /**
-     * 
-     * @param {function} fn 
-     * @param {*} [context]
-     * @param {any[]} [args] 
-     */
-    constructor(fn, context, args) {
-        this.fn = fn;
-        this.context = context;
-        this.args = args || [];
-    }
-}
-
-export class EventHandlerWrapper {
-    context;
-    fn;
-    /** @type {(Event)=>void} */
-    #handler;
-    /**
-     * Event handler ready to be used in removeEventListener.
-     */
-    get handler() { return this.#handler }
-    /**
-     * 
-     * @param {function} fn 
-     * @param {*} [context]
-     */
-    constructor(fn, context) {
-        this.fn = fn;
-        this.context = context;
-        this.#handler = (e) => this.fn.call(this.context, e);
     }
 }
