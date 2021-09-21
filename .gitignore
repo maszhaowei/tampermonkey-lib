@@ -2,7 +2,7 @@ node_modules
 package-lock.json
 .eslintrc.json
 public/index.html
-build/
+build/*
 .eslintrc.js
 jsconfig.json
 dist
