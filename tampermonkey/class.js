@@ -2,12 +2,6 @@ export class ApplyMethodSignature {
     context;
     fn;
     args;
-    /** @type {(Event)=>void} */
-    #convertedEventHandler;
-    /**
-     * Event handler converted from {@link ApplyMethodSignature} for later removeEventListener.
-     */
-    get convertedEventHandler() { return this.#convertedEventHandler }
     /**
      * 
      * @param {*} context
@@ -18,6 +12,23 @@ export class ApplyMethodSignature {
         this.context = context;
         this.fn = fn;
         this.args = args || [];
-        this.#convertedEventHandler = (e) => this.fn.call(this.context, e);
+    }
+}
+
+export class EventHandlerWrapper extends ApplyMethodSignature {
+    /** @type {(Event)=>void} */
+    #handler;
+    /**
+     * Event handler converted from {@link ApplyMethodSignature}.
+     */
+    get handler() { return this.#handler }
+    /**
+     * 
+     * @param {*} context
+     * @param {function} fn 
+     */
+    constructor(context, fn) {
+        super(context, fn);
+        this.#handler = (e) => this.fn.call(this.context, e);
     }
 }
