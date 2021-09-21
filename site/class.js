@@ -104,10 +104,11 @@ export class Site {
      * @param {string} messageType 
      * @param {*} [messageContent] 
      * @param {string} targetOrigin 
+     * @param {boolean} allowSelf - Whether allow post message to current window. Default to false.
      * @returns 
      */
-    postMessage(targetWindow, messageType, messageContent, targetOrigin) {
-        if (!messageType) return;
+    postMessage(targetWindow, messageType, messageContent, targetOrigin, allowSelf = false) {
+        if (!messageType || (!allowSelf && targetWindow === self)) return;
         let message = { type: messageType, content: messageContent, src: window.location.href };
         util.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
