@@ -351,10 +351,4 @@ export class VideoInstance {
         else return ui.isFullscreen() ? this.exitFullscreen(false) : this.requestFullscreen(false);
     }
     /* #endregion */
-
-    clean() {
-        this.video = this.container = this.#playButton = this.#volumeButton = this.#webFullscreenButton
-            = this.#fullscreenButton = null;
-        this.#initData
-    }
 }
