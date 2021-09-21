@@ -1,4 +1,6 @@
-import { util } from "../tampermonkey/util";
+import { ObjectCacheHelper } from "../common/class";
+import { MessageTypes } from "../tampermonkey/enum";
+import { util as tutil } from "../tampermonkey/util";
 export class SiteCategory {
     /** @readonly */
     categoryName;
@@ -84,6 +86,11 @@ export class Site {
         this.#hrefRegEx = hrefRegEx;
         this.#siteCategories = siteCategories;
         this.#originWhitelist = originWhitelist;
+        window.addEventListener('message', (e) => {
+            if (this.isMessageOriginAllowed(e.origin) && this.isFromTampermonkey(e)) {
+                tutil.printReceiveMessage(e);
+            }
+        });
     }
     isEmbedded() {
         return self !== top;
@@ -110,7 +117,7 @@ export class Site {
     postMessage(targetWindow, messageType, messageContent, targetOrigin, allowSelf = false) {
         if (!messageType || (!allowSelf && targetWindow === self)) return;
         let message = { type: messageType, content: messageContent, src: window.location.href };
-        util.printSendMessage(targetOrigin, message);
+        tutil.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
     }
     /**
@@ -120,6 +127,14 @@ export class Site {
     test() {
         if (this.#hrefRegEx) return this.#hrefRegEx.test(window.location.href);
         else if (this.#origin) return this.#origin == window.location.origin;
+    }
+    /**
+     * 
+     * @param {MessageEvent} e 
+     * @returns 
+     */
+    isFromTampermonkey(e) {
+        return e.data && MessageTypes.test(e.data.type);
     }
 }
 /**
@@ -141,5 +156,40 @@ export class VideoSite extends Site {
         super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
         this.#parent = site;
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
+    }
+}
+/**
+ * 
+ * @extends Site
+ * {@link Site} 
+ */
+export class VideoPortalSite extends Site {
+    /**
+     * @hideconstructor
+     * @param {Site} site 
+     */
+    constructor(site) {
+        super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
+        window.addEventListener('message', (e) => {
+            if (!this.isFromTampermonkey(e)) return;
+            switch (e.data.type) {
+                case MessageTypes.REQUEST_WEBFULLSCREEN:
+                    this.#saveCss();
+                    break;
+                case MessageTypes.EXIT_WEBFULLSCREEN:
+                    this.#restoreCss();
+                    break;
+            }
+        })
+    }
+    #saveCss() {
+        let html = document.documentElement;
+        let overflow = window.getComputedStyle(html).getPropertyValue('overflow');
+        ObjectCacheHelper.save(html, 'overflow', () => html.style.overflow = overflow);
+        ObjectCacheHelper.save(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
+    }
+    #restoreCss() {
+        ObjectCacheHelper.restore(document.documentElement, 'overflow');
+        ObjectCacheHelper.restore(document.documentElement, 'scroll');
     }
 }

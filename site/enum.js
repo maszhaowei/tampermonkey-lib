@@ -1,4 +1,4 @@
-import { SiteCategory, Site, VideoSite, PlayerMetadata } from "./class";
+import { SiteCategory, Site, VideoSite, VideoPortalSite, PlayerMetadata } from "./class";
 /**
  * @enum {SiteCategory}
  */
@@ -93,4 +93,12 @@ export const VideoSites = {
     QXWK: new VideoSite(Sites.QXWK, new PlayerMetadata(...dplayerMetadata)),
     YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED, new PlayerMetadata("div#player", ".ytp-chrome-bottom", [".ytp-pause-overlay"],
         "button.ytp-play-button", "button.ytp-mute-button", "button.ytp-fullscreen-button")),
+};
+/** @enum {VideoPortalSite} */
+export const VideoPortalSites = {
+    "7MM": new VideoPortalSite(Sites["7MM"]),
+    MEIJUBS: new VideoPortalSite(Sites.MEIJUBS),
+    MEIJUTTB: new VideoPortalSite(Sites.MEIJUTTB),
+    MINGTIAN6: new VideoPortalSite(Sites.MINGTIAN6),
+    NEXUSMODS: new VideoPortalSite(Sites.NEXUSMODS)
 };

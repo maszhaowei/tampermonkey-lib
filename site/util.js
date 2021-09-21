@@ -1,46 +1,42 @@
-import { SiteCategories, Sites, VideoSites } from './enum';
-import { util as tutil } from '../tampermonkey/util';
-import { Enum } from '../tampermonkey/main';
+import { SiteCategories, Sites, VideoPortalSites, VideoSites } from './enum';
+/** @type {Map<import('./class').Site,(e)=>void>} */
+/**
+ * 
+ * @param {Site[]} sites 
+ * @returns 
+ * @throws
+ */
+function findCurrentSite(sites) {
+    for (let s in sites) {
+        /** @type {import('./class').Site}  */
+        const site = sites[s];
+        if (site.test()) {
+            return site;
+        }
+    }
+    throw "No match for current site";
+}
 export const util = {
     /**
      * 
      * @throws 
      */
     getCurrentSite: function () {
-        for (let s in Sites) {
-            /** @type {import('./class').Site}  */
-            const site = Sites[s];
-            if (site.test()) {
-                /** @todo 重复调用 */
-                window.addEventListener('message', (e) => {
-                    if (e.data && site.isMessageOriginAllowed(e.origin) && Enum.MessageTypes.test(e.data.type)) {
-                        tutil.printReceiveMessage(e);
-                    }
-                })
-                return site;
-            }
-        }
-        throw "No match for current site";
+        return findCurrentSite(Sites);
     },
     /**
      * 
      * @throws 
      */
     getCurrentVideoSite: function () {
-        for (let s in VideoSites) {
-            /** @type {import('./class').VideoSite} */
-            const videoSite = VideoSites[s];
-            if (videoSite.test()) {
-                /** @todo 重复调用 */
-                window.addEventListener('message', (e) => {
-                    if (e.data && videoSite.isMessageOriginAllowed(e.origin) && Enum.MessageTypes.test(e.data.type)) {
-                        tutil.printReceiveMessage(e);
-                    }
-                })
-                return videoSite;
-            }
-        }
-        throw "No match for current video site";
+        return findCurrentSite(VideoSites);
+    },
+    /**
+     * 
+     * @throws 
+     */
+    getCurrentVideoPortalSite: function () {
+        return findCurrentSite(VideoPortalSites);
     },
     /**
      * 
