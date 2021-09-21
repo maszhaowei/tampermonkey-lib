@@ -6,7 +6,7 @@ export const util = {
      * @param  {...any} objs 
      */
     debug: function (...objs) {
-        cutil.printGroupDebug(`[${scriptName}]`, ...objs)
+        cutil.printGroupDebug(scriptName, ...objs);
     },
     get: function (url, headers, responseType) {
         return new Promise((resolve, reject) => {

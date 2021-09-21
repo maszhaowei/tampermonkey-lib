@@ -1,1 +1,1 @@
-export const DEFAULT_LOG_GROUP = 'Tampermonkey';
+export const DEFAULT_LOG_GROUP = 'Common';

@@ -85,7 +85,7 @@ export const ui = {
      */
     querySelectorFirst(selector, ...contexts) {
         if (!selector) {
-            util.printGroupDebug("Common", "selector is empty");
+            util.printGroupDebug(undefined, "selector is empty");
             return;
         }
         for (let i = 0; i < contexts.length; i++) {

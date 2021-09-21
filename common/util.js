@@ -1,10 +1,12 @@
+import { DEFAULT_LOG_GROUP } from "./const";
+
 export let util = {
     /**
      * Output message to web console in gourp {@link grouName}.
      * @param {string} grouName 
      * @param  {...any} objs 
      */
-    printGroupDebug: function (grouName, ...objs) {
+    printGroupDebug: function (grouName = DEFAULT_LOG_GROUP, ...objs) {
         console.group(`[${grouName}]`);
         let arr = [];
         for (let i = 0; i < objs.length; i++) {
