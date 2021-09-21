@@ -172,13 +172,16 @@ export let util = {
     isObject: function (obj) {
         return Object.prototype.toString.apply(obj) === "[object Object]"
     },
+    isString: function (str) {
+        return str instanceof String || typeof str === 'string';
+    },
     /**
      * 
      * @param {string} str 
      * @returns 
      */
     isBlank: function (str) {
-        if (str instanceof String || typeof str === 'string') {
+        if (util.isString(str)) {
             return str.trim() === '';
         }
         return str === undefined || str === null;

@@ -85,8 +85,11 @@ export class Site {
         this.#siteCategories = siteCategories;
         this.#originWhitelist = originWhitelist;
     }
+    isEmbedded() {
+        return self !== top;
+    }
     /**
-     * Check if {@link targetOrigin} is allowed to act as the origin of Window.postMessage.
+     * Check if {@link targetOrigin} is allowed to act as the origin of Window.postMessage and send message to {@link this}.
      * @param {string} targetOrigin 
      * @returns {boolean} 
      */

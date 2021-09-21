@@ -77,3 +77,12 @@ export const MediaEvents = {
     PLAY: 'play',
     VOLUME_CHANGE: 'volumechange'
 };
+/**
+ * @enum {string}
+ */
+export const GlobalEvents = {
+    WHEEL: 'wheel',
+    MOUSEDOWN: 'mousedown',
+    CLICK: 'click',
+    DBLCLICK: 'dblclick'
+}

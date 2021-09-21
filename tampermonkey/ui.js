@@ -1,3 +1,4 @@
+import { util } from '../common/util';
 import { ApplyMethodSignature } from './class';
 /**
  * 
@@ -10,7 +11,7 @@ import { ApplyMethodSignature } from './class';
 function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
     let context = applySig.context;
     return new Promise((resolve, reject) => {
-        if (context instanceof String || typeof context === 'string') {
+        if (util.isString(context)) {
             document.arrive(context, { existing: true, onceOnly: true }, function () {
                 applySig.fn.apply(this, applySig.args);
 
