@@ -1,22 +1,16 @@
-import { VideoInstances } from './enum';
+import { VideoInstance } from './class';
+import { util as sutil } from '../site/util';
 export const util = {
     /**
      * 
-     * @param {HTMLVideoElement} video 
-     * @param {Element} container 
+     * @param {import('./class').VideoInstanceData} initData 
+     * @param {import('../site/class').VideoSite} [site]
      * @param {import('../site/class').PlayerMetadata} [playerMetadata]
      * @returns 
      * @throws
      */
-    getVideoInstance: function (video, container, playerMetadata) {
-        for (let name in VideoInstances) {
-            /** @type {import('./class').VideoInstance} */
-            let videoInstance = VideoInstances[name];
-            if (videoInstance.test()) {
-                let instance = videoInstance.clone();
-                return instance.init(video, container, playerMetadata);
-            }
-        }
-        throw 'No match for current video instance';
+    asyncGetVideoInstance: function (initData, site = sutil.getCurrentVideoSite(), playerMetadata) {
+        let videoInstance = new VideoInstance(site);
+        return videoInstance.init(initData, playerMetadata);
     }
 };
