@@ -125,3 +125,41 @@ export class TooltipOption {
         this.margin = margin ?? 0;
     }
 }
+
+export class ApplyMethodSignature {
+    context;
+    fn;
+    args;
+    /**
+     * 
+     * @param {*} context
+     * @param {function} fn 
+     * @param {any[]} [args] 
+     */
+    constructor(context, fn, args) {
+        this.context = context;
+        this.fn = fn;
+        this.args = args || [];
+    }
+}
+
+export class EventHandlerWrapper {
+    context;
+    fn;
+    /** @type {(Event)=>void} */
+    #handler;
+    /**
+     * Event handler ready to be used in removeEventListener.
+     */
+    get handler() { return this.#handler }
+    /**
+     * 
+     * @param {*} context
+     * @param {function} fn 
+     */
+    constructor(context, fn) {
+        this.context = context;
+        this.fn = fn;
+        this.#handler = (e) => this.fn.call(this.context, e);
+    }
+}

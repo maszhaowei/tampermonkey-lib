@@ -1,5 +1,5 @@
 import { util } from '../common/util';
-import { ApplyMethodSignature } from './class';
+import { ApplyMethodSignature } from '../common/class';
 /**
  * 
  * @param {ApplyMethodSignature} applySig 
