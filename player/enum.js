@@ -1,32 +1,12 @@
-import { VideoInstance } from "./class";
-import { VideoSites } from '../site/enum';
-/**
- * @enum {VideoInstance}
- */
-export const VideoInstances = {
-    AVGLE: new VideoInstance(VideoSites.AVGLE),
-    AVGLE_EMBED: new VideoInstance(VideoSites.AVGLE_EMBED),
-    BILIBILI: new VideoInstance(VideoSites.BILIBILI_VIDEO),
-    BILIBILI_BANGUMI: new VideoInstance(VideoSites.BILIBILI_BANGUMI),
-    BUYCAR5: new VideoInstance(VideoSites.BUYCAR5),
-    DIOUS: new VideoInstance(VideoSites.DIOUS),
-    JABLE: new VideoInstance(VideoSites.JABLE),
-    JX444662: new VideoInstance(VideoSites.JX444662),
-    MM9842: new VideoInstance(VideoSites.MM9842),
-    QINGBEIBAN: new VideoInstance(VideoSites.QINGBEIBAN),
-    QXWK: new VideoInstance(VideoSites.QXWK),
-    YOUTUBE_EMBED: new VideoInstance(VideoSites.YOUTUBE_EMBED),
-};
-
 /**
  * @enum {string}
  */
-export const PlayerCallbackTypes = {
+export const VideoCustomEventTypes = {
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
     PLAY: 'play',
     PAUSE: 'pause',
-    KEYDOWN: 'keydown',
+    VOLUME_CHANGE: 'volume_change',
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen'
 }
