@@ -2,6 +2,7 @@ import '../css/video.css';
 import * as Const from './const';
 import { VideoCustomEventTypes } from './enum';
 import { ui } from './ui.js';
+import { ObjectCacheHelper } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
@@ -54,7 +55,7 @@ class VideoEventDelegate {
             this.#delegate = createDelegate || this.#defaultDelegate;
             for (let i in GlobalEvents) {
                 let type = GlobalEvents[i];
-                this.#delegate.addEventListener(type, (e)=>{
+                this.#delegate.addEventListener(type, (e) => {
                     let wrappers = this.#eventsObserverMap.get(type);
                     if (wrappers) wrappers.forEach((wrapper) => {
                         wrapper.fn.call(wrapper.context, e);
@@ -278,7 +279,19 @@ export class VideoInstance {
     isVideoInWebFullScreen() {
         return document.body.classList.contains(Const.bodyWebFullscreenClassName);
     }
+    #saveAndSetCss() {
+        let html = document.documentElement;
+        let overflow = window.getComputedStyle(html).getPropertyValue('overflow');
+        ObjectCacheHelper.save(html, 'overflow', () => html.style.overflow = overflow);
+        ObjectCacheHelper.save(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
+        document.documentElement.style.overflow = 'hidden';
+    }
+    #restoreCss() {
+        ObjectCacheHelper.restore(document.documentElement, 'overflow');
+        ObjectCacheHelper.restore(document.documentElement, 'scroll');
+    }
     requestWebFullscreen() {
+        this.#saveAndSetCss();
         if (!this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
         else {
             this.container.classList.add(Const.containerWebFullscreenClassName);
@@ -287,6 +300,7 @@ export class VideoInstance {
         this.#triggerCustomEvent(VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
     }
     exitWebFullscreen() {
+        this.#restoreCss();
         if (this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
         else {
             this.container.classList.remove(Const.containerWebFullscreenClassName);
