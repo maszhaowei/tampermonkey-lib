@@ -132,13 +132,13 @@ export class ApplyMethodSignature {
     args;
     /**
      * 
-     * @param {*} context
      * @param {function} fn 
+     * @param {*} [context]
      * @param {any[]} [args] 
      */
-    constructor(context, fn, args) {
-        this.context = context;
+    constructor(fn, context, args) {
         this.fn = fn;
+        this.context = context;
         this.args = args || [];
     }
 }
@@ -154,12 +154,12 @@ export class EventHandlerWrapper {
     get handler() { return this.#handler }
     /**
      * 
-     * @param {*} context
      * @param {function} fn 
+     * @param {*} [context]
      */
-    constructor(context, fn) {
-        this.context = context;
+    constructor(fn, context) {
         this.fn = fn;
+        this.context = context;
         this.#handler = (e) => this.fn.call(this.context, e);
     }
 }

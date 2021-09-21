@@ -12,7 +12,7 @@ class VideoEventDelegate {
     #defaultDelegate;
     /** @type {Element} */
     #delegate;
-    /** @type {Map<string,import('../tampermonkey/class').EventHandlerWrapper[]>} */
+    /** @type {Map<string,import('../common/class').EventHandlerWrapper[]>} */
     #eventsObserverMap = new Map();
     /**
      * @param {Element} defaultDelegate 
@@ -54,9 +54,11 @@ class VideoEventDelegate {
             this.#delegate = createDelegate || this.#defaultDelegate;
             for (let i in GlobalEvents) {
                 let type = GlobalEvents[i];
-                let wrappers = this.#eventsObserverMap.get(type);
-                if (wrappers) wrappers.forEach((wrapper) => {
-                    this.#delegate.addEventListener(type, wrapper.handler);
+                this.#delegate.addEventListener(type, (e)=>{
+                    let wrappers = this.#eventsObserverMap.get(type);
+                    if (wrappers) wrappers.forEach((wrapper) => {
+                        wrapper.fn.call(wrapper.context, e);
+                    });
                 });
             }
         })
@@ -64,7 +66,7 @@ class VideoEventDelegate {
     /**
      * 
      * @param {string} eventType 
-     * @param {import('../tampermonkey/class').EventHandlerWrapper} wrapper 
+     * @param {import('../common/class').EventHandlerWrapper} wrapper 
      */
     registerEventHandler(eventType, wrapper) {
         if (this.#eventsObserverMap.has(eventType)) {
@@ -79,18 +81,11 @@ class VideoEventDelegate {
             for (let i = 0; i < wrappers.length; i++) {
                 let wrapper = wrappers[i];
                 if (wrapper.context == context) {
-                    for (let i in GlobalEvents) {
-                        this.#delegate.removeEventListener(GlobalEvents[i], wrapper.handler);
-                    }
                     wrappers.splice(i, 1);
                     i--;
                 }
             }
         });
-    }
-    clear() {
-        this.#eventsObserverMap.forEach()
-        this.#eventsObserverMap.clear();
     }
 }
 export class VideoInstanceData {
