@@ -58,6 +58,6 @@ export const ui = {
      * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 2000.
      */
     asyncChainClick: function (contexts, interval = 0, waitTimeout = 2000) {
-        return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(context, HTMLElement.prototype.click)), interval, waitTimeout);
+        return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(HTMLElement.prototype.click, context)), interval, waitTimeout);
     }
 }
