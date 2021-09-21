@@ -174,7 +174,7 @@ export class VideoPortalSite extends Site {
             if (!this.isFromTampermonkey(e)) return;
             switch (e.data.type) {
                 case MessageTypes.REQUEST_WEBFULLSCREEN:
-                    this.#saveCss();
+                    this.#saveAndSetCss();
                     break;
                 case MessageTypes.EXIT_WEBFULLSCREEN:
                     this.#restoreCss();
@@ -182,11 +182,12 @@ export class VideoPortalSite extends Site {
             }
         })
     }
-    #saveCss() {
+    #saveAndSetCss() {
         let html = document.documentElement;
         let overflow = window.getComputedStyle(html).getPropertyValue('overflow');
         ObjectCacheHelper.save(html, 'overflow', () => html.style.overflow = overflow);
         ObjectCacheHelper.save(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
+        document.documentElement.style.overflow = 'hidden';
     }
     #restoreCss() {
         ObjectCacheHelper.restore(document.documentElement, 'overflow');
