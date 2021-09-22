@@ -83,6 +83,10 @@ export class Tuple extends IEquatable {
         return true;
     }
 }
+/**
+ * @classdesc Key equality: Based on the sameValueZero algorithm and NaN equals NaN. Will compare each element if the arguments are array and call equals method on any object that implements IEquatable.
+ * @extends Map
+ */
 export class LooseMap extends Map {
     get(key) {
         let i = this.entries();
