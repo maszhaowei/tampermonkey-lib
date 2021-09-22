@@ -24,13 +24,13 @@
     "videosites": {
         "test": {
             "siteid": "test",
-            "containerSelector": "",
-            "controlsSelector": "",
-            "topElementSelectors": "",
-            "playButtonSelector": "",
-            "volumeButtonSelector": "",
-            "fullscreenButtonSelector": "",
-            "webFullscreenButtonSelector": ""
+            "containerSelector": ".containerSelector",
+            "controlsSelector": ".controlsSelector",
+            "topElementSelectors": ".topElementSelectors",
+            "playButtonSelector": ".playButtonSelector",
+            "volumeButtonSelector": ".volumeButtonSelector",
+            "fullscreenButtonSelector": ".fullscreenButtonSelector",
+            "webFullscreenButtonSelector": ".webFullscreenButtonSelector"
         }
     },
     "videoportalsites": {
