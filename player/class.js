@@ -14,7 +14,7 @@ class VideoEventDelegate {
     #defaultDelegate;
     /** @type {Element} */
     #delegate;
-    /** @type {Map<string,import('../common/class').ApplyMethodSignature[]>} */
+    /** @type {Map<string,ApplyMethodSignature[]>} */
     #eventsObserverMap = new Map();
     /**
      * @param {Element} defaultDelegate 
