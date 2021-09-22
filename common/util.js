@@ -19,22 +19,21 @@ export let util = {
     /**
      * 
      * @param {string|URL} url 
-     * @param {boolean} [async] - Default to true.
      * @param {Object.<string,string>} [headers] 
      * @param {string} [responseType] - Default to "json".
      * @returns 
      */
-    get: function (url, async = true, headers, responseType) {
+    get: function (url, headers, responseType) {
         return new Promise((resolve, reject) => {
             var req = new XMLHttpRequest();
-            if(async) req.responseType = responseType || 'json';
+            req.responseType = responseType || 'json';
             req.addEventListener("load", (res) => {
                 resolve(res.response || res.responseText);
             });
             req.addEventListener("error", (err) => {
                 reject(err);
             });
-            req.open("GET", url, async);
+            req.open("GET", url);
             if (headers) {
                 for (let i in headers) req.setRequestHeader(i, headers[i]);
             }
