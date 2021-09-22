@@ -1,5 +1,5 @@
 import { DEFAULT_LOG_GROUP } from "./const";
-
+import { IEquatable } from "./interface";
 export let util = {
     /**
      * Output message to web console in gourp {@link grouName}.
@@ -207,5 +207,19 @@ export let util = {
             })
         })
         return target;
+    },
+    isIterable: function (obj) {
+        if (obj == undefined) return false;
+        return typeof obj[Symbol.iterator] === 'function';
+    },
+    isEqual(obj1, obj2) {
+        if (obj1 instanceof Array) {
+            if (!(obj2 instanceof Array) || obj1.length != obj2.length) return false;
+            for (let i = 0; i < obj1.length; i++) {
+                if (!util.isEqual(obj1[i], obj2[i])) return false;
+            }
+            return true;
+        }
+        return obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
     }
 };
