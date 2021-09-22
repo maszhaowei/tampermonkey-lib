@@ -1,5 +1,7 @@
-import { SiteCategories, Sites, VideoPortalSites, VideoSites } from './enum';
-/** @type {Map<import('./class').Site,(e)=>void>} */
+import { SiteCategories, SiteIDs, Sites, VideoPortalSites, VideoSites } from './enum';
+import { util as ctuil } from '../common/util';
+import { util as tutil } from '../tampermonkey/util';
+import { PlayerMetadata, Site, SiteCategory, VideoPortalSite, VideoSite } from './class';
 /**
  * 
  * @param {Site[]} sites 
@@ -53,3 +55,49 @@ export const util = {
         else if (siteCategories && siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
     }
 };
+tutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/dev/conf/site.json').then((res) => {
+    if (ctuil.isObject(res)) {
+        let siteids = res['siteids'];
+        if (ctuil.isObject(siteids)) {
+            for (let i in siteids) {
+                SiteIDs[i] = siteids[i];
+            }
+        }
+        let sitecategories = res['sitecategories'];
+        if (ctuil.isObject(sitecategories)) {
+            for (let i in sitecategories) {
+                let s = sitecategories[i];
+                SiteCategories[i] = new SiteCategory(s.categoryName, new RegExp(s.titleRegEx));
+            }
+        }
+        let sites = res['sites'];
+        if (ctuil.isObject(sites)) {
+            for (let i in sites) {
+                let s = sites[i];
+                Sites[i] = new Site(s.id, s.origin, s.hrefRegEx, s.siteCategories, s.originWhitelist);
+            }
+        }
+        let videosites = res['videosites'];
+        if (ctuil.isObject(videosites)) {
+            for (let i in videosites) {
+                let s = videosites[i];
+                let siteid = s.siteid;
+                let site = Sites.get(siteid);
+                if (!site) continue;
+                VideoSites[i] = new VideoSite(site,
+                    new PlayerMetadata(s.containerSelector, s.controlsSelector, s.topElementSelectors,
+                        s.playButtonSelector, s.volumeButtonSelector, s.fullscreenButtonSelector, s.webFullscreenButtonSelector));
+            }
+        }
+        let portalsites = res['videoportalsites'];
+        if (ctuil.isObject(portalsites)) {
+            for (let i in portalsites) {
+                let s = portalsites[i];
+                let siteid = s.siteid;
+                let site = Sites.get(siteid);
+                if (!site) continue;
+                VideoPortalSites[i] = new VideoPortalSite(site);
+            }
+        }
+    }
+});

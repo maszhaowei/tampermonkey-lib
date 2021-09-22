@@ -70,7 +70,17 @@ export const Sites = {
     STEAM_STORE: new Site(SiteIDs.STEAM_STORE, "https://store.steampowered.com", /^https:\/\/store\.steampowered\.com\/.*/, [SiteCategories.GAME]),
     WALLHAVEN: new Site(SiteIDs.WALLHAVEN, "https://wallhaven.cc", /^https:\/\/wallhaven\.cc\/.*/, [SiteCategories.IMAGE_HOSTING]),
     WUKONGMEIJU: new Site(SiteIDs.WUKONGMEIJU, "https://m.wukongmeiju.com", undefined, [SiteCategories.TV_SERIES], ["https://code.qxwk.net"]),
-    YOUTUBE_EMBED: new Site(SiteIDs.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com'])
+    YOUTUBE_EMBED: new Site(SiteIDs.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com']),
+    /**
+     * 
+     * @param {string} key 
+     * @returns {Site|undefined}
+     */
+    get(key) {
+        for (let i in Sites) {
+            if (i === key) return Sites[i];
+        }
+    }
 };
 let avgleMetadata = ["div#video-player", "div.vjs-control-bar", undefined, "button.vjs-play-control", undefined, "button.vjs-fullscreen-control"];
 let dplayerMetadata = ["div#dplayer, div#mvideo", undefined, "button.dplayer-play-icon", "button.dplayer-volume-icon", "button.dplayer-full-icon"];

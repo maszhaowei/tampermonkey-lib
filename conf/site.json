@@ -2,16 +2,15 @@
     "siteids": {
         "test": "test"
     },
-    "sitecategories": [
-        {
-            "key": "test",
+    "sitecategories": {
+        "test": {
             "categoryName": "test",
             "titleRegEx": "test"
         }
-    ],
-    "sites": [
-        {
-            "siteid": "test",
+    },
+    "sites": {
+        "test": {
+            "id": "test",
             "origin": "origin",
             "hrefRegEx": "^example://example.com",
             "siteCategories": [
@@ -21,9 +20,9 @@
                 "test"
             ]
         }
-    ],
-    "videosites": [
-        {
+    },
+    "videosites": {
+        "test": {
             "siteid": "test",
             "containerSelector": "",
             "controlsSelector": "",
@@ -33,10 +32,10 @@
             "fullscreenButtonSelector": "",
             "webFullscreenButtonSelector": ""
         }
-    ],
-    "videoportalsites": [
-        {
+    },
+    "videoportalsites": {
+        "test": {
             "siteid": "test"
         }
-    ]
+    }
 }
