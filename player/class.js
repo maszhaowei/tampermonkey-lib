@@ -2,10 +2,11 @@ import '../css/video.css';
 import * as Const from './const';
 import { VideoCustomEventTypes } from './enum';
 import { ui } from './ui.js';
-import { ObjectCacheHelper } from '../common/class';
+import { ApplyMethodSignature } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
+import { CssCacheHelper } from '../tampermonkey/class';
 
 class VideoEventDelegate {
     #previousSiblingSelector;
@@ -13,7 +14,7 @@ class VideoEventDelegate {
     #defaultDelegate;
     /** @type {Element} */
     #delegate;
-    /** @type {Map<string,import('../common/class').EventHandlerWrapper[]>} */
+    /** @type {Map<string,import('../common/class').ApplyMethodSignature[]>} */
     #eventsObserverMap = new Map();
     /**
      * @param {Element} defaultDelegate 
@@ -56,9 +57,9 @@ class VideoEventDelegate {
             for (let i in GlobalEvents) {
                 let type = GlobalEvents[i];
                 this.#delegate.addEventListener(type, (e) => {
-                    let wrappers = this.#eventsObserverMap.get(type);
-                    if (wrappers) wrappers.forEach((wrapper) => {
-                        wrapper.fn.call(wrapper.context, e);
+                    let sigs = this.#eventsObserverMap.get(type);
+                    if (sigs) sigs.forEach((sig) => {
+                        sig.fn.call(sig.context, e);
                     });
                 });
             }
@@ -67,22 +68,24 @@ class VideoEventDelegate {
     /**
      * 
      * @param {string} eventType 
-     * @param {import('../common/class').EventHandlerWrapper} wrapper 
+     * @param {function} handler 
+     * @param {*} [context] 
      */
-    registerEventHandler(eventType, wrapper) {
+    registerEventHandler(eventType, handler, context) {
+        let sig = new ApplyMethodSignature(handler, context);
         if (this.#eventsObserverMap.has(eventType)) {
-            this.#eventsObserverMap.get(eventType).push(wrapper);
+            this.#eventsObserverMap.get(eventType).push(sig);
         }
         else {
-            this.#eventsObserverMap.set(eventType, [wrapper]);
+            this.#eventsObserverMap.set(eventType, [sig]);
         }
     }
     unregisterContext(context) {
-        this.#eventsObserverMap.forEach((wrappers) => {
-            for (let i = 0; i < wrappers.length; i++) {
-                let wrapper = wrappers[i];
-                if (wrapper.context == context) {
-                    wrappers.splice(i, 1);
+        this.#eventsObserverMap.forEach((sigs) => {
+            for (let i = 0; i < sigs.length; i++) {
+                let sig = sigs[i];
+                if (sig.context == context) {
+                    sigs.splice(i, 1);
                     i--;
                 }
             }
@@ -277,34 +280,38 @@ export class VideoInstance {
      * @returns 
      */
     isVideoInWebFullScreen() {
-        return document.body.classList.contains(Const.bodyWebFullscreenClassName);
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        let rect = this.#initData.container.getBoundingClientRect();
+        return document.body.classList.contains(Const.bodyWebFullscreenClassName)
+            || (Math.round(rect.width) == vw && Math.round(rect.height) == vh);
     }
     #saveAndSetCss() {
         let html = document.documentElement;
         let overflow = window.getComputedStyle(html).getPropertyValue('overflow');
-        ObjectCacheHelper.save(html, 'overflow', () => html.style.overflow = overflow);
-        ObjectCacheHelper.save(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
+        CssCacheHelper.save(html, 'overflow', () => html.style.overflow = overflow);
+        CssCacheHelper.save(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
         document.documentElement.style.overflow = 'hidden';
     }
     #restoreCss() {
-        ObjectCacheHelper.restore(document.documentElement, 'overflow');
-        ObjectCacheHelper.restore(document.documentElement, 'scroll');
+        CssCacheHelper.restore(document.documentElement, 'overflow');
+        CssCacheHelper.restore(document.documentElement, 'scroll');
     }
     requestWebFullscreen() {
-        this.#saveAndSetCss();
         if (!this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
         else {
+            this.#saveAndSetCss();
             this.container.classList.add(Const.containerWebFullscreenClassName);
             document.body.classList.add(Const.bodyWebFullscreenClassName);
         }
         this.#triggerCustomEvent(VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
     }
     exitWebFullscreen() {
-        this.#restoreCss();
         if (this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
         else {
             this.container.classList.remove(Const.containerWebFullscreenClassName);
             document.body.classList.remove(Const.bodyWebFullscreenClassName);
+            this.#restoreCss();
         }
         this.#triggerCustomEvent(VideoCustomEventTypes.EXIT_WEBFULLSCREEN);
     }

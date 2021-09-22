@@ -36,27 +36,6 @@ export class ApplyMethodSignature {
     }
 }
 
-export class EventHandlerWrapper {
-    context;
-    fn;
-    /** @type {(Event)=>void} */
-    #handler;
-    /**
-     * Event handler ready to be used in removeEventListener.
-     */
-    get handler() { return this.#handler }
-    /**
-     * 
-     * @param {function} fn - Will be converted to an event handler that takes Event as the only parameter.
-     * @param {*} [context] - thisArg of {@link fn}.
-     */
-    constructor(fn, context) {
-        this.fn = fn;
-        this.context = context;
-        this.#handler = (e) => this.fn.call(this.context, e);
-    }
-}
-
 export class Tuple extends IEquatable {
     #items;
     get size() { return this.#items.length }
