@@ -55,7 +55,7 @@ export const util = {
         else if (siteCategories && siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
     }
 };
-tutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/dev/conf/site.json').then((res) => {
+tutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json').then((res) => {
     if (ctuil.isObject(res)) {
         let siteids = res['siteids'];
         if (ctuil.isObject(siteids)) {
