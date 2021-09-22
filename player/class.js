@@ -204,7 +204,7 @@ export class VideoInstance {
         this.#initVideo();
         let video = this.video;
         video.addEventListener(MediaEvents.VOLUME_CHANGE, () => this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume }));
-        let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector, this.topElementSelectors);
+        let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector, this.playerMetadata.topElementSelectors);
         this.videoDelegate = videoDelegate;
         return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
     }
