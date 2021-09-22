@@ -73,7 +73,7 @@ cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/
         if (cutil.isObject(sites)) {
             for (let i in sites) {
                 let s = sites[i];
-                Sites[i] = new Site(s.id, s.origin, s.hrefRegEx, s.siteCategories, s.originWhitelist);
+                Sites[i] = new Site(s.id, s.origin, new RegExp(s.hrefRegEx), s.siteCategories, s.originWhitelist);
             }
         }
         let videosites = res['videosites'];
