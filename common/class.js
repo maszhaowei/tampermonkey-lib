@@ -1,3 +1,6 @@
+import { IEquatable } from "./interface";
+import { util } from "./util";
+
 /**
  * @enum {KeyboardKeyCode}
  */
@@ -53,53 +56,65 @@ export class EventHandlerWrapper {
         this.#handler = (e) => this.fn.call(this.context, e);
     }
 }
-export class ObjectCacheHelper {
-    #site;
-    /** @type {WeakMap<Element, Map<string, ApplyMethodSignature>>} */
-    static #cacheMap = new WeakMap();
-    /** 
-     * @private
-     * @hideconstructor
-     */
-    constructor() { }
-    /**
-     * 
-     * @param {object} obj 
-     * @param {string} key 
-     * @param {function} callback 
-     * @param {any[]} [args] 
-     */
-    static save(obj, key, callback, args) {
-        /** @type {Map<string, ApplyMethodSignature>} */
-        let cacheItemMap;
-        if (ObjectCacheHelper.#cacheMap.has(obj)) {
-            cacheItemMap = ObjectCacheHelper.#cacheMap.get(obj);
+
+export class Tuple extends IEquatable {
+    #items;
+    get size() { return this.#items.length }
+    constructor(...items) {
+        super();
+        if (items.length == 0) throw new Error('Empty parameter')
+        this.#items = items;
+        for (let i = 0; i < items.length; i++) {
+            this[i] = items[i];
         }
-        else {
-            cacheItemMap = new Map();
-            ObjectCacheHelper.#cacheMap.set(obj, cacheItemMap);
-        }
-        cacheItemMap.set(key, new ApplyMethodSignature(callback, obj, args));
     }
     /**
-     * 
-     * @param {object} obj 
-     * @param {string} key 
-     * @param {boolean} clearAfterRestore
-     * @returns {boolean} Whether the specified obj and key exists in cache.
+     * @override
+     * @param {Tuple} obj 
      */
-    static restore(obj, key, clearAfterRestore = false) {
-        let cacheItemMap = ObjectCacheHelper.#cacheMap.get(obj);
-        if (cacheItemMap) {
-            let cacheItem = cacheItemMap.get(key);
-            if (cacheItem) cacheItem.fn.apply(cacheItem.context, cacheItem.args);
-            if (clearAfterRestore) {
-                cacheItemMap.delete(key);
-                if (cacheItemMap.size == 0) ObjectCacheHelper.#cacheMap.delete(obj);
-            }
-            return !!cacheItem;
+    equals(obj) {
+        if (!(obj instanceof Tuple)) return false;
+        if (this.size != obj.size) return false;
+        for (let i = 0; i < this.size; i++) {
+            let item = this[i];
+            let target = obj[i];
+            if (item instanceof Tuple && !item.equals(target)) return false;
+            else if (item !== target) return false;
         }
-        else return false;
+        return true;
+    }
+}
+export class LooseMap extends Map {
+    get(key) {
+        let i = this.entries();
+        let ir;
+        while (!(ir = i.next()).done) {
+            let [k, v] = ir.value;
+            if (util.isEqual(k, key)) return v;
+        }
+    }
+    set(key, value) {
+        let i = this.keys();
+        let ir;
+        while (!(ir = i.next()).done) {
+            if (util.isEqual(ir.value, key)) return super.set(ir.value, value);
+        }
+        super.set(key, value);
+    }
+    has(key) {
+        let i = this.keys();
+        let ir;
+        while (!(ir = i.next()).done) {
+            if (util.isEqual(ir.value, key)) return true;
+        }
+        return false;
+    }
+    delete(key) {
+        let i = this.keys();
+        let ir;
+        while (!(ir = i.next()).done) {
+            if (util.isEqual(ir.value, key)) return super.delete(ir.value);
+        }
     }
 }
 
