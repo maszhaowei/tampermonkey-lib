@@ -47,8 +47,8 @@ export class EventHandlerWrapper {
     get handler() { return this.#handler }
     /**
      * 
-     * @param {function} fn 
-     * @param {*} [context]
+     * @param {function} fn - Will be converted to an event handler that takes Event as the only parameter.
+     * @param {*} [context] - thisArg of {@link fn}.
      */
     constructor(fn, context) {
         this.fn = fn;
@@ -84,7 +84,7 @@ export class Tuple extends IEquatable {
     }
 }
 /**
- * @classdesc Key equality: Based on the sameValueZero algorithm and NaN equals NaN. Will compare each element if the arguments are array and call equals method on any object that implements IEquatable.
+ * @classdesc Key equality: Based on the sameValueZero algorithm and NaN equals NaN. Will compare each element if key is an array and call equals method if key implements IEquatable.
  * @extends Map
  */
 export class LooseMap extends Map {
