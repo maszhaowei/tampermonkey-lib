@@ -18,6 +18,54 @@ export let util = {
     },
     /**
      * 
+     * @param {string|URL} url 
+     * @param {boolean} [async] - Default to true.
+     * @param {Object.<string,string>} [headers] 
+     * @param {string} [responseType] - Default to "json".
+     * @returns 
+     */
+    get: function (url, async = true, headers, responseType) {
+        return new Promise((resolve, reject) => {
+            var req = new XMLHttpRequest();
+            req.responseType = responseType || 'json';
+            req.addEventListener("load", (res) => {
+                resolve(res.response || res.responseText);
+            });
+            req.addEventListener("error", (err) => {
+                reject(err);
+            });
+            req.open("GET", url, async);
+            if (headers) {
+                for (let i in headers) req.setRequestHeader(i, headers[i]);
+            }
+            req.send();
+        });
+    },
+    /**
+     * 
+     * @param {string|URL} url 
+     * @param {Object.<string,string>} [headers] - Default to { "Content-Type": "application/x-www-form-urlencoded" }.
+     * @param {Document | XMLHttpRequestBodyInit} [data] 
+     * @param {string} [responseType] - Default to "json".
+     * @returns 
+     */
+    post: function (url, headers = { "Content-Type": "application/x-www-form-urlencoded" }, data, responseType) {
+        return new Promise((resolve, reject) => {
+            var req = new XMLHttpRequest();
+            req.responseType = responseType || 'json';
+            req.addEventListener("load", (res) => {
+                resolve(res.response || res.responseText);
+            });
+            req.addEventListener("error", (err) => {
+                reject(err);
+            });
+            req.open("POST", url);
+            for (let i in headers) req.setRequestHeader(i, headers[i]);
+            req.send(data);
+        });
+    },
+    /**
+     * 
      * @param {string} name 
      * @returns 
      */

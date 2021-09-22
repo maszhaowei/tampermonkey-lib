@@ -1,6 +1,5 @@
 import { SiteCategories, SiteIDs, Sites, VideoPortalSites, VideoSites } from './enum';
-import { util as ctuil } from '../common/util';
-import { util as tutil } from '../tampermonkey/util';
+import { util as cutil } from '../common/util';
 import { PlayerMetadata, Site, SiteCategory, VideoPortalSite, VideoSite } from './class';
 /**
  * 
@@ -55,30 +54,30 @@ export const util = {
         else if (siteCategories && siteCategories.includes(SiteCategories.MOVIE)) return SiteCategories.MOVIE;
     }
 };
-tutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json').then((res) => {
-    if (ctuil.isObject(res)) {
+cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json', false).then((res) => {
+    if (cutil.isObject(res)) {
         let siteids = res['siteids'];
-        if (ctuil.isObject(siteids)) {
+        if (cutil.isObject(siteids)) {
             for (let i in siteids) {
                 SiteIDs[i] = siteids[i];
             }
         }
         let sitecategories = res['sitecategories'];
-        if (ctuil.isObject(sitecategories)) {
+        if (cutil.isObject(sitecategories)) {
             for (let i in sitecategories) {
                 let s = sitecategories[i];
                 SiteCategories[i] = new SiteCategory(s.categoryName, new RegExp(s.titleRegEx));
             }
         }
         let sites = res['sites'];
-        if (ctuil.isObject(sites)) {
+        if (cutil.isObject(sites)) {
             for (let i in sites) {
                 let s = sites[i];
                 Sites[i] = new Site(s.id, s.origin, s.hrefRegEx, s.siteCategories, s.originWhitelist);
             }
         }
         let videosites = res['videosites'];
-        if (ctuil.isObject(videosites)) {
+        if (cutil.isObject(videosites)) {
             for (let i in videosites) {
                 let s = videosites[i];
                 let siteid = s.siteid;
@@ -90,7 +89,7 @@ tutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/
             }
         }
         let portalsites = res['videoportalsites'];
-        if (ctuil.isObject(portalsites)) {
+        if (cutil.isObject(portalsites)) {
             for (let i in portalsites) {
                 let s = portalsites[i];
                 let siteid = s.siteid;
