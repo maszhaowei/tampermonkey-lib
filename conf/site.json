@@ -1,9 +1,7 @@
 {
-    "siteids": [
-        {
-            "test": "test"
-        }
-    ],
+    "siteids": {
+        "test": "test"
+    },
     "sitecategories": [
         {
             "key": "test",
