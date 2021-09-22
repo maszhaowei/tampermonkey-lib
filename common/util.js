@@ -213,7 +213,7 @@ export let util = {
         return typeof obj[Symbol.iterator] === 'function';
     },
     /**
-     * Based on sameValueZero algorithm. This method will compare each element if the arguments are array and call equals method on any object that implements IEquatable.
+     * Based on sameValueZero algorithm and NaN equals NaN. This method will compare each element if the arguments are array and call equals method on any object that implements IEquatable.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#same-value-zero_equality
      * @param {*} obj1 
      * @param {*} obj2 
