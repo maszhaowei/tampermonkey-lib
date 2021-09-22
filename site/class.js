@@ -1,4 +1,3 @@
-import { ObjectCacheHelper } from "../common/class";
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
 export class SiteCategory {
@@ -170,27 +169,5 @@ export class VideoPortalSite extends Site {
      */
     constructor(site) {
         super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
-        window.addEventListener('message', (e) => {
-            if (!this.isFromTampermonkey(e)) return;
-            switch (e.data.type) {
-                case MessageTypes.REQUEST_WEBFULLSCREEN:
-                    this.#saveAndSetCss();
-                    break;
-                case MessageTypes.EXIT_WEBFULLSCREEN:
-                    this.#restoreCss();
-                    break;
-            }
-        })
-    }
-    #saveAndSetCss() {
-        let html = document.documentElement;
-        let overflow = window.getComputedStyle(html).getPropertyValue('overflow');
-        ObjectCacheHelper.save(html, 'overflow', () => html.style.overflow = overflow);
-        ObjectCacheHelper.save(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
-        document.documentElement.style.overflow = 'hidden';
-    }
-    #restoreCss() {
-        ObjectCacheHelper.restore(document.documentElement, 'overflow');
-        ObjectCacheHelper.restore(document.documentElement, 'scroll');
     }
 }

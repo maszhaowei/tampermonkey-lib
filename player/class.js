@@ -1,13 +1,20 @@
 import '../css/video.css';
 import * as Const from './const';
-import { VideoCustomEventTypes } from './enum';
-import { ui } from './ui.js';
 import { ApplyMethodSignature } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
 import { CssCacheHelper } from '../tampermonkey/class';
 
+export const _VideoCustomEventTypes = {
+    VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
+    VIDEO_READY: 'video_ready',
+    PLAY: 'video_play',
+    PAUSE: 'video_pause',
+    VOLUME_CHANGE: 'video_volume_change',
+    REQUEST_WEBFULLSCREEN: 'video_request_webfullscreen',
+    EXIT_WEBFULLSCREEN: 'video_exit_webfullscreen'
+}
 class VideoEventDelegate {
     #previousSiblingSelector;
     #topElementSelectors;
@@ -191,25 +198,25 @@ export class VideoInstance {
             tutil.debug(`Set init volume: ${volume}`);
             video.volume = volume;
         }
-        this.#triggerCustomEvent(VideoCustomEventTypes.VIDEO_ATTR_INITIALIZED, { volume: volume, progress: progress });
+        this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_ATTR_INITIALIZED, { volume: volume, progress: progress });
     }
     async #onLoadedMetadata() {
         this.#initVideo();
         let video = this.video;
-        video.addEventListener(MediaEvents.VOLUME_CHANGE, () => this.#triggerCustomEvent(VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume }));
+        video.addEventListener(MediaEvents.VOLUME_CHANGE, () => this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume }));
         let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector, this.topElementSelectors);
         this.videoDelegate = videoDelegate;
-        return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(VideoCustomEventTypes.VIDEO_READY));
+        return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
     }
     async #bindEvent() {
         let video = this.video;
         video.addEventListener(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
-            this.#triggerCustomEvent(VideoCustomEventTypes.PLAY);
+            this.#triggerCustomEvent(_VideoCustomEventTypes.PLAY);
         }, true);
         video.addEventListener(MediaEvents.PAUSE, () => {
             this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
-            this.#triggerCustomEvent(VideoCustomEventTypes.PAUSE);
+            this.#triggerCustomEvent(_VideoCustomEventTypes.PAUSE);
         }, true);
         return new Promise((resolve) => {
             if (video.readyState >= MediaReadyState.HAVE_METADATA) return this.#onLoadedMetadata().then(() => resolve());
@@ -304,7 +311,7 @@ export class VideoInstance {
             this.container.classList.add(Const.containerWebFullscreenClassName);
             document.body.classList.add(Const.bodyWebFullscreenClassName);
         }
-        this.#triggerCustomEvent(VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
+        this.#triggerCustomEvent(_VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
     }
     exitWebFullscreen() {
         if (this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
@@ -313,14 +320,14 @@ export class VideoInstance {
             document.body.classList.remove(Const.bodyWebFullscreenClassName);
             this.#restoreCss();
         }
-        this.#triggerCustomEvent(VideoCustomEventTypes.EXIT_WEBFULLSCREEN);
+        this.#triggerCustomEvent(_VideoCustomEventTypes.EXIT_WEBFULLSCREEN);
     }
     /**
      * 
      * @returns {boolean} Whether in web full screen.
      */
     toggleWebFullscreen() {
-        if (ui.isFullscreen()) {
+        if (cui.isFullscreen()) {
             this.exitFullscreen();
             this.requestWebFullscreen();
             return true;
@@ -329,34 +336,34 @@ export class VideoInstance {
             let prevInWebFull = this.isVideoInWebFullScreen();
             if (this.webFullscreenButton) {
                 this.webFullscreenButton.click();
-                prevInWebFull ? this.#triggerCustomEvent(VideoCustomEventTypes.EXIT_WEBFULLSCREEN) : this.#triggerCustomEvent(VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
+                prevInWebFull ? this.#triggerCustomEvent(_VideoCustomEventTypes.EXIT_WEBFULLSCREEN) : this.#triggerCustomEvent(_VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
             }
             else prevInWebFull ? this.exitWebFullscreen() : this.requestWebFullscreen();
             return !prevInWebFull;
         }
     }
     requestFullscreen(preferButton = true) {
-        if (ui.isFullscreen()) return Promise.resolve();
+        if (cui.isFullscreen()) return Promise.resolve();
         if (preferButton && this.fullscreenButton) {
             this.fullscreenButton.click();
             return Promise.resolve();
         }
-        return ui.requestFullscreen(this.container);
+        return cui.requestFullscreen(this.container);
     }
     exitFullscreen(preferButton = true) {
-        if (!ui.isFullscreen()) return Promise.resolve();
+        if (!cui.isFullscreen()) return Promise.resolve();
         if (preferButton && this.fullscreenButton) {
             this.fullscreenButton.click();
             return Promise.resolve();
         }
-        return ui.exitFullscreen();
+        return cui.exitFullscreen();
     }
     toggleFullscreen() {
         if (this.fullscreenButton) {
             this.fullscreenButton.click();
             return Promise.resolve();
         }
-        else return ui.isFullscreen() ? this.exitFullscreen(false) : this.requestFullscreen(false);
+        else return cui.isFullscreen() ? this.exitFullscreen(false) : this.requestFullscreen(false);
     }
     /* #endregion */
 }
