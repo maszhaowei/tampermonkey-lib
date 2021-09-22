@@ -1,0 +1,44 @@
+{
+    "siteids": [
+        {
+            "test": "test"
+        }
+    ],
+    "sitecategories": [
+        {
+            "key": "test",
+            "categoryName": "test",
+            "titleRegEx": "test"
+        }
+    ],
+    "sites": [
+        {
+            "siteid": "test",
+            "origin": "origin",
+            "hrefRegEx": "^example://example.com",
+            "siteCategories": [
+                "test"
+            ],
+            "originWhitelist": [
+                "test"
+            ]
+        }
+    ],
+    "videosites": [
+        {
+            "siteid": "test",
+            "containerSelector": "",
+            "controlsSelector": "",
+            "topElementSelectors": "",
+            "playButtonSelector": "",
+            "volumeButtonSelector": "",
+            "fullscreenButtonSelector": "",
+            "webFullscreenButtonSelector": ""
+        }
+    ],
+    "videoportalsites": [
+        {
+            "siteid": "test"
+        }
+    ]
+}
