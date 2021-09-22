@@ -27,7 +27,7 @@ export let util = {
     get: function (url, async = true, headers, responseType) {
         return new Promise((resolve, reject) => {
             var req = new XMLHttpRequest();
-            req.responseType = responseType || 'json';
+            if(async) req.responseType = responseType || 'json';
             req.addEventListener("load", (res) => {
                 resolve(res.response || res.responseText);
             });
