@@ -8,23 +8,23 @@ export class CssCacheHelper {
     constructor() { }
     /**
      * 
-     * @param {object} obj 
-     * @param {string} key 
+     * @param {Element} element 
+     * @param {string} cssKey 
      * @param {function} callback 
      * @param {any[]} [args] 
      */
-    static save(obj, key, callback, args) {
-        this.#cacheMap.set(new Tuple(obj, key), new ApplyMethodSignature(callback, obj, args));
+    static save(element, cssKey, callback, args) {
+        this.#cacheMap.set(new Tuple(element, cssKey), new ApplyMethodSignature(callback, element, args));
     }
     /**
      * 
-     * @param {object} obj 
-     * @param {string} key 
+     * @param {Element} element 
+     * @param {string} cssKey 
      * @param {boolean} clearAfterRestore
      * @returns {boolean} Whether the specified obj and key exists in cache.
      */
-    static restore(obj, key, clearAfterRestore = false) {
-        let t = new Tuple(obj, key);
+    static restore(element, cssKey, clearAfterRestore = false) {
+        let t = new Tuple(element, cssKey);
         /** @type ApplyMethodSignature */
         let sig = this.#cacheMap.get(t);
         if (sig) {
