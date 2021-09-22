@@ -102,7 +102,7 @@ export class Site {
     isMessageOriginAllowed(targetOrigin) {
         if (!targetOrigin) return false;
         if (targetOrigin === window.location.origin) return true;
-        return this.#originWhitelist?.includes(targetOrigin);
+        return !!this.#originWhitelist?.includes(targetOrigin);
     }
     /**
      * 
