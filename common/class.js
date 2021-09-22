@@ -62,7 +62,6 @@ export class Tuple extends IEquatable {
     get size() { return this.#items.length }
     constructor(...items) {
         super();
-        if (items.length == 0) throw new Error('Empty parameter')
         this.#items = items;
         for (let i = 0; i < items.length; i++) {
             this[i] = items[i];
@@ -78,7 +77,7 @@ export class Tuple extends IEquatable {
         for (let i = 0; i < this.size; i++) {
             let item = this[i];
             let target = obj[i];
-            if (item instanceof Tuple && !item.equals(target)) return false;
+            if (item instanceof IEquatable && !item.equals(target)) return false;
             else if (item !== target) return false;
         }
         return true;
