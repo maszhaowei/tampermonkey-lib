@@ -212,6 +212,13 @@ export let util = {
         if (obj == undefined) return false;
         return typeof obj[Symbol.iterator] === 'function';
     },
+    /**
+     * Based on sameValueZero and NaN equals NaN. This method will compare each element if the arguments are array.
+     * Any object implementing IEquatable will call its equals method.
+     * @param {*} obj1 
+     * @param {*} obj2 
+     * @returns 
+     */
     isEqual(obj1, obj2) {
         if (obj1 instanceof Array) {
             if (!(obj2 instanceof Array) || obj1.length != obj2.length) return false;
@@ -220,6 +227,6 @@ export let util = {
             }
             return true;
         }
-        return obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
+        return isNaN(obj1) ? isNaN(obj2) : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
     }
 };
