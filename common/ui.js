@@ -153,15 +153,17 @@ export const ui = {
      * Show {@link tooltip} of white color against black background on target. Default to be at center position.
      * @param {string} tooltip
      * @param {import('./class').PositionOption} options
+     * @param {number} [timeout] - Timeout(ms) before tooltip to fadeout. Default to 1000.
      */
-    showTooltip: (tooltip, options) => { console.debug(tooltip, options) },
+    showTooltip: (tooltip, options, timeout) => { console.debug(tooltip, options, timeout) },
     /**
      * 
      * @param {string} message 
      * @param {string} [level] - Default to "info". See MessageLevel for available values.
      * @param {import('./class').PositionOption} options
+     * @param {number} - [timeout] - Timeout(ms) before message to fade out. Default to 4000.
      */
-    showMessage: function (message, level = MessageLevel.INFO, options) {
+    showMessage: function (message, level = MessageLevel.INFO, options, timeout = 4000) {
         if (!MessageLevel.test(level)) level = MessageLevel.INFO;
         let frag = document.createDocumentFragment(), linkDiv = document.createElement('div');
         linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
@@ -179,7 +181,7 @@ export const ui = {
                 setTimeout((function () {
                     linkDiv.parentNode ? linkDiv.parentNode.removeChild(linkDiv) : linkDiv.remove();
                 }), 350)
-        }), 4000);
+        }), timeout);
     },
     /* #endregion */
     /* #region Fullscreen/Webfullscreen */
@@ -251,8 +253,9 @@ class Tooltip {
      * 
      * @param {string} tooltip
      * @param {import('./class').PositionOption} positionOption 
+     * @param {number} timeout
      */
-    constructor(tooltip, positionOption) {
+    constructor(tooltip, positionOption, timeout) {
         this.options = util.assignNotUndefined({
             name: 'player-tooltip',
             target: document.body,
@@ -276,7 +279,7 @@ class Tooltip {
             },
             onHide: function () {
             }
-        }, { text: tooltip }, positionOption),
+        }, { text: tooltip, hideTime: timeout }, positionOption),
             this.status = 0,
             this.prefix = 'zw-player-tooltips',
             this.triggerClass = this.prefix + '-trigger',
@@ -393,12 +396,13 @@ class Tooltip {
  * 
  * @param {string} tooltip
  * @param {import('./class').PositionOption} options
+ * @param {number} [timeout] - Timeout(ms) before tooltip to fadeout. Default to 1000.
  * @returns 
  */
-ui.showTooltip = function (tooltip, options) {
+ui.showTooltip = function (tooltip, options, timeout = 1000) {
     if (util.isBlank(tooltip)) {
         console.debug("Tooltip is blank");
         return;
     }
-    new Tooltip(tooltip, options);
+    new Tooltip(tooltip, options, timeout);
 }
