@@ -1,6 +1,6 @@
 import '../css/video.css';
 import * as Const from './const';
-import { ApplyMethodSignature } from '../common/class';
+import { ApplyMethodSignature, PositionOption } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
@@ -242,10 +242,11 @@ export class VideoInstance {
      * 
      * @param {string} tooltip 
      * @param {string} [position]
-     * @param {number} [margin] 
+     * @param {number} [top] 
+     * @param {number} [left] 
      */
-    showTooltip(tooltip, position, margin) {
-        cui.showTooltip(tooltip, this.tooltipWrap, position, margin);
+    showTooltip(tooltip, position, top, left) {
+        cui.showTooltip(tooltip, new PositionOption({ target: this.tooltipWrap, position: position, top: top, left: left }));
     }
     changeVolume(deltaVolume) {
         let video = this.video;
