@@ -136,6 +136,7 @@ export class PositionOption {
      * @param {boolean} [options.fixed] - Whether the css position of displayed message is fixed. Default to true.
      */
     constructor({ target, position = _TooltipPosition.CENTER_CENTER, top = 0, left = 0, inside = true, fixed = true }) {
+        if(!(target instanceof Element)) throw new TypeError('target is not an Element');
         this.target = target;
         this.position = position;
         this.top = top;
