@@ -1,4 +1,4 @@
-import { KeyboardKeyCode } from "./class";
+import { KeyboardKeyCode, _TooltipPosition } from "./class";
 
 export const KeyboardKeyCodes = {
     Space: new KeyboardKeyCode('Space', ' '),
@@ -35,21 +35,7 @@ export const KeyboardKeyCodes = {
 /**
  * @enum {string}
  */
-export const TooltipPosition = {
-    TOP_LEFT: 'top-left',
-    TOP_CENTER: 'top-center',
-    TOP_RIGHT: 'top-right',
-    BOTTOM_LEFT: 'bottom-left',
-    BOTTOM_CENTER: 'bottom-center',
-    BOTTOM_RIGHT: 'bottom-right',
-    LEFT_TOP: 'left-top',
-    LEFT_CENTER: 'left-center',
-    LEFT_BOTTOM: 'left-bottom',
-    RIGHT_TOP: 'right-top',
-    RIGHT_CENTER: 'right-center',
-    RIGHT_BOTTOM: 'right-bottom',
-    CENTER_CENTER: 'center-center',
-}
+export const TooltipPosition = _TooltipPosition;
 
 /**
  * The readiness state of the HTMLMediaElement. 
@@ -85,4 +71,25 @@ export const GlobalEvents = {
     MOUSEDOWN: 'mousedown',
     CLICK: 'click',
     DBLCLICK: 'dblclick'
+}
+/**
+ * @enum {string}
+ */
+export const MessageLevel = {
+    SUCCESS: 'success',
+    INFO: 'info',
+    CAUTION: 'caution',
+    ERROR: 'error',
+    /**
+     * 
+     * @param {string} value 
+     * @returns 
+     */
+    test: function (value) {
+        if (value === MessageLevel.test) return false;
+        for (let i in MessageLevel) {
+            if (this[i] === value) return true;
+        }
+        return false;
+    }
 }

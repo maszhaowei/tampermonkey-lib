@@ -2,6 +2,24 @@ import { IEquatable } from "./interface";
 import { util } from "./util";
 
 /**
+ * @enum {string}
+ */
+export const _TooltipPosition = {
+    TOP_LEFT: 'top-left',
+    TOP_CENTER: 'top-center',
+    TOP_RIGHT: 'top-right',
+    BOTTOM_LEFT: 'bottom-left',
+    BOTTOM_CENTER: 'bottom-center',
+    BOTTOM_RIGHT: 'bottom-right',
+    LEFT_TOP: 'left-top',
+    LEFT_CENTER: 'left-center',
+    LEFT_BOTTOM: 'left-bottom',
+    RIGHT_TOP: 'right-top',
+    RIGHT_CENTER: 'right-center',
+    RIGHT_BOTTOM: 'right-bottom',
+    CENTER_CENTER: 'center-center',
+}
+/**
  * @enum {KeyboardKeyCode}
  */
 export class KeyboardKeyCode {
@@ -100,47 +118,29 @@ export class LooseMap extends Map {
     }
 }
 
-export class TooltipOption {
-    name = 'player-tooltip';
-    /** Target element to display the tooltip. */
-    target = document.body;
-    type = 'info';
-    /** @type {string} */
+export class PositionOption {
+    target;
     position;
-    /** Additional left offset. */
-    left = 0;
-    /** Additional top offset. */
-    top = 0;
-    /** Inside margin to the border of target. */
-    margin = 0;
-    arrow = false;
-    changeMode = 0;
-    singleMode = true;
-    animation = true;
-    supportShow = true;
-    autoShow = true;
-    autoHide = true;
-    hideTime = 1000;
-    autoRemove = true;
-    game = false;
-    /** @callback */
-    callback;
-    /** @callback */
-    onShow;
-    /** @callback */
-    onHide;
+    top;
+    left;
+    inside;
+    fixed;
     /**
      * 
-     * @param {string} text 
-     * @param {Element} [target] - Target element to display the tooltip. Default to document.body.
-     * @param {string} [position] - Position to display {@link text}. Default to "center-center". See TooltipPosition for value range.
-     * @param {number} [margin] - Inside margin to the border of {@link target}. Default to 0.
+     * @param {object} options
+     * @param {Element} options.target - Target element for display.
+     * @param {string} [options.position] - Position to display. Default to "center-center". See TooltipPosition for available values.
+     * @param {number} [options.top] - Additional y offset. Default to 0.
+     * @param {number} [options.left] - Additional x offset. Default to 0.
+     * @param {boolean} [options.inside] - Whether the displayed message is inside {@link target}. Default to true.
+     * @param {boolean} [options.fixed] - Whether the css position of displayed message is fixed. Default to true.
      */
-    constructor(text, target, position, margin) {
-        this.text = text;
-        this.target = target || document.body;
-        /** @todo TooltipPosition.CENTER_CENTER will cause circular dependency */
-        this.position = position || 'center-center';
-        this.margin = margin ?? 0;
+    constructor({ target, position = _TooltipPosition.CENTER_CENTER, top = 0, left = 0, inside = true, fixed = true }) {
+        this.target = target;
+        this.position = position;
+        this.top = top;
+        this.left = left;
+        this.inside = inside;
+        this.fixed = fixed;
     }
 }

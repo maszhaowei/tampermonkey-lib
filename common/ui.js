@@ -1,38 +1,87 @@
 import '../css/tooltip.css';
-import { TooltipOption } from './class';
-import { TooltipPosition } from './enum';
+import '../css/linkmsg.css';
+import { TooltipPosition, MessageLevel } from './enum';
 import { util } from './util';
+
+function getScrollTop() {
+    return window.scrollY || window.pageYOffset || (document.documentElement && document.documentElement.scrollTop || 0) || document.body.scrollTop;
+}
+function getScrollLeft() {
+    return window.scrollX || window.pageXOffset || (document.documentElement && document.documentElement.scrollLeft || 0) || document.body.scrollLeft;
+}
+/**
+ * jQuery.fn.offset implementation to retrieve the current position of an element (specifically its border box, which excludes margins) relative to the document.
+ * Returns {top:0, left:0} if display:none.
+ * @see {@link https://api.jquery.com/offset/}
+ * @param {Element} element 
+ * @returns 
+ */
+function offset2(element) {
+    let offset = {
+        top: 0,
+        left: 0
+    };
+    if (!element.getClientRects().length) {
+        return offset;
+    }
+    if (window.getComputedStyle(element)['display'] === 'none') {
+        return offset;
+    }
+    let rect = element.getBoundingClientRect();
+    let docElement = element.ownerDocument.documentElement;
+    return {
+        top: rect.top + getScrollTop() - (docElement.clientTop || 0),
+        left: rect.left + getScrollLeft() - (docElement.clientLeft || 0)
+    };
+}
+/**
+ * 
+ * @param {Element} displayElement 
+ * @param {import('./class').PositionOption} options
+ * @returns 
+ */
+function getCoord(displayElement, options) {
+    let targetRect = options.target.getBoundingClientRect(), tooltipRect = displayElement.getBoundingClientRect();
+    let tOffset = options.fixed ? targetRect : offset2(options.target);
+    let left = tOffset.left + options.left, top = tOffset.top + options.top;
+    let position = options.position;
+    if (position.startsWith('top')) {
+        if (position.endsWith('center')) left += targetRect.width / 2 - tooltipRect.width / 2;
+    }
+    else if (position.startsWith('bottom')) {
+        top += targetRect.height;
+        if (position.endsWith('center')) left += targetRect.width / 2 - tooltipRect.width / 2;
+    }
+    else if (position.startsWith('left')) {
+        if (position.endsWith('center')) top += targetRect.height / 2 - tooltipRect.height / 2;
+    }
+    else if (position.startsWith('right')) {
+        left += targetRect.width;
+        if (position.endsWith('center')) top += targetRect.height / 2 - tooltipRect.height / 2;
+    }
+    else if (position == TooltipPosition.CENTER_CENTER) {
+        left += targetRect.width / 2 - tooltipRect.width / 2;
+        top += targetRect.height / 2 - tooltipRect.height / 2;
+    }
+
+    if (position.endsWith('right')) left += targetRect.width;
+    else if (position.endsWith('bottom')) top += targetRect.height;
+
+    let inside = options.inside;
+    if (inside && position.includes('bottom') || (!inside && position.includes('top'))) top -= tooltipRect.height;
+    if (inside && position.includes('right') || (!inside && position.includes('left'))) left -= tooltipRect.width;
+    return { left: left, top: top };
+}
 export const ui = {
     /* #region General */
     /**
-     * jQuery.fn.offset的js实现，不支持IE11以下浏览器
+     * jQuery.fn.offset implementation to retrieve the current position of an element (specifically its border box, which excludes margins) relative to the document.
+     * Returns {top:0, left:0} if display:none.
      * @see {@link https://api.jquery.com/offset/}
-     * @param {Element} node 
+     * @param {Element} element 
      * @returns 
      */
-    offset2(node) {
-        let offset = {
-            top: 0,
-            left: 0
-        };
-        // 当前为IE11以下, 直接返回{top: 0, left: 0}
-        if (!node.getClientRects().length) {
-            return offset;
-        }
-        // 当前DOM节点的 display === 'node' 时, 直接返回{top: 0, left: 0}
-        if (window.getComputedStyle(node)['display'] === 'none') {
-            return offset;
-        }
-        // Element.getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
-        // 返回值包含了一组用于描述边框的只读属性——left、top、right和bottom，单位为像素。除了 width 和 height 外的属性都是相对于视口的左上角位置而言的。
-        // 返回如{top: 8, right: 1432, bottom: 548, left: 8, width: 1424…}
-        offset = node.getBoundingClientRect();
-        let docElement = node.ownerDocument.documentElement;
-        return {
-            top: offset.top + window.pageYOffset - docElement.clientTop,
-            left: offset.left + window.pageXOffset - docElement.clientLeft
-        };
-    },
+    offset: offset2,
     /**
      * 
      * @param {HTMLElement} element 
@@ -101,13 +150,37 @@ export const ui = {
         }
     },
     /**
-     * Show {@link tooltip} of white color on black background on {@link target}. Default to be at center position.
-     * @param {string} tooltip 
-     * @param {Element} target - Target element to display the tooltip.
-     * @param {*} [position] - Position to display {@link tooltip}. Default to "center-center". See TooltipPosition for value range.
-     * @param {*} [margin] - Inside margin to the border of {@link target}. Default to 0.
+     * Show {@link tooltip} of white color against black background on target. Default to be at center position.
+     * @param {string} tooltip
+     * @param {import('./class').PositionOption} options
      */
-    showTooltip: (tooltip, target, position, margin) => { console.debug(tooltip, target, position, margin) },
+    showTooltip: (tooltip, options) => { console.debug(tooltip, options) },
+    /**
+     * 
+     * @param {string} message 
+     * @param {string} [level] - Default to "info". See MessageLevel for available values.
+     * @param {import('./class').PositionOption} options
+     */
+    showMessage: function (message, level = MessageLevel.INFO, options) {
+        if (!MessageLevel.test(level)) level = MessageLevel.INFO;
+        let frag = document.createDocumentFragment(), linkDiv = document.createElement('div');
+        linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
+        linkDiv.className = 'link-toast ' + level;
+        let target = options.target;
+        if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
+        document.querySelector('div.link-toast')?.remove();
+        frag.appendChild(linkDiv);
+        document.body.appendChild(frag);
+        let offset = getCoord(linkDiv, options);
+        linkDiv.style.left = offset.left + 'px';
+        linkDiv.style.top = offset.top + 'px';
+        setTimeout((function () {
+            linkDiv.className += ' out',
+                setTimeout((function () {
+                    linkDiv.parentNode ? linkDiv.parentNode.removeChild(linkDiv) : linkDiv.remove();
+                }), 350)
+        }), 4000);
+    },
     /* #endregion */
     /* #region Fullscreen/Webfullscreen */
     isFullscreen() {
@@ -176,10 +249,34 @@ export const ui = {
 class Tooltip {
     /**
      * 
-     * @param {TooltipOption} customOption 
+     * @param {string} tooltip
+     * @param {import('./class').PositionOption} positionOption 
      */
-    constructor(customOption) {
-        this.options = util.assignNotUndefined(new TooltipOption(), customOption),
+    constructor(tooltip, positionOption) {
+        this.options = util.assignNotUndefined({
+            name: 'player-tooltip',
+            target: document.body,
+            type: 'info',
+            left: 0,
+            top: 0,
+            margin: 0,
+            arrow: !1,
+            changeMode: 0,
+            singleMode: !0,
+            animation: !0,
+            supportShow: !0,
+            autoShow: !0,
+            autoHide: !0,
+            hideTime: 1000,
+            autoRemove: !0,
+            game: !1,
+            callback: function () {
+            },
+            onShow: function () {
+            },
+            onHide: function () {
+            }
+        }, { text: tooltip }, positionOption),
             this.status = 0,
             this.prefix = 'zw-player-tooltips',
             this.triggerClass = this.prefix + '-trigger',
@@ -265,17 +362,6 @@ class Tooltip {
         } else
             this.$zwtooltips && this.$zwtooltips.remove();
     }
-    getElemPos(i) {
-        var e = ui.offset2(i);
-        /** @type {DOMRect} */
-        let rect = i.getBoundingClientRect();
-        return {
-            x: e.left,
-            y: e.top,
-            w: rect.width,
-            h: rect.height
-        };
-    }
     create() {
         document.querySelector('.' + this.prefix + '[data-tooltip-name="' + this.options.name + '"]') || (this.$zwtooltips = this.template(!0), this.options.game && this.$zwtooltips.classList.add('tooltip-game'), this.options.target.insertAdjacentElement('beforeend', this.$zwtooltips)),
             this.$zwtooltips.insertAdjacentElement('beforeend', this.template()),
@@ -298,53 +384,21 @@ class Tooltip {
         return document.createRange().createContextualFragment(o).firstElementChild;
     }
     updatePos() {
-        var left, top, arrowLeft, options = this.options, targetPositions = this.getElemPos(options.target), tooltipWH = this.getElemPos(this.$zwtooltips);
-        let position = options.position || options.target.getAttribute('data-position');
-        left = targetPositions.x, top = targetPositions.y;
-        if (position.startsWith('top')) {
-            top += options.margin;
-            if (position.endsWith('center')) left += targetPositions.w / 2 - tooltipWH.w / 2;
-        }
-        else if (position.startsWith('bottom')) {
-            top += targetPositions.h - tooltipWH.h - options.margin;
-            if (position.endsWith('center')) left += targetPositions.w / 2 - tooltipWH.w / 2;
-        }
-        else if (position.startsWith('left')) {
-            left += options.margin;
-            if (position.endsWith('center')) top += targetPositions.h / 2 - tooltipWH.h / 2;
-        }
-        else if (position.startsWith('right')) {
-            left += targetPositions.w - tooltipWH.w - options.margin;
-            if (position.endsWith('center')) top += targetPositions.h / 2 - tooltipWH.h / 2;
-        }
-        else if (position == TooltipPosition.CENTER_CENTER) {
-            left += targetPositions.w / 2 - tooltipWH.w / 2;
-            top += targetPositions.h / 2 - tooltipWH.h / 2;
-        }
-
-        if (position.endsWith('right')) left += targetPositions.w - tooltipWH.w;
-        else if (position.endsWith('bottom')) top += targetPositions.h - tooltipWH.h;
-
-        if (options.arrow) {
-            var l = '<div class="arrow" style="' + arrowLeft + '"></div>';
-            this.$zwtooltips.insertAdjacentHTML('beforeend', l);
-        }
-        this.$zwtooltips.style.top = (top + options.top + document.documentElement.clientTop - window.pageYOffset) + 'px';
-        this.$zwtooltips.style.left = (left + options.left + document.documentElement.clientLeft - window.pageXOffset) + 'px';
+        let offset = getCoord(this.$zwtooltips, this.options);
+        this.$zwtooltips.style.top = offset.top + 'px';
+        this.$zwtooltips.style.left = offset.left + 'px';
     }
 }
 /**
  * 
- * @param {string} tooltip 
- * @param {Element} target 
- * @param {string} [position] 
- * @param {number} [margin] 
+ * @param {string} tooltip
+ * @param {import('./class').PositionOption} options
  * @returns 
  */
-ui.showTooltip = function (tooltip, target, position = TooltipOption.CENTER_CENTER, margin = 0) {
+ui.showTooltip = function (tooltip, options) {
     if (util.isBlank(tooltip)) {
         console.debug("Tooltip is blank");
         return;
     }
-    new Tooltip(new TooltipOption(tooltip, target, position, margin));
+    new Tooltip(tooltip, options);
 }
