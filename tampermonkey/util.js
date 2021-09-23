@@ -1,4 +1,5 @@
 import { scriptName } from './const';
+import { EMOJIS } from './enum';
 import { util as cutil } from '../common/util';
 export const util = {
     /**
@@ -18,4 +19,8 @@ export const util = {
     printSendMessage: function (targetOrigin, message) {
         util.debug(`<<< To: ${targetOrigin}, From: ${window.location.origin}, Message:`, message);
     },
+    randomEmoji: {}
 };
+for (let i in EMOJIS) {
+    util.randomEmoji[i] = () => EMOJIS[i][Math.floor(Math.random() * EMOJIS[i].length)];
+}
