@@ -211,7 +211,33 @@ class Tooltip {
         return document.createRange().createContextualFragment(o).firstElementChild;
     }
     updatePos() {
-        let offset = getCoord(this.$zwtooltips, this.options);
+        let options = this.options;
+        let targetRect = this.options.target.getBoundingClientRect(), tooltipRect = this.$zwtooltips.getBoundingClientRect();
+        let arrow;
+        switch (options.position || options.target.attr('data-position')) {
+            case TooltipPosition.TOP_LEFT:
+                arrow = targetRect.width / 2;
+                break;
+            case TooltipPosition.TOP_CENTER:
+                arrow = tooltipRect.width / 2;
+                break;
+            case TooltipPosition.TOP_RIGHT:
+                arrow = tooltipRect.width - targetRect.width / 2;
+                break;
+            case TooltipPosition.BOTTOM_LEFT:
+                arrow = targetRect.width / 2;
+                break;
+            case TooltipPosition.BOTTOM_CENTER:
+                arrow = tooltipRect.width / 2;
+                break;
+            case TooltipPosition.BOTTOM_RIGHT:
+                arrow = tooltipRect.width / 2;
+                break;
+        }
+        if (options.arrow) {
+            this.$zwtooltips.insertAdjacentHTML('beforeend', `<div class="arrow" style="left:${arrow}px;"></div>`);
+        }
+        let offset = getCoord(this.$zwtooltips, options);
         this.$zwtooltips.style.top = offset.top + 'px';
         this.$zwtooltips.style.left = offset.left + 'px';
     }
