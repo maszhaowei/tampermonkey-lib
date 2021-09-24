@@ -27,11 +27,11 @@ export let util = {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
             req.responseType = responseType || 'json';
-            req.addEventListener("load", (res) => {
-                resolve(res.response || res.responseText);
+            req.addEventListener("load", function () {
+                resolve(this.response || this.responseText);
             });
-            req.addEventListener("error", (err) => {
-                reject(err);
+            req.addEventListener("error", function () {
+                reject(this);
             });
             req.open("GET", url);
             if (headers) {
@@ -52,11 +52,11 @@ export let util = {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
             req.responseType = responseType || 'json';
-            req.addEventListener("load", (res) => {
-                resolve(res.response || res.responseText);
+            req.addEventListener("load", function () {
+                resolve(this.response || this.responseText);
             });
-            req.addEventListener("error", (err) => {
-                reject(err);
+            req.addEventListener("error", function () {
+                reject(this);
             });
             req.open("POST", url);
             for (let i in headers) req.setRequestHeader(i, headers[i]);
