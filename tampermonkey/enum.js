@@ -11,6 +11,7 @@ export const MessageTypes = {
     REQUEST_WEBFULLSCREEN: 'request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'exit_webfullscreen',
     KEYDOWN: 'keydown',
+    RESIZE: 'resize',
     /**
      * 
      * @param {string} value 
