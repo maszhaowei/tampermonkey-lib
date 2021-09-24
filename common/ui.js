@@ -35,7 +35,7 @@ function offset2(element) {
     };
 }
 /**
- * Retrieve the dimension of viewport.
+ * Retrieve the dimension of viewport. Result is rounded.
  * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
  * @returns 
  */
@@ -93,6 +93,14 @@ function getCoord(displayElement, options) {
     if (insideX && position.includes('bottom') || (!insideX && position.includes('top'))) top -= tooltipRect.height;
     let insideY = options.insideY;
     if (insideY && position.includes('right') || (!insideY && position.includes('left'))) left -= tooltipRect.width;
+
+    let vw = getViewPortDimension2(false);
+    if (options.ensureViewPort) {
+        if (left < 0) left = 0;
+        else if (vw.width < Math.round(left + tooltipRect.width)) left = vw.width - tooltipRect.width;
+        if (top < 0) top = 0;
+        else if (vw.height < Math.round(top + tooltipRect.height)) left = vw.height - tooltipRect.height;
+    }
     return { left: left, top: top };
 }
 class Tooltip {
@@ -287,7 +295,7 @@ export const ui = {
         html.scrollTo(offset.left - (html.clientWidth - rect.width) / 2, offset.top - (html.clientHeight - rect.height) / 2);
     },
     /**
-     * Retrieve the dimension of viewport.
+     * Retrieve the dimension of viewport. Result is rounded.
      * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
      * @returns 
      */

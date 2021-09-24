@@ -138,10 +138,10 @@ export class PositionOption {
      * @param {boolean} [options.insideY] - Whether the displayed message is inside vertical axes of {@link target}. Default to true.
      * @param {boolean} [options.insideX] - Whether the displayed message is inside {@link target}. Default to true.
      * @param {boolean} [options.fixed] - Whether the css position of displayed message is fixed. Default to true.
-     * @param {boolean} [options.ensureViewPort] - Ensure that the displayed element is whithin the viewport. Default to true.
+     * @param {boolean} [options.ensureViewPort] - Ensure that the displayed element is whithin the viewport. Default to false.
      */
     constructor({ target, position = _TooltipPosition.CENTER_CENTER,
-        top = 0, left = 0, insideX = true, insideY = true, fixed = true, ensureViewPort = true }) {
+        top = 0, left = 0, insideX = true, insideY = true, fixed = true, ensureViewPort = false }) {
         if (!(target instanceof Element)) throw new TypeError('target is not an Element');
         this.target = target;
         this.position = position;
