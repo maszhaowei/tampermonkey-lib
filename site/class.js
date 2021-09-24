@@ -85,11 +85,6 @@ export class Site {
         this.#hrefRegEx = hrefRegEx;
         this.#siteCategories = siteCategories;
         this.#originWhitelist = originWhitelist;
-        window.addEventListener('message', (e) => {
-            if (this.isMessageOriginAllowed(e.origin) && this.isFromTampermonkey(e)) {
-                tutil.printReceiveMessage(e);
-            }
-        });
     }
     isEmbedded() {
         return self !== top;

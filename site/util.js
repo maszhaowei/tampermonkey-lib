@@ -1,6 +1,9 @@
 import { SiteCategories, SiteIDs, Sites, VideoPortalSites, VideoSites } from './enum';
-import { util as cutil } from '../common/util';
 import { PlayerMetadata, Site, SiteCategory, VideoPortalSite, VideoSite } from './class';
+import { util as cutil } from '../common/util';
+import { util as tutil } from '../tampermonkey/util';
+/** @type {WeakMap<import('./class').Site,(e:MessageEvent)=>void)>} */
+let messageHandlerMap = new WeakMap();
 /**
  * 
  * @param {Site[]} sites 
@@ -12,6 +15,17 @@ function findCurrentSite(sites) {
         /** @type {import('./class').Site}  */
         const site = sites[s];
         if (site.test()) {
+            let handler;
+            if (messageHandlerMap.has(site)) handler = messageHandlerMap.get(site);
+            else {
+                handler = (e) => {
+                    if (site.isMessageOriginAllowed(e.origin) && site.isFromTampermonkey(e)) {
+                        tutil.printReceiveMessage(e);
+                    }
+                };
+                messageHandlerMap.set(site, handler);
+            }
+            window.addEventListener('message', handler);
             return site;
         }
     }
