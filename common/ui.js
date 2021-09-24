@@ -401,6 +401,18 @@ export const ui = {
                 }), 350)
         }), timeout);
     },
+    /**
+     * Download blob as a file.
+     * @param {Blob} blob 
+     * @param {string} filename - File name with extension.
+     */
+    downloadBlob: function (blob, filename) {
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    },
     /* #endregion */
     /* #region Fullscreen/Webfullscreen */
     isFullscreen() {

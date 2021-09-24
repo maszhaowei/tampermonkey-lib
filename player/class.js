@@ -264,13 +264,7 @@ export class VideoInstance {
         canvas.width = videoWidth;
         canvas.height = videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, videoWidth, videoHeight);
-        canvas.toBlob(function (e) {
-            let a = document.createElement('a');
-            a.href = URL.createObjectURL(e);
-            a.download = `${fileName}_${videoWidth}x${videoHeight}.png`;
-            a.click();
-            URL.revokeObjectURL(a.href);
-        });
+        canvas.toBlob((blob) => cui.downloadBlob(blob, `${fileName}_${videoWidth}x${videoHeight}.png`));
     }
 
     /* #region Video Control */
