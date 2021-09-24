@@ -282,10 +282,7 @@ export class VideoInstance {
      * @returns 
      */
     isVideoInWebFullScreen() {
-        let rect = this.#initData.container.getBoundingClientRect();
-        let v = cui.getViewPortDimension();
-        return document.body.classList.contains(Const.bodyWebFullscreenClassName)
-            || (Math.round(rect.width) == v.width && Math.round(rect.height) == v.height);
+        return document.body.classList.contains(Const.bodyWebFullscreenClassName);
     }
     #saveAndSetCss() {
         let html = document.documentElement;
