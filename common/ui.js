@@ -238,6 +238,28 @@ export const ui = {
         html.scrollTo(offset.left - (html.clientWidth - rect.width) / 2, offset.top - (html.clientHeight - rect.height) / 2);
     },
     /**
+     * Retrieve the dimension of viewport.
+     * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
+     * @returns 
+     */
+    getViewPortDimension(scrollbar = false) {
+        let vh, vw;
+        if (scrollbar) {
+            vh = window.innerHeight;
+            vw = window.innerWidth;
+        }
+        else {
+            if (document.compatMode === 'BackCompat') {
+                vh = document.body.clientHeight;
+                vw = document.body.clientWidth;
+            } else {
+                vh = document.documentElement.clientHeight;
+                vw = document.documentElement.clientWidth;
+            }
+        }
+        return { vh: vh, vw: vw };
+    },
+    /**
      * 
      * @param {KeyboardEvent} e 
      * @returns 

@@ -288,11 +288,10 @@ export class VideoInstance {
      * @returns 
      */
     isVideoInWebFullScreen() {
-        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
         let rect = this.#initData.container.getBoundingClientRect();
+        let v = cui.getViewPortDimension();
         return document.body.classList.contains(Const.bodyWebFullscreenClassName)
-            || (Math.round(rect.width) == vw && Math.round(rect.height) == vh);
+            || (Math.round(rect.width) == v.vw && Math.round(rect.height) == v.vh);
     }
     #saveAndSetCss() {
         let html = document.documentElement;
