@@ -58,6 +58,7 @@ export const ui = {
      * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 2000.
      */
     asyncChainClick: function (contexts, interval = 0, waitTimeout = 2000) {
+        if(!Array.isArray(contexts)) throw new TypeError('contexts is not an array.')
         return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(HTMLElement.prototype.click, context)), interval, waitTimeout);
     }
 }
