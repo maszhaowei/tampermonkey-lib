@@ -294,7 +294,7 @@ export const ui = {
         }
     },
     /**
-     * Show {@link tooltip} of white color against black background on target. Default to be at center position.
+     * 
      * @param {string} tooltip
      * @param {import('./class').PositionOption} options
      * @param {number} [timeout] - Timeout(ms) before tooltip to fadeout. Default to 1000.
