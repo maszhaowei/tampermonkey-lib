@@ -380,7 +380,7 @@ export const ui = {
         if (!MessageLevel.test(level)) level = MessageLevel.INFO;
         let frag = document.createDocumentFragment(), linkDiv = document.createElement('div');
         linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
-        linkDiv.className = 'link-toast ' + level;
+        linkDiv.className = 'link-toast ' + level + ' ' + (options.fixed ? 'fixed' : '');
         let target = options.target;
         if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
         document.querySelector('div.link-toast')?.remove();
