@@ -274,6 +274,6 @@ export let util = {
             }
             return true;
         }
-        return isNaN(obj1) ? isNaN(obj2) : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
+        return Object.is(obj1, obj2) ? true : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
     }
 };
