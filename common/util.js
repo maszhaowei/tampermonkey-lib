@@ -19,11 +19,12 @@ export let util = {
     /**
      * 
      * @param {string|URL} url 
+     * @param {boolean} withCredentials 
      * @param {Object.<string,string>} [headers] 
      * @param {string} [responseType] - Default to "json".
      * @returns 
      */
-    get: function (url, headers, responseType) {
+    get: function (url, withCredentials = false, headers, responseType) {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
             req.responseType = responseType || 'json';
@@ -33,6 +34,7 @@ export let util = {
             req.addEventListener("error", function () {
                 reject(this);
             });
+            req.withCredentials = withCredentials;
             req.open("GET", url);
             if (headers) {
                 for (let i in headers) req.setRequestHeader(i, headers[i]);
