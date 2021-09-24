@@ -4,7 +4,7 @@ import { ApplyMethodSignature, PositionOption } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
-import { CssCacheHelper } from '../tampermonkey/class';
+import { CssCacheHelper } from '../tampermonkey/utils';
 
 export const _VideoCustomEventTypes = {
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
