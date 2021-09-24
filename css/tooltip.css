@@ -64,7 +64,11 @@
     -webkit-transform:translate(-10px);
     transform:translate(-10px)
 }
-.zw-player-tooltips.active {
+.zw-player-tooltips.active,
+.zw-player-tooltips.center-center.active,
+.zw-player-tooltips.top-center.active,
+.zw-player-tooltips.top-left.active,
+.zw-player-tooltips.top-right.active {
     -webkit-transform:translate(0);
     transform:translate(0);
     z-index:999999;
