@@ -1,11 +1,12 @@
 .zw-player-tooltips {
-    position: fixed;
-    opacity: 0;
-    z-index: -1;
-    top: -999px;
-    cursor: default;
-    pointer-events: none;
-
+    position:fixed;
+    opacity:0;
+    z-index:-1;
+    top:-999px;
+    cursor:default;
+    pointer-events:none;
+}
+.zw-player-tooltips {
     text-align: left;
     white-space: nowrap;
 
@@ -13,58 +14,106 @@
     line-height: 1;
 
     color: #222;
-}
-.zw-player-tooltips.active {
-    -webkit-transform: translate(0);
-    transform: translate(0);
-    z-index: 999999;
-    opacity: 1;
-}
-.zw-player-tooltips.center-center, .zw-player-tooltips.top-center, .zw-player-tooltips.top-left, .zw-player-tooltips.top-right {
-    -webkit-transform: translateY(10px);
-    transform: translateY(10px);
-}
-.zw-player-tooltips.animation {
-    -webkit-transition: opacity .3s ease-in-out,-webkit-transform .3s ease-in-out;
-    transition: opacity .3s ease-in-out,-webkit-transform .3s ease-in-out;
-    transition: transform .3s ease-in-out,opacity .3s ease-in-out;
-    transition: transform .3s ease-in-out,opacity .3s ease-in-out,-webkit-transform .3s ease-in-out;
-}
 
-.zw-player-tooltips > .zw-tooltip:first-child {
-    margin: 0;
-}
-.zw-player-tooltips.active > .arrow, .zw-player-tooltips.active > .zw-tooltip {
-    opacity: 1;
-    z-index: 98;
-}
-.zw-player-tooltips.animation > .arrow, .zw-player-tooltips.animation > .zw-tooltip {
-    -webkit-transition: opacity .3s ease-in-out;
-    transition: opacity .3s ease-in-out;
-}
-.zw-player-tooltips > .zw-tooltip {
-    background: rgba(0,0,0,.7);
-    border-radius: 4px;
-    color: #fff;
-    font-size: 16px;
-    padding: 6px 8px;
-    line-height: normal;
-}
-
-div.zw-player-tooltips, div.zw-tooltip {
     margin: 0;
     padding: 0;
     border: 0;
     font-size: 100%;
     vertical-align: baseline;
     font-style: normal;
-
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
+    
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
 }
-
+.zw-player-tooltips.animation {
+    -webkit-transition:opacity .3s ease-in-out,-webkit-transform .3s ease-in-out;
+    transition:opacity .3s ease-in-out,-webkit-transform .3s ease-in-out;
+    transition:transform .3s ease-in-out,opacity .3s ease-in-out;
+    transition:transform .3s ease-in-out,opacity .3s ease-in-out,-webkit-transform .3s ease-in-out
+}
+.zw-player-tooltips.animation>.arrow,
+.zw-player-tooltips.animation>.zw-tooltip {
+    -webkit-transition:opacity .3s ease-in-out;
+    transition:opacity .3s ease-in-out
+}
+.zw-player-tooltips.center-center,
+.zw-player-tooltips.top-center,
+.zw-player-tooltips.top-left,
+.zw-player-tooltips.top-right {
+    -webkit-transform:translateY(10px);
+    transform:translateY(10px)
+}
+.zw-player-tooltips.bottom-center,
+.zw-player-tooltips.bottom-left,
+.zw-player-tooltips.bottom-right {
+    -webkit-transform:translateY(-10px);
+    transform:translateY(-10px)
+}
+.zw-player-tooltips.left-bottom,
+.zw-player-tooltips.left-center,
+.zw-player-tooltips.left-top {
+    -webkit-transform:translate(10px);
+    transform:translate(10px)
+}
+.zw-player-tooltips.right-bottom,
+.zw-player-tooltips.right-center,
+.zw-player-tooltips.right-top {
+    -webkit-transform:translate(-10px);
+    transform:translate(-10px)
+}
+.zw-player-tooltips.active {
+    -webkit-transform:translate(0);
+    transform:translate(0);
+    z-index:999999;
+    opacity:1
+}
+.zw-player-tooltips.active>.arrow,
+.zw-player-tooltips.active>.zw-tooltip {
+    opacity:1;
+    z-index:98
+   }
+.zw-player-tooltips.tip .arrow {
+    position:absolute;
+    width:0;
+    height:0;
+    border:4px solid transparent;
+    opacity:1;
+    z-index:-1
+}
+.zw-player-tooltips.tip.top-center .arrow,
+.zw-player-tooltips.tip.top-left .arrow,
+.zw-player-tooltips.tip.top-right .arrow {
+    bottom:-8px;
+    margin-left:-4px;
+    border-top-color:rgba(0,0,0,.7)
+}
+.zw-player-tooltips.tip.bottom-center .arrow,
+.zw-player-tooltips.tip.bottom-left .arrow,
+.zw-player-tooltips.tip.bottom-right .arrow {
+    top:-8px;
+    margin-left:-4px;
+    border-bottom-color:rgba(0,0,0,.7)
+}
+.zw-player-tooltips>.zw-tooltip {
+    background:rgba(21,21,21,.9);
+    border-radius:2px;
+    color:#fff;
+    font-size:12px;
+    line-height:normal;
+    padding:6px 8px;
+    margin-top:5px;
+    opacity:0
+}
+.zw-player-tooltips>.zw-tooltip:first-child {
+    margin:0
+}
+.zw-player-tooltips.zw-tooltip-game>.zw-tooltip {
+    background:rgba(0,0,0,.8)
+}
 div.zw-player-tooltips::selection, div.zw-tooltip::selection {
-background: #1890ff;
-color: #fff;
+    background: #1890ff;
+    color: #fff;
 }
