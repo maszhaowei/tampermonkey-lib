@@ -123,25 +123,33 @@ export class PositionOption {
     position;
     top;
     left;
-    inside;
+    insideX;
+    insideY;
     fixed;
+    ensureViewPort;
     /**
      * 
      * @param {object} options
-     * @param {Element} options.target - Target element for display.
+     * @param {Element} options.target - Target element for positioning.
      * @param {string} [options.position] - Position to display. Default to "center-center". See TooltipPosition for available values.
      * @param {number} [options.top] - Additional y offset. Default to 0.
      * @param {number} [options.left] - Additional x offset. Default to 0.
-     * @param {boolean} [options.inside] - Whether the displayed message is inside {@link target}. Default to true.
+     * @param {boolean} [options.insideX] - Whether the displayed message is inside horizontal axes of {@link target}. Default to true.
+     * @param {boolean} [options.insideY] - Whether the displayed message is inside vertical axes of {@link target}. Default to true.
+     * @param {boolean} [options.insideX] - Whether the displayed message is inside {@link target}. Default to true.
      * @param {boolean} [options.fixed] - Whether the css position of displayed message is fixed. Default to true.
+     * @param {boolean} [options.ensureViewPort] - Ensure that the displayed element is whithin the viewport. Default to true.
      */
-    constructor({ target, position = _TooltipPosition.CENTER_CENTER, top = 0, left = 0, inside = true, fixed = true }) {
-        if(!(target instanceof Element)) throw new TypeError('target is not an Element');
+    constructor({ target, position = _TooltipPosition.CENTER_CENTER,
+        top = 0, left = 0, insideX = true, insideY = true, fixed = true, ensureViewPort = true }) {
+        if (!(target instanceof Element)) throw new TypeError('target is not an Element');
         this.target = target;
         this.position = position;
         this.top = top;
         this.left = left;
-        this.inside = inside;
+        this.insideX = insideX;
+        this.insideY = insideY;
         this.fixed = fixed;
+        this.ensureViewPort = ensureViewPort;
     }
 }

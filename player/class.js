@@ -291,7 +291,7 @@ export class VideoInstance {
         let rect = this.#initData.container.getBoundingClientRect();
         let v = cui.getViewPortDimension();
         return document.body.classList.contains(Const.bodyWebFullscreenClassName)
-            || (Math.round(rect.width) == v.vw && Math.round(rect.height) == v.vh);
+            || (Math.round(rect.width) == v.width && Math.round(rect.height) == v.height);
     }
     #saveAndSetCss() {
         let html = document.documentElement;

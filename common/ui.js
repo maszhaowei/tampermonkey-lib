@@ -35,6 +35,28 @@ function offset2(element) {
     };
 }
 /**
+ * Retrieve the dimension of viewport.
+ * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
+ * @returns 
+ */
+function getViewPortDimension2(scrollbar = false) {
+    let vh, vw;
+    if (scrollbar) {
+        vh = window.innerHeight;
+        vw = window.innerWidth;
+    }
+    else {
+        if (document.compatMode === 'BackCompat') {
+            vh = document.body.clientHeight;
+            vw = document.body.clientWidth;
+        } else {
+            vh = document.documentElement.clientHeight;
+            vw = document.documentElement.clientWidth;
+        }
+    }
+    return { height: vh, width: vw };
+}
+/**
  * 
  * @param {Element} displayElement 
  * @param {import('./class').PositionOption} options
@@ -67,9 +89,10 @@ function getCoord(displayElement, options) {
     if (position.endsWith('right')) left += targetRect.width;
     else if (position.endsWith('bottom')) top += targetRect.height;
 
-    let inside = options.inside;
-    if (inside && position.includes('bottom') || (!inside && position.includes('top'))) top -= tooltipRect.height;
-    if (inside && position.includes('right') || (!inside && position.includes('left'))) left -= tooltipRect.width;
+    let insideX = options.insideX;
+    if (insideX && position.includes('bottom') || (!insideX && position.includes('top'))) top -= tooltipRect.height;
+    let insideY = options.insideY;
+    if (insideY && position.includes('right') || (!insideY && position.includes('left'))) left -= tooltipRect.width;
     return { left: left, top: top };
 }
 class Tooltip {
@@ -268,23 +291,7 @@ export const ui = {
      * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
      * @returns 
      */
-    getViewPortDimension(scrollbar = false) {
-        let vh, vw;
-        if (scrollbar) {
-            vh = window.innerHeight;
-            vw = window.innerWidth;
-        }
-        else {
-            if (document.compatMode === 'BackCompat') {
-                vh = document.body.clientHeight;
-                vw = document.body.clientWidth;
-            } else {
-                vh = document.documentElement.clientHeight;
-                vw = document.documentElement.clientWidth;
-            }
-        }
-        return { vh: vh, vw: vw };
-    },
+    getViewPortDimension: getViewPortDimension2,
     /**
      * 
      * @param {KeyboardEvent} e 
