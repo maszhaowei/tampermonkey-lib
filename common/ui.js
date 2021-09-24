@@ -172,7 +172,7 @@ class Tooltip {
             text: i
         }) : 'object' == typeof i && (i = Object.assign(this.options, i));
         var e = this.template(!1, i);
-        this.$zwtooltips.insertAdjacentElement('beforeend', e),
+        this.$zwtooltips.append(e),
             this.updatePos(!0);
     }
     hide() {
@@ -190,8 +190,8 @@ class Tooltip {
             this.$zwtooltips && this.$zwtooltips.remove();
     }
     create() {
-        document.querySelector('.' + this.prefix + '[data-tooltip-name="' + this.options.name + '"]') || (this.$zwtooltips = this.template(!0), this.options.game && this.$zwtooltips.classList.add('tooltip-game'), this.options.target.insertAdjacentElement('beforeend', this.$zwtooltips)),
-            this.$zwtooltips.insertAdjacentElement('beforeend', this.template()),
+        document.querySelector('.' + this.prefix + '[data-tooltip-name="' + this.options.name + '"]') || (this.$zwtooltips = this.template(!0), this.options.game && this.$zwtooltips.classList.add('tooltip-game'), this.options.target.append(this.$zwtooltips)),
+            this.$zwtooltips.append(this.template()),
             this.updatePos();
     }
     template(i, e) {
