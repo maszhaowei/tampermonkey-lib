@@ -25,7 +25,7 @@ export let util = {
      */
     get: function (url, headers, responseType) {
         return new Promise((resolve, reject) => {
-            var req = new XMLHttpRequest();
+            let req = new XMLHttpRequest();
             req.responseType = responseType || 'json';
             req.addEventListener("load", (res) => {
                 resolve(res.response || res.responseText);
@@ -50,7 +50,7 @@ export let util = {
      */
     post: function (url, headers = { "Content-Type": "application/x-www-form-urlencoded" }, data, responseType) {
         return new Promise((resolve, reject) => {
-            var req = new XMLHttpRequest();
+            let req = new XMLHttpRequest();
             req.responseType = responseType || 'json';
             req.addEventListener("load", (res) => {
                 resolve(res.response || res.responseText);
@@ -183,7 +183,7 @@ export let util = {
         else if (!util.isInteger(digits)) return;
 
         let zhNumber = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '百', '千', '万', '亿'];
-        var length = digits.length;
+        let length = digits.length;
         if (length == 1) {
             return zhNumber[digits];
         } else if (length == 2) {
