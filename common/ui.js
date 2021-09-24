@@ -72,182 +72,6 @@ function getCoord(displayElement, options) {
     if (inside && position.includes('right') || (!inside && position.includes('left'))) left -= tooltipRect.width;
     return { left: left, top: top };
 }
-export const ui = {
-    /* #region General */
-    /**
-     * jQuery.fn.offset implementation to retrieve the current position of an element (specifically its border box, which excludes margins) relative to the document.
-     * Returns {top:0, left:0} if display:none.
-     * @see {@link https://api.jquery.com/offset/}
-     * @param {Element} element 
-     * @returns 
-     */
-    offset: offset2,
-    /**
-     * 
-     * @param {HTMLElement} element 
-     */
-    scrollToElement(element) {
-        if (!element) return;
-        let html = element.ownerDocument.documentElement;
-        const offset = ui.offset2(element);
-        const rect = element.getBoundingClientRect();
-        html.scrollTo(offset.left - (html.clientWidth - rect.width) / 2, offset.top - (html.clientHeight - rect.height) / 2);
-    },
-    /**
-     * 
-     * @param {KeyboardEvent} e 
-     * @returns 
-     */
-    isInputEvent(e) {
-        if (!e.target) return false;
-        return e.target.tagName.toUpperCase() == "TEXTAREA" || (e.target.tagName.toUpperCase() == "INPUT" && e.target.type == "text")
-            || e.isComposing || e.keyCode === 229;
-    },
-    /**
-     * 
-     * @param {Event} e 
-     * @returns 
-     */
-    isEventFromThisDoc(e) {
-        return e.target && e.target.getRootNode() == document;
-    },
-    /**
-     * 
-     * @param {string} selector 
-     * @param {Element|Document} context 
-     */
-    hide(selector, context = document) {
-        context.querySelectorAll(selector).forEach((element) => ui.hideElement(element));
-    },
-    /**
-     * 
-     * @param {HTMLElement} element 
-     */
-    hideElement(element) {
-        if (element) element.style.display = 'none';
-    },
-    /**
-     * Find the first {@link selector} in the context of {@link contexts}.
-     * @param {string} selector 
-     * @param {...string|Element|Document} contexts 
-     * @returns {HTMLElement}
-     */
-    querySelectorFirst(selector, ...contexts) {
-        if (!selector) {
-            util.printGroupDebug(undefined, "selector is empty");
-            return;
-        }
-        for (let i = 0; i < contexts.length; i++) {
-            let context = contexts[i];
-            if (!context) continue;
-            if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
-            else {
-                for (let contextElement of document.querySelectorAll(context)) {
-                    let findElement = contextElement.querySelector(selector);
-                    if (findElement) return findElement;
-                }
-            }
-        }
-    },
-    /**
-     * Show {@link tooltip} of white color against black background on target. Default to be at center position.
-     * @param {string} tooltip
-     * @param {import('./class').PositionOption} options
-     * @param {number} [timeout] - Timeout(ms) before tooltip to fadeout. Default to 1000.
-     */
-    showTooltip: (tooltip, options, timeout) => { console.debug(tooltip, options, timeout) },
-    /**
-     * 
-     * @param {string} message 
-     * @param {string} [level] - Default to "info". See MessageLevel for available values.
-     * @param {import('./class').PositionOption} options
-     * @param {number} - [timeout] - Timeout(ms) before message to fade out. Default to 4000.
-     */
-    showMessage: function (message, level = MessageLevel.INFO, options, timeout = 4000) {
-        if (!MessageLevel.test(level)) level = MessageLevel.INFO;
-        let frag = document.createDocumentFragment(), linkDiv = document.createElement('div');
-        linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
-        linkDiv.className = 'link-toast ' + level;
-        let target = options.target;
-        if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
-        document.querySelector('div.link-toast')?.remove();
-        frag.appendChild(linkDiv);
-        document.body.appendChild(frag);
-        let offset = getCoord(linkDiv, options);
-        linkDiv.style.left = offset.left + 'px';
-        linkDiv.style.top = offset.top + 'px';
-        setTimeout((function () {
-            linkDiv.className += ' out',
-                setTimeout((function () {
-                    linkDiv.parentNode ? linkDiv.parentNode.removeChild(linkDiv) : linkDiv.remove();
-                }), 350)
-        }), timeout);
-    },
-    /* #endregion */
-    /* #region Fullscreen/Webfullscreen */
-    isFullscreen() {
-        return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
-    },
-    isFullscreenEnabled() {
-        // return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
-        return util.anyMemberNotEmpty(['fullscreenEnabled',
-            'webkitFullscreenEnabled',
-            'mozFullScreenEnabled',
-            'msFullscreenEnabled'], document)
-    },
-    /**
-     * Returns the Element that is currently being presented in full-screen mode in this document.
-     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot.
-     * @returns {Element} 
-     */
-    getFullscreenElement(tryShadowRoot) {
-        tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
-        /** @type {Element} */
-        var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
-            'webkitFullscreenElement',
-            'mozFullScreenElement',
-            'msFullscreenElement'], document);
-        if (tryShadowRoot) for (; fsEle && fsEle.shadowRoot;) fsEle = fsEle.shadowRoot.fullscreenElement;
-        return fsEle ? fsEle : null;
-    },
-    /**
-     * 
-     * @param {Element} element 
-     * @returns {Promise<undefined|Error>}
-     */
-    requestFullscreen(element = document.documentElement) {
-        let p;
-        if (element.requestFullscreen) p = element.requestFullscreen();
-        else if (element.webkitRequestFullscreen) p = element.webkitRequestFullscreen();
-        else if (element.mozRequestFullScreen) p = element.mozRequestFullScreen();
-        else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
-        else if (element.webkitEnterFullscreen) p = element.webkitEnterFullscreen();
-        else return Promise.reject(Error('Fullscreen API unavailable'));
-        return p instanceof Promise ? p : Promise.resolve();
-    },
-    /**
-     * 
-     * @returns {Promise<undefined|Error>}
-     */
-    exitFullscreen() {
-        let p;
-        if (document.exitFullscreen) p = document.exitFullscreen();
-        else if (document.webkitExitFullscreen) p = document.webkitExitFullscreen();
-        else if (document.mozCancelFullScreen) p = document.mozCancelFullScreen();
-        else if (document.msExitFullscreen) p = document.msExitFullscreen();
-        else return Promise.reject(Error('Exit fullscreen API unavailable'));
-        return p instanceof Promise ? p : Promise.resolve();
-    },
-    /**
-     * 
-     * @param {Element} element 
-     */
-    toggleFullscreen(element = document.documentElement) {
-        if (ui.isFullscreen()) return ui.exitFullscreen(element);
-        else return ui.requestFullscreen(element);
-    }
-    /* #endregion */
-};
 class Tooltip {
     /**
      * 
@@ -392,17 +216,185 @@ class Tooltip {
         this.$zwtooltips.style.left = offset.left + 'px';
     }
 }
-/**
- * 
- * @param {string} tooltip
- * @param {import('./class').PositionOption} options
- * @param {number} [timeout] - Timeout(ms) before tooltip to fadeout. Default to 1000.
- * @returns 
- */
-ui.showTooltip = function (tooltip, options, timeout = 1000) {
-    if (util.isBlank(tooltip)) {
-        console.debug("Tooltip is blank");
-        return;
+export const ui = {
+    /* #region General */
+    /**
+     * jQuery.fn.offset implementation to retrieve the current position of an element (specifically its border box, which excludes margins) relative to the document.
+     * Returns {top:0, left:0} if display:none.
+     * @see {@link https://api.jquery.com/offset/}
+     * @param {Element} element 
+     * @returns 
+     */
+    offset: offset2,
+    /**
+     * 
+     * @param {HTMLElement} element 
+     */
+    scrollToElement(element) {
+        if (!element) return;
+        let html = element.ownerDocument.documentElement;
+        const offset = offset2(element);
+        const rect = element.getBoundingClientRect();
+        html.scrollTo(offset.left - (html.clientWidth - rect.width) / 2, offset.top - (html.clientHeight - rect.height) / 2);
+    },
+    /**
+     * 
+     * @param {KeyboardEvent} e 
+     * @returns 
+     */
+    isInputEvent(e) {
+        if (!e.target) return false;
+        return e.target.tagName.toUpperCase() == "TEXTAREA" || (e.target.tagName.toUpperCase() == "INPUT" && e.target.type == "text")
+            || e.isComposing || e.keyCode === 229;
+    },
+    /**
+     * 
+     * @param {Event} e 
+     * @returns 
+     */
+    isEventFromThisDoc(e) {
+        return e.target && e.target.getRootNode() == document;
+    },
+    /**
+     * 
+     * @param {string} selector 
+     * @param {Element|Document} context 
+     */
+    hide(selector, context = document) {
+        context.querySelectorAll(selector).forEach((element) => ui.hideElement(element));
+    },
+    /**
+     * 
+     * @param {HTMLElement} element 
+     */
+    hideElement(element) {
+        if (element) element.style.display = 'none';
+    },
+    /**
+     * Find the first {@link selector} in the context of {@link contexts}.
+     * @param {string} selector 
+     * @param {...string|Element|Document} contexts 
+     * @returns {HTMLElement}
+     */
+    querySelectorFirst(selector, ...contexts) {
+        if (!selector) {
+            util.printGroupDebug(undefined, "selector is empty");
+            return;
+        }
+        for (let i = 0; i < contexts.length; i++) {
+            let context = contexts[i];
+            if (!context) continue;
+            if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
+            else {
+                for (let contextElement of document.querySelectorAll(context)) {
+                    let findElement = contextElement.querySelector(selector);
+                    if (findElement) return findElement;
+                }
+            }
+        }
+    },
+    /**
+     * Show {@link tooltip} of white color against black background on target. Default to be at center position.
+     * @param {string} tooltip
+     * @param {import('./class').PositionOption} options
+     * @param {number} [timeout] - Timeout(ms) before tooltip to fadeout. Default to 1000.
+     */
+    showTooltip: function (tooltip, options, timeout = 1000) {
+        if (util.isBlank(tooltip)) {
+            console.debug("Tooltip is blank");
+            return;
+        }
+        new Tooltip(tooltip, options, timeout);
+    },
+    /**
+     * 
+     * @param {string} message 
+     * @param {string} [level] - Default to "info". See MessageLevel for available values.
+     * @param {import('./class').PositionOption} options
+     * @param {number} - [timeout] - Timeout(ms) before message to fade out. Default to 4000.
+     */
+    showMessage: function (message, level = MessageLevel.INFO, options, timeout = 4000) {
+        if (!MessageLevel.test(level)) level = MessageLevel.INFO;
+        let frag = document.createDocumentFragment(), linkDiv = document.createElement('div');
+        linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
+        linkDiv.className = 'link-toast ' + level;
+        let target = options.target;
+        if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
+        document.querySelector('div.link-toast')?.remove();
+        frag.appendChild(linkDiv);
+        document.body.appendChild(frag);
+        let offset = getCoord(linkDiv, options);
+        linkDiv.style.left = offset.left + 'px';
+        linkDiv.style.top = offset.top + 'px';
+        setTimeout((function () {
+            linkDiv.className += ' out',
+                setTimeout((function () {
+                    linkDiv.parentNode ? linkDiv.parentNode.removeChild(linkDiv) : linkDiv.remove();
+                }), 350)
+        }), timeout);
+    },
+    /* #endregion */
+    /* #region Fullscreen/Webfullscreen */
+    isFullscreen() {
+        return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+    },
+    isFullscreenEnabled() {
+        // return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
+        return util.anyMemberNotEmpty(['fullscreenEnabled',
+            'webkitFullscreenEnabled',
+            'mozFullScreenEnabled',
+            'msFullscreenEnabled'], document)
+    },
+    /**
+     * Returns the Element that is currently being presented in full-screen mode in this document.
+     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot.
+     * @returns {Element} 
+     */
+    getFullscreenElement(tryShadowRoot) {
+        tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
+        /** @type {Element} */
+        var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
+            'webkitFullscreenElement',
+            'mozFullScreenElement',
+            'msFullscreenElement'], document);
+        if (tryShadowRoot) for (; fsEle && fsEle.shadowRoot;) fsEle = fsEle.shadowRoot.fullscreenElement;
+        return fsEle ? fsEle : null;
+    },
+    /**
+     * 
+     * @param {Element} element 
+     * @returns {Promise<undefined|Error>}
+     */
+    requestFullscreen(element = document.documentElement) {
+        let p;
+        if (element.requestFullscreen) p = element.requestFullscreen();
+        else if (element.webkitRequestFullscreen) p = element.webkitRequestFullscreen();
+        else if (element.mozRequestFullScreen) p = element.mozRequestFullScreen();
+        else if (element.msRequestFullscreen) p = element.msRequestFullscreen();
+        else if (element.webkitEnterFullscreen) p = element.webkitEnterFullscreen();
+        else return Promise.reject(Error('Fullscreen API unavailable'));
+        return p instanceof Promise ? p : Promise.resolve();
+    },
+    /**
+     * 
+     * @returns {Promise<undefined|Error>}
+     */
+    exitFullscreen() {
+        let p;
+        if (document.exitFullscreen) p = document.exitFullscreen();
+        else if (document.webkitExitFullscreen) p = document.webkitExitFullscreen();
+        else if (document.mozCancelFullScreen) p = document.mozCancelFullScreen();
+        else if (document.msExitFullscreen) p = document.msExitFullscreen();
+        else return Promise.reject(Error('Exit fullscreen API unavailable'));
+        return p instanceof Promise ? p : Promise.resolve();
+    },
+    /**
+     * 
+     * @param {Element} element 
+     */
+    toggleFullscreen(element = document.documentElement) {
+        if (ui.isFullscreen()) return ui.exitFullscreen(element);
+        else return ui.requestFullscreen(element);
     }
-    new Tooltip(tooltip, options, timeout);
-}
+    /* #endregion */
+};
