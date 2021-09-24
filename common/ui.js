@@ -311,7 +311,7 @@ export const ui = {
      * @param {string} message 
      * @param {string} [level] - Default to "info". See MessageLevel for available values.
      * @param {import('./class').PositionOption} options
-     * @param {number} - [timeout] - Timeout(ms) before message to fade out. Default to 4000.
+     * @param {number} - [timeout] - Timeout(ms) before message begin to fade out. Default to 4000.
      */
     showMessage: function (message, level = MessageLevel.INFO, options, timeout = 4000) {
         if (!MessageLevel.test(level)) level = MessageLevel.INFO;
