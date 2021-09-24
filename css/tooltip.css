@@ -1,4 +1,12 @@
 .zw-player-tooltips {
+    position:absolute;
+    opacity:0;
+    z-index:-1;
+    top:-999px;
+    cursor:default;
+    pointer-events:none;
+}
+.zw-player-tooltips.fixed {
     position:fixed;
     opacity:0;
     z-index:-1;

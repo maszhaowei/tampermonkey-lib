@@ -225,21 +225,26 @@ class Tooltip {
             this.$zwtooltips.append(this.template()),
             this.updatePos();
     }
-    template(i, e) {
-        var t, a, r, o = '', n = [];
-        if (a = (e = e || this.options).text || e.target.getAttribute('data-text'), r = e.position || e.target.getAttribute('data-position'), e.changeMode = e.target.getAttribute('data-change-mode') || 0, i)
-            n.push(e.type),
-                n.push(r),
-                e.animation && n.push('animation'),
-                t = n.join(' '),
-                o = '<div class="' + this.prefix + ' ' + t + '"  data-tooltip-name="' + e.name + '"></div>';
-        else {
-            var l = '';
-            e.padding && (e.padding instanceof Array ? l += 'padding:' + e.padding.join('px ') + 'px;' : 'number' == typeof e.padding && (l += 'padding:' + e.padding + ';')),
-                e.fontSize && 'number' == typeof e.fontSize && (l += 'font-size:' + e.fontSize + 'px;'),
-                o = '<div class="zw-tooltip" style="' + l + '">' + a + '</div>';
+    template(i, options) {
+        let className, text, position, htmlText = '', classes = [];
+        text = (options = options || this.options).text || options.target.getAttribute('data-text');
+        position = options.position || options.target.getAttribute('data-position');
+        options.changeMode = options.target.getAttribute('data-change-mode') || 0;
+        if (i) {
+            classes.push(options.type);
+            classes.push(position);
+            options.animation && classes.push('animation');
+            if (options.fixed) classes.push('fixed');
+            className = classes.join(' ');
+            htmlText = `<div class="${this.prefix} ${className}"  data-tooltip-name="${options.name}"></div>`;
         }
-        return document.createRange().createContextualFragment(o).firstElementChild;
+        else {
+            var style = '';
+            options.padding && (options.padding instanceof Array ? style += 'padding:' + options.padding.join('px ') + 'px;' : 'number' == typeof options.padding && (style += 'padding:' + options.padding + ';')),
+                options.fontSize && 'number' == typeof options.fontSize && (style += 'font-size:' + options.fontSize + 'px;'),
+                htmlText = `<div class="zw-tooltip${options.fixed ? ' fixed' : ''}" style="` + style + '">' + text + '</div>';
+        }
+        return document.createRange().createContextualFragment(htmlText).firstElementChild;
     }
     updatePos() {
         let options = this.options;
