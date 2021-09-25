@@ -1,5 +1,5 @@
-import { SiteCategories, SiteIDs, Sites, VideoPortalSites, VideoSites } from './enum';
-import { PlayerMetadata, Site, SiteCategory, VideoPortalSite, VideoSite } from './class';
+import { SiteCategories, SiteIDs, Sites, VideoCategories, VideoPortalSites, VideoSites } from './enum';
+import { PlayerMetadata, Site, VideoPortalSite, VideoSite } from './class';
 import { util as cutil } from '../common/util';
 import { util as tutil } from '../tampermonkey/util';
 /** @type {WeakMap<import('./class').Site,(e:MessageEvent)=>void)>} */
@@ -79,15 +79,24 @@ cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/
         let sitecategories = res['sitecategories'];
         if (cutil.isObject(sitecategories)) {
             for (let i in sitecategories) {
-                let s = sitecategories[i];
-                SiteCategories[i] = new SiteCategory(s.categoryName, new RegExp(s.titleRegEx));
+                SiteCategories[i] = sitecategories[i];
+            }
+        }
+        let videocategories = res['videocategories'];
+        if (cutil.isObject(videocategories)) {
+            for (let i in videocategories) {
+                VideoCategories[i] = videocategories[i];
             }
         }
         let sites = res['sites'];
         if (cutil.isObject(sites)) {
             for (let i in sites) {
                 let s = sites[i];
-                Sites[i] = new Site(s.id, s.origin, new RegExp(s.hrefRegEx), s.siteCategories, s.originWhitelist);
+                Sites[i] = new Site({
+                    id: s.id, origin: s.origin, hrefRegEx: new RegExp(s.hrefRegEx),
+                    siteCategories: s.siteCategories, subcategories: s.subcategories,
+                    originWhitelist: s.originWhitelist
+                });
             }
         }
         let videosites = res['videosites'];

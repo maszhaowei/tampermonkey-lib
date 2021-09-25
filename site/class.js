@@ -1,20 +1,5 @@
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
-export class SiteCategory {
-    /** @readonly */
-    categoryName;
-    /** @readonly */
-    titleRegEx;
-    /**
-     * @hideconstructor
-     * @param {string} categoryName 
-     * @param {RegExp} [titleRegEx] 
-     */
-    constructor(categoryName, titleRegEx) {
-        this.categoryName = categoryName;
-        this.titleRegEx = titleRegEx;
-    }
-}
 export class PlayerMetadata {
     #containerSelector;
     /**
@@ -69,21 +54,26 @@ export class Site {
     get hrefRegEx() { return this.#hrefRegEx }
     #siteCategories;
     get siteCategories() { return this.#siteCategories }
+    #subcategories;
+    get subcategories() { return this.#subcategories }
     #originWhitelist;
     get originWhitelist() { return this.#originWhitelist }
     /**
      * @hideconstructor
-     * @param {string} id 
-     * @param {string} origin 
-     * @param {RegExp} [hrefRegEx] 
-     * @param {SiteCategory[]} siteCategories 
-     * @param {string[]} [originWhitelist] 
+     * @param {object} options
+     * @param {string} options.id 
+     * @param {string} options.origin 
+     * @param {RegExp} [options.hrefRegEx] 
+     * @param {string[]} [options.siteCategories] 
+     * @param {string[]} [options.subcategories] 
+     * @param {string[]} [options.originWhitelist] 
      */
-    constructor(id, origin, hrefRegEx, siteCategories, originWhitelist = []) {
+    constructor({ id, origin, hrefRegEx, siteCategories, subcategories, originWhitelist = [] }) {
         this.#id = id;
         this.#origin = origin;
         this.#hrefRegEx = hrefRegEx;
         this.#siteCategories = siteCategories;
+        this.#subcategories = subcategories;
         this.#originWhitelist = originWhitelist;
     }
     isEmbedded() {

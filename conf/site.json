@@ -3,10 +3,10 @@
         "test": "test"
     },
     "sitecategories": {
-        "test": {
-            "categoryName": "test",
-            "titleRegEx": "test"
-        }
+        "test": "test"
+    },
+    "videocategories": {
+        "test": "test"
     },
     "sites": {
         "test": {
@@ -14,6 +14,9 @@
             "origin": "origin",
             "hrefRegEx": "^example://example.com",
             "siteCategories": [
+                "test"
+            ],
+            "subcategories": [
                 "test"
             ],
             "originWhitelist": [

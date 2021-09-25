@@ -1,18 +1,24 @@
-import { SiteCategory, Site, VideoSite, VideoPortalSite, PlayerMetadata } from "./class";
+import { Site, VideoSite, VideoPortalSite, PlayerMetadata } from "./class";
 /**
- * @enum {SiteCategory}
+ * @enum {string}
  */
 export const SiteCategories = {
-    AV: new SiteCategory("AV", /([a-zA-Z]+-\d+)(-(\w+))?/),
-    DB: new SiteCategory("DB"),
-    GAME: new SiteCategory("Game"),
-    IMAGE_HOSTING: new SiteCategory("Image Hosting"),
-    LIVE_STREAMING: new SiteCategory("Live Streaming"),
-    MODDING: new SiteCategory("Modding"),
-    MOVIE: new SiteCategory("Movie"),
-    TV_SERIES: new SiteCategory("TV Series", /([\u4e00-\u9fa5\w]+)第(.+)季.*第(.+)集/),
-    VIDEO_HOSTING: new SiteCategory("Video Hosting"),
-    VIDEO_SHARING: new SiteCategory("Video Sharing")
+    DATABASE: "Database",
+    GAMING: "Gaming",
+    IMAGE_HOSTING: "Image Hosting",
+    JAV: "JAV",
+    LIVE_STREAMING: "Live Streaming",
+    VIDEO_HOSTING: "Video Hosting",
+    VIDEO_SHARING: "Video Sharing",
+    VIDEO_STREAMING: "Video Streaming",
+};
+/**
+ * @enum {string}
+ */
+export const VideoCategories = {
+    JAV: "JAV",
+    TV_SERIES: "TV Series",
+    MOVIE: "Movie"
 };
 /**
  * @enum {string}
@@ -47,30 +53,117 @@ export const SiteIDs = {
  * @enum {Site} 
  */
 export const Sites = {
-    "7MM": new Site(SiteIDs["7MM"], "https://7mmtv.tv", /^https:\/\/7mmtv\.tv\/.*/, [SiteCategories.AV], ["https://mm9842.com", "https://avgle.com"]),
-    AVGLE: new Site(SiteIDs.AVGLE, "https://avgle.com", /^https:\/\/avgle\.com\/video\/\w+/, [SiteCategories.AV], ["https://7mmtv.tv"]),
-    AVGLE_EMBED: new Site(SiteIDs.AVGLE_EMBED, "https://avgle.com", /^https:\/\/avgle\.com\/embed\/\w+$/, [SiteCategories.AV], ["https://7mmtv.tv"]),
-    BILIBILI: new Site(SiteIDs.BILIBILI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/.*/, [SiteCategories.VIDEO_SHARING]),
-    BILIBILI_BANGUMI: new Site(SiteIDs.BILIBILI_BANGUMI, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/, [SiteCategories.VIDEO_SHARING]),
-    BILIBILI_LIVE: new Site(SiteIDs.BILIBILI_LIVE, "https://live.bilibili.com", /^https:\/\/live\.bilibili\.com\/.*/, [SiteCategories.LIVE_STREAMING]),
-    BILIBILI_VIDEO: new Site(SiteIDs.BILIBILI_VIDEO, "https://www.bilibili.com", /^https:\/\/www\.bilibili\.com\/video\/.+/, [SiteCategories.VIDEO_SHARING]),
-    BUYCAR5: new Site(SiteIDs.BUYCAR5, "https://vod3.buycar5.cn", /^https:\/\/vod\d+\.buycar5\.cn/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
-    DIOUS: new Site(SiteIDs.DIOUS, "https://v7.dious.cc", /^https:\/\/v7.dious.cc/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
-    JABLE: new Site(SiteIDs.JABLE, "https://jable.tv", /^https:\/\/jable.tv/, [SiteCategories.AV]),
-    JAVLIBRARY: new Site(SiteIDs.JAVLIBRARY, "https://www.javlibrary.com", /^https:\/\/www\.javlibrary\.com\/.*/, [SiteCategories.AV]),
-    JX444662: new Site(SiteIDs.JX444662, "https://jx.444662.cn", /^https:\/\/jx.444662.cn/, [SiteCategories.VIDEO_HOSTING], ["https://www.meijuttb.com", 'https://www.meijubs.com']),
-    MEIJUBS: new Site(SiteIDs.MEIJUBS, "https://www.meijubs.com", undefined, [SiteCategories.TV_SERIES], ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]),
-    MEIJUTTB: new Site(SiteIDs.MEIJUTTB, "https://www.meijuttb.com", undefined, [SiteCategories.TV_SERIES], ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn"]),
-    MINGTIAN6: new Site(SiteIDs.MINGTIAN6, "https://www.mingtian6.com", undefined, [SiteCategories.TV_SERIES], ["https://www.qingbeiban.com"]),
-    MM9842: new Site(SiteIDs.MM9842, "https://mm9842.com", /^https:\/\/mm9842.com/, [SiteCategories.AV], ["https://7mmtv.tv"]),
-    NEXUSMODS: new Site(SiteIDs.NEXUSMODS, "https://www.nexusmods.com", undefined, [SiteCategories.MODDING], ["https://www.youtube.com"]),
-    QINGBEIBAN: new Site(SiteIDs.QINGBEIBAN, "https://www.qingbeiban.com", /^https:\/\/www.qingbeiban.com/, [SiteCategories.VIDEO_HOSTING], ["https://www.mingtian6.com"]),
-    QXWK: new Site(SiteIDs.QXWK, "https://code.qxwk.net", /^https:\/\/code.qxwk.net/, [SiteCategories.VIDEO_HOSTING], ["https://m.wukongmeiju.com"]),
-    STEAM_COMMUNITY_REVIEW: new Site(SiteIDs.STEAM_COMMUNITY_REVIEW, "https://steamcommunity.com", /^https:\/\/steamcommunity\.com\/app\/\d+\/reviews\/.+/, [SiteCategories.GAME]),
-    STEAM_STORE: new Site(SiteIDs.STEAM_STORE, "https://store.steampowered.com", /^https:\/\/store\.steampowered\.com\/.*/, [SiteCategories.GAME]),
-    WALLHAVEN: new Site(SiteIDs.WALLHAVEN, "https://wallhaven.cc", /^https:\/\/wallhaven\.cc\/.*/, [SiteCategories.IMAGE_HOSTING]),
-    WUKONGMEIJU: new Site(SiteIDs.WUKONGMEIJU, "https://m.wukongmeiju.com", undefined, [SiteCategories.TV_SERIES], ["https://code.qxwk.net"]),
-    YOUTUBE_EMBED: new Site(SiteIDs.YOUTUBE_EMBED, "https://www.youtube.com", /^https:\/\/www.youtube.com\/embed\/[\w-]+$/, [SiteCategories.VIDEO_SHARING], ['https://www.nexusmods.com']),
+    "7MM": new Site({
+        id: SiteIDs["7MM"], origin: "https://7mmtv.tv", hrefRegEx: /^https:\/\/7mmtv\.tv\/.*/,
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.JAV],
+        originWhitelist: ["https://mm9842.com", "https://avgle.com"]
+    }),
+    AVGLE: new Site({
+        id: SiteIDs.AVGLE, origin: "https://avgle.com", hrefRegEx: /^https:\/\/avgle\.com\/video\/\w+/,
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], subcategories: [VideoCategories.JAV],
+        originWhitelist: ["https://7mmtv.tv"]
+    }),
+    AVGLE_EMBED: new Site({
+        id: SiteIDs.AVGLE_EMBED, origin: "https://avgle.com", hrefRegEx: /^https:\/\/avgle\.com\/embed\/\w+$/,
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], subcategories: [VideoCategories.JAV],
+        originWhitelist: ["https://7mmtv.tv"]
+    }),
+    BILIBILI: new Site({
+        id: SiteIDs.BILIBILI, origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/.*/,
+        siteCategories: [SiteCategories.VIDEO_SHARING]
+    }),
+    BILIBILI_BANGUMI: new Site({
+        id: SiteIDs.BILIBILI_BANGUMI, origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/,
+        siteCategories: [SiteCategories.VIDEO_SHARING]
+    }),
+    BILIBILI_LIVE: new Site({
+        id: SiteIDs.BILIBILI_LIVE, origin: "https://live.bilibili.com", hrefRegEx: /^https:\/\/live\.bilibili\.com\/.*/,
+        siteCategories: [SiteCategories.LIVE_STREAMING]
+    }),
+    BILIBILI_VIDEO: new Site({
+        id: SiteIDs.BILIBILI_VIDEO, origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/video\/.+/,
+        siteCategories: [SiteCategories.VIDEO_SHARING]
+    }),
+    BUYCAR5: new Site({
+        id: SiteIDs.BUYCAR5, origin: "https://vod3.buycar5.cn", hrefRegEx: /^https:\/\/vod\d+\.buycar5\.cn/,
+        siteCategories: [SiteCategories.VIDEO_HOSTING],
+        originWhitelist: ["https://www.meijuttb.com", 'https://www.meijubs.com']
+    }),
+    DIOUS: new Site({
+        id: SiteIDs.DIOUS, origin: "https://v7.dious.cc", hrefRegEx: /^https:\/\/v7.dious.cc/,
+        siteCategories: [SiteCategories.VIDEO_HOSTING],
+        originWhitelist: ["https://www.meijuttb.com", 'https://www.meijubs.com']
+    }),
+    JABLE: new Site({
+        id: SiteIDs.JABLE, origin: "https://jable.tv", hrefRegEx: /^https:\/\/jable.tv/,
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], subcategories: [VideoCategories.JAV]
+    }),
+    JAVLIBRARY: new Site({
+        id: SiteIDs.JAVLIBRARY, origin: "https://www.javlibrary.com", hrefRegEx: /^https:\/\/www\.javlibrary\.com\/.*/,
+        siteCategories: [SiteCategories.JAV, SiteCategories.DATABASE]
+    }),
+    JX444662: new Site({
+        id: SiteIDs.JX444662, origin: "https://jx.444662.cn", hrefRegEx: /^https:\/\/jx.444662.cn/,
+        siteCategories: [SiteCategories.VIDEO_HOSTING],
+        originWhitelist: ["https://www.meijuttb.com", 'https://www.meijubs.com']
+    }),
+    MEIJUBS: new Site({
+        id: SiteIDs.MEIJUBS, origin: "https://www.meijubs.com",
+        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
+        originWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]
+    }),
+    MEIJUTTB: new Site({
+        id: SiteIDs.MEIJUTTB, origin: "https://www.meijuttb.com",
+        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
+        originWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn"]
+    }),
+    MINGTIAN6: new Site({
+        id: SiteIDs.MINGTIAN6, origin: "https://www.mingtian6.com",
+        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES, VideoCategories.MOVIE],
+        originWhitelist: ["https://www.qingbeiban.com"]
+    }),
+    MM9842: new Site({
+        id: SiteIDs.MM9842, origin: "https://mm9842.com", hrefRegEx: /^https:\/\/mm9842.com/,
+        siteCategories: [SiteCategories.VIDEO_HOSTING],
+        originWhitelist: ["https://7mmtv.tv"]
+    }),
+    NEXUSMODS: new Site({
+        id: SiteIDs.NEXUSMODS, origin: "https://www.nexusmods.com",
+        siteCategories: [SiteCategories.GAMING],
+        originWhitelist: ["https://www.youtube.com"]
+    }),
+    QINGBEIBAN: new Site({
+        id: SiteIDs.QINGBEIBAN, origin: "https://www.qingbeiban.com", hrefRegEx: /^https:\/\/www.qingbeiban.com/,
+        siteCategories: [SiteCategories.VIDEO_HOSTING],
+        originWhitelist: ["https://www.mingtian6.com"]
+    }),
+    QXWK: new Site({
+        id: SiteIDs.QXWK, origin: "https://code.qxwk.net", hrefRegEx: /^https:\/\/code.qxwk.net/,
+        siteCategories: [SiteCategories.VIDEO_HOSTING],
+        originWhitelist: ["https://m.wukongmeiju.com"]
+    }),
+    STEAM_COMMUNITY_REVIEW: new Site({
+        id: SiteIDs.STEAM_COMMUNITY_REVIEW, origin: "https://steamcommunity.com", hrefRegEx: /^https:\/\/steamcommunity\.com\/app\/\d+\/reviews\/.+/,
+        siteCategories: [SiteCategories.GAMING]
+    }),
+    STEAM_STORE: new Site({
+        id: SiteIDs.STEAM_STORE, origin: "https://store.steampowered.com", hrefRegEx: /^https:\/\/store\.steampowered\.com\/.*/,
+        siteCategories: [SiteCategories.GAMING]
+    }),
+    WALLHAVEN: new Site({
+        id: SiteIDs.WALLHAVEN, origin: "https://wallhaven.cc", hrefRegEx: /^https:\/\/wallhaven\.cc\/.*/,
+        siteCategories: [SiteCategories.IMAGE_HOSTING]
+    }),
+    WUKONGMEIJU: new Site({
+        id: SiteIDs.WUKONGMEIJU, origin: "https://m.wukongmeiju.com",
+        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
+        originWhitelist: ["https://code.qxwk.net"]
+    }),
+    YOUTUBE_EMBED: new Site({
+        id: SiteIDs.YOUTUBE_EMBED, origin: "https://www.youtube.com", hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+$/,
+        siteCategories: [SiteCategories.VIDEO_SHARING],
+        originWhitelist: ['https://www.nexusmods.com']
+    }),
     /**
      * 
      * @param {string} key 
