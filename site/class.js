@@ -58,6 +58,8 @@ export class Site {
     get subcategories() { return this.#subcategories }
     #originWhitelist;
     get originWhitelist() { return this.#originWhitelist }
+    #additionalInfo;
+    get additionalInfo() { return this.#additionalInfo }
     /**
      * @hideconstructor
      * @param {object} options
@@ -67,14 +69,16 @@ export class Site {
      * @param {string[]} [options.siteCategories] 
      * @param {string[]} [options.subcategories] 
      * @param {string[]} [options.originWhitelist] 
+     * @param {*} [additionalInfo]
      */
-    constructor({ id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [] }) {
+    constructor({ id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.#id = id;
         this.#origin = origin;
         this.#hrefRegEx = hrefRegEx;
         this.#siteCategories = siteCategories;
         this.#subcategories = subcategories;
         this.#originWhitelist = originWhitelist;
+        this.#additionalInfo = additionalInfo;
     }
     isEmbedded() {
         return self !== top;

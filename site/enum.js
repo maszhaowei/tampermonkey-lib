@@ -4,6 +4,7 @@ import { Site, VideoSite, VideoPortalSite, PlayerMetadata } from "./class";
  */
 export const SiteCategories = {
     DATABASE: "Database",
+    DICTIONARY: "Dictionary",
     GAMING: "Gaming",
     IMAGE_HOSTING: "Image Hosting",
     JAV: "JAV",

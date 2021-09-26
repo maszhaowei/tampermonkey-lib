@@ -3,7 +3,6 @@
         "YOUDAO": "Youdao"
     },
     "sitecategories": {
-        "DICTIONARY": "Dictionary"
     },
     "videocategories": {
         "test": "test"
@@ -19,7 +18,10 @@
             "subcategories": [
             ],
             "originWhitelist": [
-            ]
+            ],
+            "additionalInfo" : {
+                "inputFiledSelector" : "#query"
+            }
         }
     },
     "videosites": {
