@@ -77,7 +77,7 @@ export const ui = {
     /**
      * Hide {@link hideTarget} in {@link context}.
      * @param {string|HTMLElement} hideTarget 
-     * @param {boolean} [force] 
+     * @param {boolean} [force] - Use css !important. Default to false.
      * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector.
      */
     hide: function (hideTarget, force = false, context = document) {
@@ -92,7 +92,7 @@ export const ui = {
      * Hide parent({@link parentSelector}) of {@link descendent} in {@link context}.
      * @param {string|HTMLElement} descendent 
      * @param {string} parentSelector 
-     * @param {boolean} [force] 
+     * @param {boolean} [force] - Use css !important. Default to false.
      * @param {Element|Document} [context] - Context to watch for {@link descendent}.
      */
     hideParent(descendent, parentSelector, force = false, context = document) {
