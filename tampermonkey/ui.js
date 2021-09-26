@@ -1,5 +1,18 @@
-import { util } from '../common/util';
+import { util as cutil } from '../common/util';
 import { ApplyMethodSignature } from '../common/class';
+import { FORCE_HIDDEN_CLASSNAME } from './const';
+import '../css/common.css';
+
+/**
+ * 
+ * @param {HTMLElement} element 
+ * @param {boolean} [force]
+ */
+function hideElement(element, force = false) {
+    if (!element) return;
+    if (force) element.classList.add(FORCE_HIDDEN_CLASSNAME);
+    else element.style.display = 'none';
+}
 /**
  * 
  * @param {ApplyMethodSignature} applySig 
@@ -11,7 +24,7 @@ import { ApplyMethodSignature } from '../common/class';
 function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
     let context = applySig.context;
     return new Promise((resolve, reject) => {
-        if (util.isString(context)) {
+        if (cutil.isString(context)) {
             document.arrive(context, { existing: true, onceOnly: true }, function () {
                 applySig.fn.apply(this, applySig.args);
 
@@ -58,7 +71,33 @@ export const ui = {
      * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 2000.
      */
     asyncChainClick: function (contexts, interval = 0, waitTimeout = 2000) {
-        if(!Array.isArray(contexts)) throw new TypeError('contexts is not an array.')
+        if (!Array.isArray(contexts)) throw new TypeError('contexts is not an array.')
         return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(HTMLElement.prototype.click, context)), interval, waitTimeout);
+    },
+    /**
+     * 
+     * @param {string|HTMLElement} hideTarget 
+     * @param {boolean} [force] 
+     * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector.
+     */
+    hide: function (hideTarget, force = false, context = document) {
+        if (cutil.isString(hideTarget)) {
+            context.arrive(hideTarget, { existing: true }, function () {
+                hideElement(this, force);
+            })
+        }
+        else if (hideTarget instanceof HTMLElement) hideElement(hideTarget, force);
+    },
+    /**
+     * 
+     * @param {string} hideSelector 
+     * @param {string} parentSelector 
+     * @param {boolean} [force] 
+     * @param {Element|Document} [context] - Context to watch for {@link hideSelector}.
+     */
+    hideParent(hideSelector, parentSelector, force = false, context = document) {
+        context.arrive(hideSelector, { existing: true }, function () {
+            ui.hide(this.closest(parentSelector), force);
+        });
     }
 }

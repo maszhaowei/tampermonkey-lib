@@ -324,21 +324,6 @@ export const ui = {
         return e.target && e.target.getRootNode() == document;
     },
     /**
-     * 
-     * @param {string} selector 
-     * @param {Element|Document} context 
-     */
-    hide(selector, context = document) {
-        context.querySelectorAll(selector).forEach((element) => ui.hideElement(element));
-    },
-    /**
-     * 
-     * @param {HTMLElement} element 
-     */
-    hideElement(element) {
-        if (element) element.style.display = 'none';
-    },
-    /**
      * Find the first {@link selector} in the context of {@link contexts}.
      * @param {string} selector 
      * @param {...string|Element|Document} contexts 
