@@ -12,9 +12,8 @@ let messageHandlerMap = new WeakMap();
  */
 function findCurrentSite(sites) {
     for (let s in sites) {
-        /** @type {import('./class').Site}  */
         const site = sites[s];
-        if (site.test()) {
+        if (site instanceof Site && site.test()) {
             let handler;
             if (messageHandlerMap.has(site)) handler = messageHandlerMap.get(site);
             else {
