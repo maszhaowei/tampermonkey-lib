@@ -69,7 +69,7 @@ export class Site {
      * @param {string[]} [options.siteCategories] 
      * @param {string[]} [options.subcategories] 
      * @param {string[]} [options.originWhitelist] 
-     * @param {*} [additionalInfo]
+     * @param {*} [options.additionalInfo]
      */
     constructor({ id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.#id = id;
