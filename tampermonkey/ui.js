@@ -1,18 +1,6 @@
 import { util as cutil } from '../common/util';
 import { ApplyMethodSignature } from '../common/class';
-import { FORCE_HIDDEN_CLASSNAME } from './const';
-import '../css/common.css';
 
-/**
- * 
- * @param {HTMLElement} element 
- * @param {boolean} [force]
- */
-function hideElement(element, force = false) {
-    if (!element) return;
-    if (force) element.classList.add(FORCE_HIDDEN_CLASSNAME);
-    else element.style.display = 'none';
-}
 /**
  * 
  * @param {ApplyMethodSignature} applySig 
@@ -77,30 +65,28 @@ export const ui = {
     /**
      * Hide {@link hideTarget} in {@link context}.
      * @param {string|HTMLElement} hideTarget 
-     * @param {boolean} [force] 
      * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector.
      */
-    hide: function (hideTarget, force = false, context = document) {
+    hide: function (hideTarget, context = document) {
         if (cutil.isString(hideTarget)) {
             context.arrive(hideTarget, { existing: true }, function () {
-                hideElement(this, force);
+                this.style.display = 'none';
             })
         }
-        else if (hideTarget instanceof HTMLElement) hideElement(hideTarget, force);
+        else if (hideTarget instanceof HTMLElement) hideTarget.style.display = 'none';
     },
     /**
      * Hide parent({@link parentSelector}) of {@link descendent} in {@link context}.
      * @param {string|HTMLElement} descendent 
      * @param {string} parentSelector 
-     * @param {boolean} [force] 
      * @param {Element|Document} [context] - Context to watch for {@link descendent}.
      */
-    hideParent(descendent, parentSelector, force = false, context = document) {
+    hideParent(descendent, parentSelector, context = document) {
         if (cutil.isString(descendent)) {
             context.arrive(descendent, { existing: true }, function () {
-                ui.hide(this.closest(parentSelector), force);
+                ui.hide(this.closest(parentSelector));
             });
         }
-        else if (descendent instanceof HTMLElement) ui.hide(descendent.closest(parentSelector), force);
+        else if (descendent instanceof HTMLElement) ui.hide(descendent.closest(parentSelector));
     }
 }
