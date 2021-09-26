@@ -137,7 +137,11 @@ export class VideoSite extends Site {
      * @param {PlayerMetadata} defaultPlayerMetadata 
      */
     constructor(site, defaultPlayerMetadata) {
-        super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
+        super({
+            id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx,
+            siteCategories: site.siteCategories, subcategories: site.subcategories,
+            originWhitelist: site.originWhitelist
+        });
         this.#parent = site;
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
     }
@@ -153,6 +157,10 @@ export class VideoPortalSite extends Site {
      * @param {Site} site 
      */
     constructor(site) {
-        super(site.id, site.origin, site.hrefRegEx, site.siteCategories, site.originWhitelist);
+        super({
+            id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx,
+            siteCategories: site.siteCategories, subcategories: site.subcategories,
+            originWhitelist: site.originWhitelist
+        });
     }
 }
