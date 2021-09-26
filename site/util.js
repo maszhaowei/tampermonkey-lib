@@ -51,60 +51,63 @@ export const util = {
      */
     getCurrentVideoPortalSite: function () {
         return findCurrentSite(VideoPortalSites);
+    },
+    updateEnum: async function () {
+        const res = await cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json');
+        if (cutil.isObject(res)) {
+            let siteids = res['siteids'];
+            if (cutil.isObject(siteids)) {
+                for (let i in siteids) {
+                    SiteIDs[i] = siteids[i];
+                }
+            }
+            let sitecategories = res['sitecategories'];
+            if (cutil.isObject(sitecategories)) {
+                for (let i_1 in sitecategories) {
+                    SiteCategories[i_1] = sitecategories[i_1];
+                }
+            }
+            let videocategories = res['videocategories'];
+            if (cutil.isObject(videocategories)) {
+                for (let i_2 in videocategories) {
+                    VideoCategories[i_2] = videocategories[i_2];
+                }
+            }
+            let sites = res['sites'];
+            if (cutil.isObject(sites)) {
+                for (let i_3 in sites) {
+                    let s = sites[i_3];
+                    Sites[i_3] = new Site({
+                        id: s.id, origin: s.origin, hrefRegEx: new RegExp(s.hrefRegEx),
+                        siteCategories: s.siteCategories, subcategories: s.subcategories,
+                        originWhitelist: s.originWhitelist, additionalInfo: s.additionalInfo
+                    });
+                }
+            }
+            let videosites = res['videosites'];
+            if (cutil.isObject(videosites)) {
+                for (let i_4 in videosites) {
+                    let s_1 = videosites[i_4];
+                    let siteid = s_1.siteid;
+                    let site = Sites.get(siteid);
+                    if (!site)
+                        continue;
+                    VideoSites[i_4] = new VideoSite(site,
+                        new PlayerMetadata(s_1.containerSelector, s_1.controlsSelector, s_1.topElementSelectors,
+                            s_1.playButtonSelector, s_1.volumeButtonSelector, s_1.fullscreenButtonSelector, s_1.webFullscreenButtonSelector));
+                }
+            }
+            let portalsites = res['videoportalsites'];
+            if (cutil.isObject(portalsites)) {
+                for (let i_5 in portalsites) {
+                    let s_2 = portalsites[i_5];
+                    let siteid_1 = s_2.siteid;
+                    let site_1 = Sites.get(siteid_1);
+                    if (!site_1)
+                        continue;
+                    VideoPortalSites[i_5] = new VideoPortalSite(site_1);
+                }
+            }
+        }
     }
 };
-cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json').then((res) => {
-    if (cutil.isObject(res)) {
-        let siteids = res['siteids'];
-        if (cutil.isObject(siteids)) {
-            for (let i in siteids) {
-                SiteIDs[i] = siteids[i];
-            }
-        }
-        let sitecategories = res['sitecategories'];
-        if (cutil.isObject(sitecategories)) {
-            for (let i in sitecategories) {
-                SiteCategories[i] = sitecategories[i];
-            }
-        }
-        let videocategories = res['videocategories'];
-        if (cutil.isObject(videocategories)) {
-            for (let i in videocategories) {
-                VideoCategories[i] = videocategories[i];
-            }
-        }
-        let sites = res['sites'];
-        if (cutil.isObject(sites)) {
-            for (let i in sites) {
-                let s = sites[i];
-                Sites[i] = new Site({
-                    id: s.id, origin: s.origin, hrefRegEx: new RegExp(s.hrefRegEx),
-                    siteCategories: s.siteCategories, subcategories: s.subcategories,
-                    originWhitelist: s.originWhitelist
-                });
-            }
-        }
-        let videosites = res['videosites'];
-        if (cutil.isObject(videosites)) {
-            for (let i in videosites) {
-                let s = videosites[i];
-                let siteid = s.siteid;
-                let site = Sites.get(siteid);
-                if (!site) continue;
-                VideoSites[i] = new VideoSite(site,
-                    new PlayerMetadata(s.containerSelector, s.controlsSelector, s.topElementSelectors,
-                        s.playButtonSelector, s.volumeButtonSelector, s.fullscreenButtonSelector, s.webFullscreenButtonSelector));
-            }
-        }
-        let portalsites = res['videoportalsites'];
-        if (cutil.isObject(portalsites)) {
-            for (let i in portalsites) {
-                let s = portalsites[i];
-                let siteid = s.siteid;
-                let site = Sites.get(siteid);
-                if (!site) continue;
-                VideoPortalSites[i] = new VideoPortalSite(site);
-            }
-        }
-    }
-});
