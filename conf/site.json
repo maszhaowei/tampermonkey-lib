@@ -1,26 +1,24 @@
 {
     "siteids": {
-        "test": "test"
+        "YOUDAO": "Youdao"
     },
     "sitecategories": {
-        "test": "test"
+        "DICTIONARY": "Dictionary"
     },
     "videocategories": {
         "test": "test"
     },
     "sites": {
-        "test": {
-            "id": "test",
-            "origin": "origin",
-            "hrefRegEx": "^example://example.com",
+        "YOUDAO": {
+            "id": "YOUDAO",
+            "origin": "https://www.youdao.com",
+            "hrefRegEx": "^https://www\\.youdao\\.com/w/.+",
             "siteCategories": [
-                "test"
+                "DICTIONARY"
             ],
             "subcategories": [
-                "test"
             ],
             "originWhitelist": [
-                "test"
             ]
         }
     },
