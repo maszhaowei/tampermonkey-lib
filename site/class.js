@@ -115,6 +115,7 @@ export class Site {
     test() {
         if (this.#hrefRegEx) return this.#hrefRegEx.test(window.location.href);
         else if (this.#origin) return this.#origin == window.location.origin;
+        else return false;
     }
     /**
      * 
