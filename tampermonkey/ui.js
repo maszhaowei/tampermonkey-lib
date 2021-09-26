@@ -75,7 +75,7 @@ export const ui = {
         return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(HTMLElement.prototype.click, context)), interval, waitTimeout);
     },
     /**
-     * 
+     * Hide {@link hideTarget} in {@link context}.
      * @param {string|HTMLElement} hideTarget 
      * @param {boolean} [force] 
      * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector.
@@ -89,15 +89,18 @@ export const ui = {
         else if (hideTarget instanceof HTMLElement) hideElement(hideTarget, force);
     },
     /**
-     * 
-     * @param {string} hideSelector 
+     * Hide parent({@link parentSelector}) of {@link descendent} in {@link context}.
+     * @param {string|HTMLElement} descendent 
      * @param {string} parentSelector 
      * @param {boolean} [force] 
-     * @param {Element|Document} [context] - Context to watch for {@link hideSelector}.
+     * @param {Element|Document} [context] - Context to watch for {@link descendent}.
      */
-    hideParent(hideSelector, parentSelector, force = false, context = document) {
-        context.arrive(hideSelector, { existing: true }, function () {
-            ui.hide(this.closest(parentSelector), force);
-        });
+    hideParent(descendent, parentSelector, force = false, context = document) {
+        if (cutil.isString(descendent)) {
+            context.arrive(descendent, { existing: true }, function () {
+                ui.hide(this.closest(parentSelector), force);
+            });
+        }
+        else if (descendent instanceof HTMLElement) ui.hide(descendent.closest(parentSelector), force);
     }
 }
