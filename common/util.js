@@ -241,7 +241,7 @@ export let util = {
         return str === undefined || str === null;
     },
     /**
-     * Copies all enumerable own properties that are not undefined from one or more source objects to a target object.
+     * Copies all values of enumerable own properties that are not undefined from one or more source objects to a target object.
      * @param {*} target 
      * @param  {...any} sources 
      * @returns The modified target object.
@@ -252,6 +252,22 @@ export let util = {
                 let value = source[key];
                 if (value !== undefined) target[key] = value;
             })
+        });
+        return target;
+    },
+    /**
+     * Copies all values of enumerable own properties that are not null, undefined, NaN or empty array from one or more source objects to a target object.
+     * @param {*} target 
+     * @param  {...any} sources 
+     * @returns The modified target object.
+     */
+    assignNotEmpty: function (target, ...sources) {
+        sources.forEach((source) => {
+            Object.keys(source).forEach((key) => {
+                let value = source[key];
+                if (value === undefined || value === null || isNaN(value) || (Array.isArray(value) && value.length == 0)) return;
+                else target[key] = value;
+            });
         })
         return target;
     },
