@@ -10,8 +10,8 @@ import '../css/common.css';
  */
 function hideElement(element, force = false) {
     if (!element) return;
+    element.style.display = 'none';
     if (force) element.classList.add(FORCE_HIDDEN_CLASSNAME);
-    else element.style.display = 'none';
 }
 /**
  * 
