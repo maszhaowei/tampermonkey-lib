@@ -1,32 +1,46 @@
 {
     "siteids": {
-        "YOUDAO": "Youdao"
+        "YOUDAO": "Youdao",
+        "18COMIC": "18comic"
     },
-    "sitecategories": {
-    },
+    "sitecategories": {},
     "videocategories": {
         "test": "test"
     },
-    "sites": {
-        "YOUDAO": {
-            "id": "YOUDAO",
+    "sites": [
+        {
+            "id": "Youdao",
             "origin": "https://www.youdao.com",
             "hrefRegEx": "^https://www\\.youdao\\.com/w/.+",
             "siteCategories": [
                 "Dictionary"
             ],
-            "subcategories": [
-            ],
-            "originWhitelist": [
-            ],
-            "additionalInfo" : {
-                "inputFiledSelector" : "#query"
+            "subcategories": [],
+            "originWhitelist": [],
+            "additionalInfo": {
+                "inputFiledSelector": "#query"
+            }
+        },
+        {
+            "id": "JAVLIBRARY",
+            "additionalInfo": {
+                "firstBtnSelector": "a.first",
+                "prevBtnSelector": "a.prev",
+                "nextBtnSelector": "a.next",
+                "lastBtnSelector": "a.last"
+            }
+        },
+        {
+            "id": "18comic",
+            "additionalInfo": {
+                "prevBtnSelector": "a.prev",
+                "nextBtnSelector": "a.next"
             }
         }
-    },
-    "videosites": {
-        "test": {
-            "siteid": "test",
+    ],
+    "videosites": [
+        {
+            "id": "test",
             "containerSelector": ".containerSelector",
             "controlsSelector": ".controlsSelector",
             "topElementSelectors": ".topElementSelectors",
@@ -35,10 +49,10 @@
             "fullscreenButtonSelector": ".fullscreenButtonSelector",
             "webFullscreenButtonSelector": ".webFullscreenButtonSelector"
         }
-    },
-    "videoportalsites": {
-        "test": {
-            "siteid": "test"
+    ],
+    "videoportalsites": [
+        {
+            "id": "test"
         }
-    }
+    ]
 }

@@ -74,37 +74,37 @@ export const util = {
                 }
             }
             let sites = res['sites'];
-            if (cutil.isObject(sites)) {
-                for (let s in sites) {
-                    let site = sites[s];
+            if (Array.isArray(sites)) {
+                for (let site of sites) {
+                    let siteid = site.id;
                     let newSite = new Site({
                         id: site.id, origin: site.origin, hrefRegEx: new RegExp(site.hrefRegEx),
                         siteCategories: site.siteCategories, subcategories: site.subcategories,
                         originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                     });
-                    let oriSite = Sites.get(s);
+                    let oriSite = Sites.get(siteid);
                     if (oriSite) cutil.assignNotEmpty(oriSite, newSite);
-                    else Sites[s] = newSite;
+                    else Sites[siteid] = newSite;
                 }
             }
             let videosites = res['videosites'];
-            if (cutil.isObject(videosites)) {
-                for (let ivs in videosites) {
-                    let vs = videosites[ivs];
-                    let site = Sites.get(vs.siteid);
+            if (Array.isArray(videosites)) {
+                for (let vs of videosites) {
+                    let siteid = vs.id;
+                    let site = Sites.get(siteid);
                     if (!site) continue;
-                    VideoSites[ivs] = new VideoSite(site,
+                    VideoSites[siteid] = new VideoSite(site,
                         new PlayerMetadata(vs.containerSelector, vs.controlsSelector, vs.topElementSelectors,
                             vs.playButtonSelector, vs.volumeButtonSelector, vs.fullscreenButtonSelector, vs.webFullscreenButtonSelector));
                 }
             }
             let portalsites = res['videoportalsites'];
-            if (cutil.isObject(portalsites)) {
-                for (let ips in portalsites) {
-                    let ps = portalsites[ips];
-                    let site = Sites.get(ps.siteid);
+            if (Array.isArray(portalsites)) {
+                for (let ps of portalsites) {
+                    let siteid = ps.id;
+                    let site = Sites.get(siteid);
                     if (!site) continue;
-                    VideoPortalSites[ips] = new VideoPortalSite(site);
+                    VideoPortalSites[siteid] = new VideoPortalSite(site);
                 }
             }
         }
