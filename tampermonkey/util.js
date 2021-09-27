@@ -67,6 +67,27 @@ export const util = {
     },
     /**
      * 
+     * @param {string|URL} url 
+     * @param {Object.<string,string>} [headers] 
+     * @param {string} [responseType] - Default to "json".
+     * @returns 
+     */
+    gmOptions: function (url, headers, responseType) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "OPTIONS", url, headers,
+                responseType: responseType || 'json',
+                onload: (res) => {
+                    resolve(res.response || res.responseText);
+                },
+                onerror: (err) => {
+                    reject(err);
+                }
+            });
+        });
+    },
+    /**
+     * 
      * @param {MessageEvent} event 
      */
     printReceiveMessage: function (event) {
