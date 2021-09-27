@@ -78,7 +78,7 @@ export const util = {
                 for (let site of sites) {
                     let siteid = site.id;
                     let newSite = new Site({
-                        id: site.id, origin: site.origin, hrefRegEx: new RegExp(site.hrefRegEx),
+                        id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
                         siteCategories: site.siteCategories, subcategories: site.subcategories,
                         originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                     });
