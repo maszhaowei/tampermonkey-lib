@@ -282,7 +282,7 @@ export let util = {
      * @param {*} obj2 
      * @returns 
      */
-    isEqual(obj1, obj2) {
+    isEqual: function (obj1, obj2) {
         if (obj1 instanceof Array) {
             if (!(obj2 instanceof Array) || obj1.length != obj2.length) return false;
             for (let i = 0; i < obj1.length; i++) {
@@ -291,5 +291,28 @@ export let util = {
             return true;
         }
         return Object.is(obj1, obj2) ? true : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
+    },
+    /**
+     * Convert a Date object to specified format.
+     * @param {Date} date 
+     * @param {string} [format] - Format character: {M - Month, d - Day, h - Hour, m - Minute, s - Second, q - Quarter, S - Millisecond}. Repeat characters except millisecond to output long format.  Default to "MM/dd/yyyy hh:mm:ss". 
+     * @returns 
+     */
+    formatDate: function (date, format = 'MM/dd/yyyy hh:mm:ss') {
+        var o = {
+            "M+": date.getMonth() + 1, //month
+            "d+": date.getDate(), //day
+            "h+": date.getHours(), //hour
+            "m+": date.getMinutes(), //minute
+            "s+": date.getSeconds(), //second
+            "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
+            "S": date.getMilliseconds() //millisecond
+        }
+        if (/(y+)/.test(format)) format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o) if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                    ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
     }
 };
