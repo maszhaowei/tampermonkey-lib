@@ -265,7 +265,7 @@ export let util = {
         sources.forEach((source) => {
             Object.keys(source).forEach((key) => {
                 let value = source[key];
-                if (value === undefined || value === null || isNaN(value) || (Array.isArray(value) && value.length == 0)) return;
+                if (value === undefined || value === null || Object.is(NaN, value) || (Array.isArray(value) && value.length == 0)) return;
                 else target[key] = value;
             });
         })
