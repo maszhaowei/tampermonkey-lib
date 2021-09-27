@@ -46,20 +46,13 @@ export class PlayerMetadata {
     }
 }
 export class Site {
-    #id;
-    get id() { return this.#id }
-    #origin;
-    get origin() { return this.#origin }
-    #hrefRegEx;
-    get hrefRegEx() { return this.#hrefRegEx }
-    #siteCategories;
-    get siteCategories() { return this.#siteCategories }
-    #subcategories;
-    get subcategories() { return this.#subcategories }
-    #originWhitelist;
-    get originWhitelist() { return this.#originWhitelist }
-    #additionalInfo;
-    get additionalInfo() { return this.#additionalInfo }
+    id;
+    origin;
+    hrefRegEx;
+    siteCategories;
+    subcategories;
+    originWhitelist;
+    additionalInfo;
     /**
      * @hideconstructor
      * @param {object} options
@@ -72,13 +65,13 @@ export class Site {
      * @param {*} [options.additionalInfo]
      */
     constructor({ id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
-        this.#id = id;
-        this.#origin = origin;
-        this.#hrefRegEx = hrefRegEx;
-        this.#siteCategories = siteCategories;
-        this.#subcategories = subcategories;
-        this.#originWhitelist = originWhitelist;
-        this.#additionalInfo = additionalInfo;
+        this.id = id;
+        this.origin = origin;
+        this.hrefRegEx = hrefRegEx;
+        this.siteCategories = siteCategories;
+        this.subcategories = subcategories;
+        this.originWhitelist = originWhitelist;
+        this.additionalInfo = additionalInfo;
     }
     isEmbedded() {
         return self !== top;
@@ -91,7 +84,7 @@ export class Site {
     isMessageOriginAllowed(targetOrigin) {
         if (!targetOrigin) return false;
         if (targetOrigin === window.location.origin) return true;
-        return !!this.#originWhitelist?.includes(targetOrigin);
+        return !!this.originWhitelist?.includes(targetOrigin);
     }
     /**
      * 
@@ -113,8 +106,8 @@ export class Site {
      * @returns {boolean} 
      */
     test() {
-        if (this.#hrefRegEx) return this.#hrefRegEx.test(window.location.href);
-        else if (this.#origin) return this.#origin == window.location.origin;
+        if (this.hrefRegEx) return this.hrefRegEx.test(window.location.href);
+        else if (this.origin) return this.origin == window.location.origin;
         else return false;
     }
     /**
