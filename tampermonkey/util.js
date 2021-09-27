@@ -23,12 +23,14 @@ export const util = {
      * @param {string|URL} url 
      * @param {Object.<string,string>} [headers] 
      * @param {string} [responseType] - Default to "json".
+     * @param {boolean} [nocache] - Don't cache the resource. Default to false.
      * @returns 
      */
-    gmGet: function (url, headers, responseType) {
+    gmGet: function (url, headers, responseType, nocache = false) {
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET", url, headers,
+                nocache: nocache,
                 responseType: responseType || 'json',
                 onload: (res) => {
                     resolve(res.response || res.responseText);
