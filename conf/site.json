@@ -37,6 +37,13 @@
                 "prevBtnSelector": "ul.pagination li:nth-child(1) a",
                 "nextBtnSelector": "ul.pagination a.prevnext"
             }
+        },
+        {
+            "id":"7MM",
+            "additionalInfo": {
+                "prevBtnSelector": "li.previous-next:first-child a",
+                "nextBtnSelector": "li.current+li a"
+            }
         }
     ],
     "videosites": [
