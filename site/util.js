@@ -53,7 +53,8 @@ export const util = {
         return findCurrentSite(VideoPortalSites);
     },
     updateEnum: async function () {
-        const res = await cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json');
+        const res = await cutil.get('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json',
+            { "Cache-Control": "no-cache, no-store, max-age=0" });
         if (cutil.isObject(res)) {
             let siteids = res['siteids'];
             if (cutil.isObject(siteids)) {
