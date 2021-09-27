@@ -32,9 +32,10 @@
         },
         {
             "id": "18comic",
+            "origin": "https://18comic.org",
             "additionalInfo": {
-                "prevBtnSelector": "a.prev",
-                "nextBtnSelector": "a.next"
+                "prevBtnSelector": "ul.pagination li:nth-child(1) a",
+                "nextBtnSelector": "ul.pagination a.prevnext"
             }
         }
     ],
