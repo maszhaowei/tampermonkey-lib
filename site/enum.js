@@ -166,13 +166,13 @@ export const Sites = {
         originWhitelist: ['https://www.nexusmods.com']
     }),
     /**
-     * 
-     * @param {string} key 
+     * Get enum by site id.
+     * @param {string} id 
      * @returns {Site|undefined}
      */
-    get(key) {
+    get(id) {
         for (let i in Sites) {
-            if (i === key) return Sites[i];
+            if (Sites[i].id === id) return Sites[i];
         }
     }
 };
