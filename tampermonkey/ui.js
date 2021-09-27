@@ -10,8 +10,8 @@ import '../css/common.css';
  */
 function hideElement(element, force = false) {
     if (!element) return;
+    element.style.display = 'none';
     if (force) element.classList.add(FORCE_HIDDEN_CLASSNAME);
-    else element.style.display = 'none';
 }
 /**
  * 
@@ -78,7 +78,7 @@ export const ui = {
      * Hide {@link hideTarget} in {@link context}.
      * @param {string|HTMLElement} hideTarget 
      * @param {boolean} [force] - Use css !important. Default to false.
-     * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector.
+     * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector. Default to document.
      */
     hide: function (hideTarget, force = false, context = document) {
         if (cutil.isString(hideTarget)) {
@@ -93,7 +93,7 @@ export const ui = {
      * @param {string|HTMLElement} descendent 
      * @param {string} parentSelector 
      * @param {boolean} [force] - Use css !important. Default to false.
-     * @param {Element|Document} [context] - Context to watch for {@link descendent}.
+     * @param {Element|Document} [context] - Context to watch for {@link descendent}. Default to document.
      */
     hideParent(descendent, parentSelector, force = false, context = document) {
         if (cutil.isString(descendent)) {

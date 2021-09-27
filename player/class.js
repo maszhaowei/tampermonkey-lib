@@ -98,6 +98,10 @@ class VideoEventDelegate {
             }
         });
     }
+    clean() {
+        this.#defaultDelegate = this.#delegate = null;
+        this.#eventsObserverMap.clear();
+    }
 }
 export class VideoInstanceData {
     video;
@@ -357,4 +361,9 @@ export class VideoInstance {
         else return cui.isFullscreen() ? this.exitFullscreen(false) : this.requestFullscreen(false);
     }
     /* #endregion */
+    clean() {
+        this.#initData.clean();
+        this.videoDelegate.clean();
+        this.#site = this.#playerMetadata = this.#initData = this.videoDelegate = null;
+    }
 }

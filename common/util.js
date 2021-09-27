@@ -241,7 +241,7 @@ export let util = {
         return str === undefined || str === null;
     },
     /**
-     * Copies all enumerable own properties that are not undefined from one or more source objects to a target object.
+     * Copies all values of enumerable own properties that are not undefined from one or more source objects to a target object.
      * @param {*} target 
      * @param  {...any} sources 
      * @returns The modified target object.
@@ -252,6 +252,22 @@ export let util = {
                 let value = source[key];
                 if (value !== undefined) target[key] = value;
             })
+        });
+        return target;
+    },
+    /**
+     * Copies all values of enumerable own properties that are not null, undefined, NaN or empty array from one or more source objects to a target object.
+     * @param {*} target 
+     * @param  {...any} sources 
+     * @returns The modified target object.
+     */
+    assignNotEmpty: function (target, ...sources) {
+        sources.forEach((source) => {
+            Object.keys(source).forEach((key) => {
+                let value = source[key];
+                if (value === undefined || value === null || Object.is(NaN, value) || (Array.isArray(value) && value.length == 0)) return;
+                else target[key] = value;
+            });
         })
         return target;
     },
@@ -266,7 +282,7 @@ export let util = {
      * @param {*} obj2 
      * @returns 
      */
-    isEqual(obj1, obj2) {
+    isEqual: function (obj1, obj2) {
         if (obj1 instanceof Array) {
             if (!(obj2 instanceof Array) || obj1.length != obj2.length) return false;
             for (let i = 0; i < obj1.length; i++) {
@@ -275,5 +291,28 @@ export let util = {
             return true;
         }
         return Object.is(obj1, obj2) ? true : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
+    },
+    /**
+     * Convert a Date object to specified format.
+     * @param {Date} date 
+     * @param {string} [format] - Format character: {M - Month, d - Day, h - Hour, m - Minute, s - Second, q - Quarter, S - Millisecond}. Repeat characters except millisecond to output long format.  Default to "MM/dd/yyyy hh:mm:ss". 
+     * @returns 
+     */
+    formatDate: function (date, format = 'MM/dd/yyyy hh:mm:ss') {
+        var o = {
+            "M+": date.getMonth() + 1, //month
+            "d+": date.getDate(), //day
+            "h+": date.getHours(), //hour
+            "m+": date.getMinutes(), //minute
+            "s+": date.getSeconds(), //second
+            "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
+            "S": date.getMilliseconds() //millisecond
+        }
+        if (/(y+)/.test(format)) format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o) if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                    ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
     }
 };

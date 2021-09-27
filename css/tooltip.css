@@ -109,7 +109,7 @@
     margin-left:-4px;
     border-bottom-color:rgba(0,0,0,.7)
 }
-.player-tooltips>.tooltip {
+.zw-player-tooltips>.zw-tooltip {
     background:rgba(0,0,0,.7);
     border-radius:4px;
     color:#fff;

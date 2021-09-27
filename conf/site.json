@@ -1,32 +1,54 @@
 {
     "siteids": {
-        "YOUDAO": "Youdao"
+        "YOUDAO": "Youdao",
+        "18COMIC": "18comic"
     },
-    "sitecategories": {
-    },
+    "sitecategories": {},
     "videocategories": {
         "test": "test"
     },
-    "sites": {
-        "YOUDAO": {
-            "id": "YOUDAO",
+    "sites": [
+        {
+            "id": "Youdao",
             "origin": "https://www.youdao.com",
             "hrefRegEx": "^https://www\\.youdao\\.com/w/.+",
             "siteCategories": [
                 "Dictionary"
             ],
-            "subcategories": [
-            ],
-            "originWhitelist": [
-            ],
-            "additionalInfo" : {
-                "inputFiledSelector" : "#query"
+            "subcategories": [],
+            "originWhitelist": [],
+            "additionalInfo": {
+                "inputFiledSelector": "#query"
+            }
+        },
+        {
+            "id": "JAVLIBRARY",
+            "additionalInfo": {
+                "firstBtnSelector": "a.first",
+                "prevBtnSelector": "a.prev",
+                "nextBtnSelector": "a.next",
+                "lastBtnSelector": "a.last"
+            }
+        },
+        {
+            "id": "18comic",
+            "origin": "https://18comic.org",
+            "additionalInfo": {
+                "prevBtnSelector": "ul.pagination li:nth-child(1) a",
+                "nextBtnSelector": "ul.pagination a.prevnext"
+            }
+        },
+        {
+            "id":"7MM",
+            "additionalInfo": {
+                "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
+                "nextBtnSelector": "li.current+li a"
             }
         }
-    },
-    "videosites": {
-        "test": {
-            "siteid": "test",
+    ],
+    "videosites": [
+        {
+            "id": "test",
             "containerSelector": ".containerSelector",
             "controlsSelector": ".controlsSelector",
             "topElementSelectors": ".topElementSelectors",
@@ -35,10 +57,10 @@
             "fullscreenButtonSelector": ".fullscreenButtonSelector",
             "webFullscreenButtonSelector": ".webFullscreenButtonSelector"
         }
-    },
-    "videoportalsites": {
-        "test": {
-            "siteid": "test"
+    ],
+    "videoportalsites": [
+        {
+            "id": "test"
         }
-    }
+    ]
 }

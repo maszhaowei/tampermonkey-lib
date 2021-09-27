@@ -57,55 +57,54 @@ export const util = {
         if (cutil.isObject(res)) {
             let siteids = res['siteids'];
             if (cutil.isObject(siteids)) {
-                for (let i in siteids) {
-                    SiteIDs[i] = siteids[i];
+                for (let sid in siteids) {
+                    SiteIDs[sid] = siteids[sid];
                 }
             }
             let sitecategories = res['sitecategories'];
             if (cutil.isObject(sitecategories)) {
-                for (let i_1 in sitecategories) {
-                    SiteCategories[i_1] = sitecategories[i_1];
+                for (let sc in sitecategories) {
+                    SiteCategories[sc] = sitecategories[sc];
                 }
             }
             let videocategories = res['videocategories'];
             if (cutil.isObject(videocategories)) {
-                for (let i_2 in videocategories) {
-                    VideoCategories[i_2] = videocategories[i_2];
+                for (let vc in videocategories) {
+                    VideoCategories[vc] = videocategories[vc];
                 }
             }
             let sites = res['sites'];
-            if (cutil.isObject(sites)) {
-                for (let i_3 in sites) {
-                    let s = sites[i_3];
-                    Sites[i_3] = new Site({
-                        id: s.id, origin: s.origin, hrefRegEx: new RegExp(s.hrefRegEx),
-                        siteCategories: s.siteCategories, subcategories: s.subcategories,
-                        originWhitelist: s.originWhitelist, additionalInfo: s.additionalInfo
+            if (Array.isArray(sites)) {
+                for (let site of sites) {
+                    let siteid = site.id;
+                    let newSite = new Site({
+                        id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
+                        siteCategories: site.siteCategories, subcategories: site.subcategories,
+                        originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                     });
+                    let oriSite = Sites.get(siteid);
+                    if (oriSite) cutil.assignNotEmpty(oriSite, newSite);
+                    else Sites[siteid] = newSite;
                 }
             }
             let videosites = res['videosites'];
-            if (cutil.isObject(videosites)) {
-                for (let i_4 in videosites) {
-                    let s_1 = videosites[i_4];
-                    let siteid = s_1.siteid;
+            if (Array.isArray(videosites)) {
+                for (let vs of videosites) {
+                    let siteid = vs.id;
                     let site = Sites.get(siteid);
-                    if (!site)
-                        continue;
-                    VideoSites[i_4] = new VideoSite(site,
-                        new PlayerMetadata(s_1.containerSelector, s_1.controlsSelector, s_1.topElementSelectors,
-                            s_1.playButtonSelector, s_1.volumeButtonSelector, s_1.fullscreenButtonSelector, s_1.webFullscreenButtonSelector));
+                    if (!site) continue;
+                    VideoSites[siteid] = new VideoSite(site,
+                        new PlayerMetadata(vs.containerSelector, vs.controlsSelector, vs.topElementSelectors,
+                            vs.playButtonSelector, vs.volumeButtonSelector, vs.fullscreenButtonSelector, vs.webFullscreenButtonSelector));
                 }
             }
             let portalsites = res['videoportalsites'];
-            if (cutil.isObject(portalsites)) {
-                for (let i_5 in portalsites) {
-                    let s_2 = portalsites[i_5];
-                    let siteid_1 = s_2.siteid;
-                    let site_1 = Sites.get(siteid_1);
-                    if (!site_1)
-                        continue;
-                    VideoPortalSites[i_5] = new VideoPortalSite(site_1);
+            if (Array.isArray(portalsites)) {
+                for (let ps of portalsites) {
+                    let siteid = ps.id;
+                    let site = Sites.get(siteid);
+                    if (!site) continue;
+                    VideoPortalSites[siteid] = new VideoPortalSite(site);
                 }
             }
         }
