@@ -41,7 +41,7 @@
         {
             "id":"7MM",
             "additionalInfo": {
-                "prevBtnSelector": "li.previous-next:first-child a",
+                "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
                 "nextBtnSelector": "li.current+li a"
             }
         }
