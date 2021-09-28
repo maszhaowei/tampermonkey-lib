@@ -1,29 +1,22 @@
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
 export class PlayerMetadata {
-    #containerSelector;
     /**
      * Selector for video container. Must be ancestor of video.
      */
-    get containerSelector() { return this.#containerSelector }
-    #controlsSelector;
+    containerSelector;
     /**
      * Selector for video controls. Should be higher than video in the stacking context.
      */
-    get controlsSelector() { return this.#controlsSelector }
-    #topElementSelectors;
+    controlsSelector;
     /**
      * Selectors that should be on the top of stacking context to avoid being blocked by other elements.
      */
-    get topElementSelectors() { return this.#topElementSelectors }
-    #playButtonSelector;
-    get playButtonSelector() { return this.#playButtonSelector }
-    #fullscreenButtonSelector;
-    get fullscreenButtonSelector() { return this.#fullscreenButtonSelector }
-    #webFullscreenButtonSelector;
-    get webFullscreenButtonSelector() { return this.#webFullscreenButtonSelector }
-    #volumeButtonSelector;
-    get volumeButtonSelector() { return this.#volumeButtonSelector }
+    topElementSelectors;
+    playButtonSelector;
+    fullscreenButtonSelector;
+    webFullscreenButtonSelector;
+    volumeButtonSelector;
     /**
      * 
      * @param {string} containerSelector 
@@ -36,13 +29,13 @@ export class PlayerMetadata {
      */
     constructor(containerSelector, controlsSelector, topElementSelectors,
         playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector) {
-        this.#containerSelector = containerSelector;
-        this.#controlsSelector = controlsSelector;
-        this.#topElementSelectors = topElementSelectors;
-        this.#playButtonSelector = playButtonSelector;
-        this.#volumeButtonSelector = volumeButtonSelector;
-        this.#fullscreenButtonSelector = fullscreenButtonSelector;
-        this.#webFullscreenButtonSelector = webFullscreenButtonSelector;
+        this.containerSelector = containerSelector;
+        this.controlsSelector = controlsSelector;
+        this.topElementSelectors = topElementSelectors;
+        this.playButtonSelector = playButtonSelector;
+        this.volumeButtonSelector = volumeButtonSelector;
+        this.fullscreenButtonSelector = fullscreenButtonSelector;
+        this.webFullscreenButtonSelector = webFullscreenButtonSelector;
     }
 }
 export class Site {
