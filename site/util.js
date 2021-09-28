@@ -52,8 +52,13 @@ export const util = {
     getCurrentVideoPortalSite: function () {
         return findCurrentSite(VideoPortalSites);
     },
-    updateEnum: async function () {
-        const res = await tutil.gmGet('https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/master/conf/site.json', undefined, undefined, true);
+    /**
+     * 
+     * @param {'dev'|'master'} branch 
+     */
+    updateEnum: async function (branch = 'master') {
+        if (branch != 'dev' && branch != 'master') return Promise.reject('Invalid branch');
+        const res = await tutil.gmGet(`https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/${branch}/conf/site.json`, undefined, undefined, true);
         if (cutil.isObject(res)) {
             let siteids = res['siteids'];
             if (cutil.isObject(siteids)) {
@@ -108,5 +113,6 @@ export const util = {
                 }
             }
         }
+        return Promise.resolve();
     }
 };
