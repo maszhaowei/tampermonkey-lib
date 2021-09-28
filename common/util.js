@@ -257,15 +257,17 @@ export let util = {
     },
     /**
      * Copies all values of enumerable own properties that are not null, undefined, NaN or empty array from one or more source objects to a target object.
+     * @param {boolean} [deep] - Default to false.
      * @param {*} target 
      * @param  {...any} sources 
      * @returns The modified target object.
      */
-    assignNotEmpty: function (target, ...sources) {
+    assignNotEmpty: function (deep = false, target, ...sources) {
         sources.forEach((source) => {
             Object.keys(source).forEach((key) => {
                 let value = source[key];
                 if (value === undefined || value === null || Object.is(NaN, value) || (Array.isArray(value) && value.length == 0)) return;
+                else if (deep && util.isObject(value) && util.isObject(target[key])) util.assignNotEmpty(deep, target[key], value);
                 else target[key] = value;
             });
         })
