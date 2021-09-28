@@ -39,7 +39,7 @@
             }
         },
         {
-            "id":"7MM",
+            "id": "7MM",
             "additionalInfo": {
                 "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
                 "nextBtnSelector": "li.current+li a"
@@ -56,6 +56,12 @@
             "volumeButtonSelector": ".volumeButtonSelector",
             "fullscreenButtonSelector": ".fullscreenButtonSelector",
             "webFullscreenButtonSelector": ".webFullscreenButtonSelector"
+        },
+        {
+            "id": "MM9842",
+            "playButtonSelector": "",
+            "volumeButtonSelector": "",
+            "fullscreenButtonSelector": ""
         }
     ],
     "videoportalsites": [
