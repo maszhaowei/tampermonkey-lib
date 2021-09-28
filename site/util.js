@@ -88,7 +88,7 @@ export const util = {
                         originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                     });
                     let oriSite = Sites.get(siteid);
-                    if (oriSite) cutil.assignNotEmpty(oriSite, newSite);
+                    if (oriSite) cutil.assignNotEmpty(false, oriSite, newSite);
                     else Sites[siteid] = newSite;
                 }
             }
@@ -98,9 +98,11 @@ export const util = {
                     let siteid = vs.id;
                     let site = Sites.get(siteid);
                     if (!site) continue;
-                    VideoSites[siteid] = new VideoSite(site,
-                        new PlayerMetadata(vs.containerSelector, vs.controlsSelector, vs.topElementSelectors,
-                            vs.playButtonSelector, vs.volumeButtonSelector, vs.fullscreenButtonSelector, vs.webFullscreenButtonSelector));
+                    let oriVideoSite = VideoSites.get(siteid);
+                    let newPlayerMetaData = new PlayerMetadata(vs.containerSelector, vs.controlsSelector, vs.topElementSelectors,
+                        vs.playButtonSelector, vs.volumeButtonSelector, vs.fullscreenButtonSelector, vs.webFullscreenButtonSelector);
+                    if (oriVideoSite) cutil.assignNotEmpty(true, oriVideoSite.defaultPlayerMetadata, newPlayerMetaData);
+                    VideoSites[siteid] = new VideoSite(site, newPlayerMetaData);
                 }
             }
             let portalsites = res['videoportalsites'];

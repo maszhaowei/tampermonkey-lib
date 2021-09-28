@@ -197,6 +197,16 @@ export const VideoSites = {
     QXWK: new VideoSite(Sites.QXWK, new PlayerMetadata(...dplayerMetadata)),
     YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED, new PlayerMetadata("div#player", ".ytp-chrome-bottom", [".ytp-pause-overlay"],
         "button.ytp-play-button", "button.ytp-mute-button", "button.ytp-fullscreen-button")),
+    /**
+     * Get enum by site id.
+     * @param {string} id 
+     * @returns {VideoSite|undefined}
+     */
+    get(id) {
+        for (let i in VideoSites) {
+            if (VideoSites[i].id === id) return VideoSites[i];
+        }
+    }
 };
 /** @enum {VideoPortalSite} */
 export const VideoPortalSites = {
