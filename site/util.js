@@ -53,7 +53,7 @@ export const util = {
         return findCurrentSite(VideoPortalSites);
     },
     /**
-     * 
+     * Update Enums from remote json. Dependency: GM_xmlhttpRequest.
      * @param {'dev'|'master'} branch 
      */
     updateEnum: async function (branch = 'master') {
