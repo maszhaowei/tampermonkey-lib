@@ -102,7 +102,7 @@ export const util = {
                     let newPlayerMetaData = new PlayerMetadata(vs.containerSelector, vs.controlsSelector, vs.topElementSelectors,
                         vs.playButtonSelector, vs.volumeButtonSelector, vs.fullscreenButtonSelector, vs.webFullscreenButtonSelector);
                     if (oriVideoSite) cutil.assignNotEmpty(true, oriVideoSite.defaultPlayerMetadata, newPlayerMetaData);
-                    VideoSites[siteid] = new VideoSite(site, newPlayerMetaData);
+                    else VideoSites[siteid] = new VideoSite(site, newPlayerMetaData);
                 }
             }
             let portalsites = res['videoportalsites'];
