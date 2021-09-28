@@ -53,7 +53,7 @@ export const util = {
         return findCurrentSite(VideoPortalSites);
     },
     /**
-     * Update Enums from remote json. Dependency: GM_xmlhttpRequest.
+     * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.
      * @param {'dev'|'master'} branch 
      */
     updateEnum: async function (branch = 'master') {
