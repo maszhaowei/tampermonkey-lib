@@ -256,19 +256,31 @@ export let util = {
         return target;
     },
     /**
-     * Copies all values of enumerable own properties that are not null, undefined, NaN or empty array from one or more source objects to a target object.
-     * @param {boolean} [deep] - Default to false.
+     * Copies all values of enumerable own properties that are not null, undefined, NaN from one or more source objects to a target object.
      * @param {*} target 
-     * @param  {...any} sources 
+     * @param  {any[]} sources 
+     * @param {boolean} [deep] - Default to false.
+     * @param {boolean} [mergeArray] - Default to false.
      * @returns The modified target object.
+     * @throws
      */
-    assignNotEmpty: function (deep = false, target, ...sources) {
+    assignNotEmpty: function (target, sources, deep = false, mergeArray = false) {
+        if (!Array.isArray(sources)) throw "Invalid sources";
         sources.forEach((source) => {
             Object.keys(source).forEach((key) => {
-                let value = source[key];
-                if (value === undefined || value === null || Object.is(NaN, value) || (Array.isArray(value) && value.length == 0)) return;
-                else if (deep && util.isObject(value) && util.isObject(target[key])) util.assignNotEmpty(deep, target[key], value);
-                else target[key] = value;
+                let sourceValue = source[key];
+                let targetValue = target[key];
+                if (sourceValue === undefined || sourceValue === null || Object.is(NaN, sourceValue)) return;
+                else if (Array.isArray(targetValue)) {
+                    if (mergeArray && Array.isArray(sourceValue)) {
+                        sourceValue.forEach((v) => {
+                            if (!targetValue.includes(v)) targetValue.push(v);
+                        })
+                    }
+                    else target[key] = sourceValue;
+                }
+                else if (deep && util.isObject(sourceValue) && util.isObject(targetValue)) util.assignNotEmpty(targetValue, [sourceValue], deep, mergeArray);
+                else target[key] = sourceValue;
             });
         })
         return target;

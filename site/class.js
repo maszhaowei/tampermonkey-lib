@@ -1,3 +1,4 @@
+import { util as cutil } from "../common/util";
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
 export class PlayerMetadata {
@@ -18,17 +19,17 @@ export class PlayerMetadata {
     webFullscreenButtonSelector;
     volumeButtonSelector;
     /**
-     * 
-     * @param {string} containerSelector 
-     * @param {string} [controlsSelector] 
-     * @param {string[]} [topElementSelectors] 
-     * @param {string} [playButtonSelector] 
-     * @param {string} [volumeButtonSelector] 
-     * @param {string} [fullscreenButtonSelector] 
-     * @param {string} [webFullscreenButtonSelector] 
+     * @param {object} options
+     * @param {string} options.containerSelector 
+     * @param {string} [options.controlsSelector] 
+     * @param {string[]} [options.topElementSelectors] 
+     * @param {string} [options.playButtonSelector] 
+     * @param {string} [options.volumeButtonSelector] 
+     * @param {string} [options.fullscreenButtonSelector] 
+     * @param {string} [options.webFullscreenButtonSelector] 
      */
-    constructor(containerSelector, controlsSelector, topElementSelectors,
-        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector) {
+    constructor({ containerSelector, controlsSelector, topElementSelectors,
+        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector }) {
         this.containerSelector = containerSelector;
         this.controlsSelector = controlsSelector;
         this.topElementSelectors = topElementSelectors;
@@ -36,6 +37,11 @@ export class PlayerMetadata {
         this.volumeButtonSelector = volumeButtonSelector;
         this.fullscreenButtonSelector = fullscreenButtonSelector;
         this.webFullscreenButtonSelector = webFullscreenButtonSelector;
+    }
+    copy() {
+        let metadata = new PlayerMetadata({});
+        cutil.assignNotEmpty(metadata, [this]);
+        return metadata;
     }
 }
 export class Site {

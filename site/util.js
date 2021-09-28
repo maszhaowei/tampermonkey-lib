@@ -1,4 +1,4 @@
-import { SiteCategories, SiteIDs, Sites, VideoCategories, VideoPortalSites, VideoSites } from './enum';
+import { DefaultPlayerMetadatas, SiteCategories, SiteIDs, Sites, VideoCategories, VideoPortalSites, VideoSites } from './enum';
 import { PlayerMetadata, Site, VideoPortalSite, VideoSite } from './class';
 import { util as cutil } from '../common/util';
 import { util as tutil } from '../tampermonkey/util';
@@ -88,7 +88,7 @@ export const util = {
                         originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                     });
                     let oriSite = Sites.get(siteid);
-                    if (oriSite) cutil.assignNotEmpty(false, oriSite, newSite);
+                    if (oriSite) cutil.assignNotEmpty(oriSite, [newSite], false, true);
                     else Sites[siteid] = newSite;
                 }
             }
@@ -99,10 +99,16 @@ export const util = {
                     let site = Sites.get(siteid);
                     if (!site) continue;
                     let oriVideoSite = VideoSites.get(siteid);
-                    let newPlayerMetaData = new PlayerMetadata(vs.containerSelector, vs.controlsSelector, vs.topElementSelectors,
-                        vs.playButtonSelector, vs.volumeButtonSelector, vs.fullscreenButtonSelector, vs.webFullscreenButtonSelector);
-                    if (oriVideoSite) cutil.assignNotEmpty(true, oriVideoSite.defaultPlayerMetadata, newPlayerMetaData);
-                    else VideoSites[siteid] = new VideoSite(site, newPlayerMetaData);
+                    let defaultPM;
+                    if (vs.defaultPlayerMetadata) defaultPM = DefaultPlayerMetadatas.get(vs.defaultPlayerMetadata);
+                    let newPM = new PlayerMetadata({
+                        containerSelector: vs.containerSelector, controlsSelector: vs.controlsSelector, topElementSelectors: vs.topElementSelectors,
+                        playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
+                        fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
+                    });
+                    if (defaultPM) newPM = cutil.assignNotEmpty(defaultPM.copy(), [newPM], false, true);
+                    if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
+                    else VideoSites[siteid] = new VideoSite(site, newPM);
                 }
             }
             let portalsites = res['videoportalsites'];

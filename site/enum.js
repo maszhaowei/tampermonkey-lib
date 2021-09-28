@@ -176,27 +176,67 @@ export const Sites = {
         }
     }
 };
-let avgleMetadata = ["div#video-player", "div.vjs-control-bar", undefined, "button.vjs-play-control", undefined, "button.vjs-fullscreen-control"];
-let dplayerMetadata = ["div#dplayer, div#mvideo", undefined, "button.dplayer-play-icon", "button.dplayer-volume-icon", "button.dplayer-full-icon"];
+
+export const DefaultPlayerMetadatas = {
+    AVLGE: new PlayerMetadata({
+        containerSelector: "div#video-player", controlsSelector: "div.vjs-control-bar",
+        playButtonSelector: "button.vjs-play-control",
+        fullscreenButtonSelector: "button.vjs-fullscreen-control"
+    }),
+    DPLAYER: new PlayerMetadata({
+        containerSelector: "div#dplayer, div#mvideo",
+        playButtonSelector: "button.dplayer-play-icon", volumeButtonSelector: "button.dplayer-volume-icon",
+        fullscreenButtonSelector: "button.dplayer-full-icon"
+    }),
+    JABLE: new PlayerMetadata({
+        containerSelector: "div.plyr.plyr--video", controlsSelector: "div.plyr__controls",
+        volumeButtonSelector: "button[data-plyr=mute]", fullscreenButtonSelector: "button[data-plyr=fullscreen]"
+    }),
+    /**
+     * Get enum by key.
+     * @param {string} key 
+     * @returns {PlayerMetadata|undefined}
+     */
+    get(key) {
+        for (let i in DefaultPlayerMetadatas) {
+            if (i === key) return DefaultPlayerMetadatas[i];
+        }
+    }
+}
+
 /**
  * @enum {VideoSite} 
  */
 export const VideoSites = {
-    AVGLE: new VideoSite(Sites.AVGLE, new PlayerMetadata(...avgleMetadata)),
-    AVGLE_EMBED: new VideoSite(Sites.AVGLE_EMBED, new PlayerMetadata(...avgleMetadata)),
-    BILIBILI_VIDEO: new VideoSite(Sites.BILIBILI_VIDEO, new PlayerMetadata("div.bilibili-player-video-wrap", ".bilibili-player-video-control-wrap", undefined, "div.bilibili-player-video-btn-start", "button.bilibili-player-iconfont-volume",
-        "div.bilibili-player-video-btn-fullscreen button", "div.bilibili-player-video-web-fullscreen button")),
-    BILIBILI_BANGUMI: new VideoSite(Sites.BILIBILI_BANGUMI, new PlayerMetadata("div.bpx-player-video-area", ".bpx-player-control-wrap", undefined, "div.squirtle-video-start", "div.squirtle-volume-icon",
-        "div.squirtle-video-fullscreen", "div.squirtle-video-pagefullscreen")),
-    BUYCAR5: new VideoSite(Sites.BUYCAR5, new PlayerMetadata(...dplayerMetadata)),
-    DIOUS: new VideoSite(Sites.DIOUS, new PlayerMetadata(...dplayerMetadata)),
-    JABLE: new VideoSite(Sites.JABLE, new PlayerMetadata("div.plyr.plyr--video", "div.plyr__controls", undefined, undefined, "button[data-plyr=mute]", "button[data-plyr=fullscreen]")),
-    JX444662: new VideoSite(Sites.JX444662, new PlayerMetadata("div#playerCnt", "div.prism-controlbar", undefined)),
-    MM9842: new VideoSite(Sites.MM9842, new PlayerMetadata("div.jw-wrapper", "div.jw-controls", undefined, undefined, "div.jw-icon-volume", "div.jw-icon-fullscreen")),
-    QINGBEIBAN: new VideoSite(Sites.QINGBEIBAN, new PlayerMetadata(...dplayerMetadata)),
-    QXWK: new VideoSite(Sites.QXWK, new PlayerMetadata(...dplayerMetadata)),
-    YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED, new PlayerMetadata("div#player", ".ytp-chrome-bottom", [".ytp-pause-overlay"],
-        "button.ytp-play-button", "button.ytp-mute-button", "button.ytp-fullscreen-button")),
+    AVGLE: new VideoSite(Sites.AVGLE, DefaultPlayerMetadatas.AVLGE.copy()),
+    AVGLE_EMBED: new VideoSite(Sites.AVGLE_EMBED, DefaultPlayerMetadatas.AVLGE.copy()),
+    BILIBILI_VIDEO: new VideoSite(Sites.BILIBILI_VIDEO, new PlayerMetadata({
+        containerSelector: "div.bilibili-player-video-wrap", controlsSelector: ".bilibili-player-video-control-wrap",
+        playButtonSelector: "div.bilibili-player-video-btn-start", volumeButtonSelector: "button.bilibili-player-iconfont-volume",
+        fullscreenButtonSelector: "div.bilibili-player-video-btn-fullscreen button", webFullscreenButtonSelector: "div.bilibili-player-video-web-fullscreen button"
+    })),
+    BILIBILI_BANGUMI: new VideoSite(Sites.BILIBILI_BANGUMI, new PlayerMetadata({
+        containerSelector: "div.bpx-player-video-area", controlsSelector: ".bpx-player-control-wrap",
+        playButtonSelector: "div.squirtle-video-start", volumeButtonSelector: "div.squirtle-volume-icon",
+        fullscreenButtonSelector: "div.squirtle-video-fullscreen", webFullscreenButtonSelector: "div.squirtle-video-pagefullscreen"
+    })),
+    BUYCAR5: new VideoSite(Sites.BUYCAR5, DefaultPlayerMetadatas.DPLAYER.copy()),
+    DIOUS: new VideoSite(Sites.DIOUS, DefaultPlayerMetadatas.DPLAYER.copy()),
+    JABLE: new VideoSite(Sites.JABLE, DefaultPlayerMetadatas.JABLE.copy()),
+    JX444662: new VideoSite(Sites.JX444662, new PlayerMetadata({
+        containerSelector: "div#playerCnt", controlsSelector: "div.prism-controlbar"
+    })),
+    MM9842: new VideoSite(Sites.MM9842, new PlayerMetadata({
+        containerSelector: "div.jw-wrapper", controlsSelector: "div.jw-controls",
+        volumeButtonSelector: "div.jw-icon-volume", fullscreenButtonSelector: "div.jw-icon-fullscreen"
+    })),
+    QINGBEIBAN: new VideoSite(Sites.QINGBEIBAN, DefaultPlayerMetadatas.DPLAYER.copy()),
+    QXWK: new VideoSite(Sites.QXWK, DefaultPlayerMetadatas.DPLAYER.copy()),
+    YOUTUBE_EMBED: new VideoSite(Sites.YOUTUBE_EMBED, new PlayerMetadata({
+        containerSelector: "div#player", controlsSelector: ".ytp-chrome-bottom", topElementSelectors: [".ytp-pause-overlay"],
+        playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
+        fullscreenButtonSelector: "button.ytp-fullscreen-button"
+    })),
     /**
      * Get enum by site id.
      * @param {string} id 
