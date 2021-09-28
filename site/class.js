@@ -125,8 +125,6 @@ export class Site {
  * {@link Site} 
  */
 export class VideoSite extends Site {
-    #parent;
-    get parent() { return this.#parent }
     #defaultPlayerMetadata;
     get defaultPlayerMetadata() { return this.#defaultPlayerMetadata }
     /**
@@ -140,7 +138,6 @@ export class VideoSite extends Site {
             siteCategories: site.siteCategories, subcategories: site.subcategories,
             originWhitelist: site.originWhitelist
         });
-        this.#parent = site;
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
     }
 }
