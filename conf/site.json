@@ -1,7 +1,8 @@
 {
     "siteids": {
         "YOUDAO": "Youdao",
-        "18COMIC": "18comic"
+        "18COMIC": "18comic",
+        "Streamtape": "Streamtape"
     },
     "sitecategories": {},
     "videocategories": {
@@ -75,7 +76,7 @@
             "fullscreenButtonSelector": ""
         },
         {
-            "id":"Streamtape",
+            "id": "Streamtape",
             "defaultPlayerMetadata": "JABLE"
         }
     ],
