@@ -40,10 +40,21 @@
         },
         {
             "id": "7MM",
+            "originWhitelist": [
+                "https://streamtape.com"
+            ],
             "additionalInfo": {
                 "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
                 "nextBtnSelector": "li.current+li a"
             }
+        },
+        {
+            "id": "Streamtape",
+            "origin": "https://streamtape.com",
+            "siteCategories": "Video Hosting",
+            "originWhitelist": [
+                "https://7mmtv.tv"
+            ]
         }
     ],
     "videosites": [
@@ -62,6 +73,10 @@
             "playButtonSelector": "",
             "volumeButtonSelector": "",
             "fullscreenButtonSelector": ""
+        },
+        {
+            "id":"Streamtape",
+            "defaultPlayerMetadata": "JABLE"
         }
     ],
     "videoportalsites": [
