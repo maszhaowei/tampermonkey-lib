@@ -207,7 +207,10 @@ export class VideoInstance {
     async #onLoadedMetadata() {
         this.#initVideo();
         let video = this.video;
-        video.addEventListener(MediaEvents.VOLUME_CHANGE, () => this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume }));
+        video.addEventListener(MediaEvents.VOLUME_CHANGE, () => {
+            this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
+            this.showTooltip(video.muted ? "静音" : ("音量" + Math.round(video.volume * 100) + "%"));
+        });
         let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector, this.playerMetadata.topElementSelectors);
         this.videoDelegate = videoDelegate;
         return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
@@ -258,7 +261,6 @@ export class VideoInstance {
         if (deltaVolume >= 0) volume = Math.min(video.volume + deltaVolume, 1);
         else volume = Math.max(video.volume + deltaVolume, 0);
         video.volume = volume.toFixed(2);
-        this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
     }
     saveVideoFrame(fileName = document.title) {
         let video = this.video;
