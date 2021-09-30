@@ -57,7 +57,7 @@ function _offset(element) {
 /**
  * Retrieve the dimension of viewport. Result is rounded.
  * @param {Window} [targetWindow]
- * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
+ * @param {boolean} [scrollbar] - Whether to include horizontal and vertical scrollbars. Default to false.
  * @returns 
  */
 function _getViewPortDimension(targetWindow = window, scrollbar = false) {
@@ -323,8 +323,8 @@ export const ui = {
     },
     /**
      * Retrieve the dimension of viewport. Result is rounded.
-     * @param {Window} [targetWindow]
-     * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
+     * @param {Window} [targetWindow] - Default to window.
+     * @param {boolean} [scrollbar] - Whether to include horizontal and vertical scrollbars. Default to false.
      * @returns 
      */
     getViewPortDimension: _getViewPortDimension,
