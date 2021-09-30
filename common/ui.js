@@ -56,22 +56,24 @@ function offset2(element) {
 }
 /**
  * Retrieve the dimension of viewport. Result is rounded.
+ * @param {Window} [targetWindow]
  * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
  * @returns 
  */
-function getViewPortDimension2(scrollbar = false) {
+function getViewPortDimension2(targetWindow = window, scrollbar = false) {
     let vh, vw;
     if (scrollbar) {
-        vh = window.innerHeight;
-        vw = window.innerWidth;
+        vh = targetWindow.innerHeight;
+        vw = targetWindow.innerWidth;
     }
     else {
-        if (document.compatMode === 'BackCompat') {
-            vh = document.body.clientHeight;
-            vw = document.body.clientWidth;
+        let doc = targetWindow.document;
+        if (doc.compatMode === 'BackCompat') {
+            vh = doc.body.clientHeight;
+            vw = doc.body.clientWidth;
         } else {
-            vh = document.documentElement.clientHeight;
-            vw = document.documentElement.clientWidth;
+            vh = doc.documentElement.clientHeight;
+            vw = doc.documentElement.clientWidth;
         }
     }
     return { height: vh, width: vw };
@@ -114,7 +116,7 @@ function getCoord(displayElement, options) {
     let insideY = options.insideY;
     if (insideY && position.includes('right') || (!insideY && position.includes('left'))) left -= tooltipRect.width;
 
-    let vw = getViewPortDimension2(false);
+    let vw = getViewPortDimension2(_getOwnerWindow(options.target), false);
     if (options.ensureViewPort) {
         if (left < 0) left = 0;
         else if (vw.width < Math.round(left + tooltipRect.width)) left = vw.width - tooltipRect.width;
@@ -321,6 +323,7 @@ export const ui = {
     },
     /**
      * Retrieve the dimension of viewport. Result is rounded.
+     * @param {Window} [targetWindow]
      * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
      * @returns 
      */
