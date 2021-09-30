@@ -2,12 +2,31 @@ import '../css/tooltip.css';
 import '../css/linkmsg.css';
 import { TooltipPosition, MessageLevel } from './enum';
 import { util } from './util';
-
-function getScrollTop() {
-    return window.scrollY || window.pageYOffset || (document.documentElement && document.documentElement.scrollTop || 0) || document.body.scrollTop;
+/**
+ * 
+ * @param {Element} element 
+ * @returns {Window}
+ */
+function _getOwnerWindow(element) {
+    return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
 }
-function getScrollLeft() {
-    return window.scrollX || window.pageXOffset || (document.documentElement && document.documentElement.scrollLeft || 0) || document.body.scrollLeft;
+/**
+ * 
+ * @param {Window} w 
+ * @returns 
+ */
+function getScrollTop(w) {
+    let doc = w.document;
+    return w.scrollY || w.pageYOffset || (doc.documentElement && doc.documentElement.scrollTop || 0) || doc.body.scrollTop;
+}
+/**
+ * 
+ * @param {Window} w 
+ * @returns 
+ */
+function getScrollLeft(w) {
+    let doc = w.document;
+    return w.scrollX || w.pageXOffset || (doc.documentElement && doc.documentElement.scrollLeft || 0) || doc.body.scrollLeft;
 }
 /**
  * jQuery.fn.offset implementation to retrieve the current position of an element (specifically its border box, which excludes margins) relative to the document.
@@ -28,10 +47,11 @@ function offset2(element) {
         return offset;
     }
     let rect = element.getBoundingClientRect();
-    let docElement = element.ownerDocument.documentElement;
+    let w = _getOwnerWindow(element), doc = w.document;
+    let docElement = doc.documentElement;
     return {
-        top: rect.top + getScrollTop() - (docElement.clientTop || 0),
-        left: rect.left + getScrollLeft() - (docElement.clientLeft || 0)
+        top: rect.top + getScrollTop(w) - (docElement.clientTop || 0),
+        left: rect.left + getScrollLeft(w) - (docElement.clientLeft || 0)
     };
 }
 /**
