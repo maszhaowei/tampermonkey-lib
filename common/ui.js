@@ -55,7 +55,7 @@ function _offset(element) {
     };
 }
 /**
- * Retrieve the dimension of viewport. Result is rounded.
+ * Retrieve the viewport dimension of {@link targetWindow}. Result is rounded.
  * @param {Window} [targetWindow]
  * @param {boolean} [scrollbar] - Whether to include horizontal and vertical scrollbars. Default to false.
  * @returns 
@@ -322,7 +322,7 @@ export const ui = {
         element.ownerDocument.documentElement.scrollTo(offset.left - (vw.width - rect.width) / 2, offset.top - (vw.height - rect.height) / 2);
     },
     /**
-     * Retrieve the dimension of viewport. Result is rounded.
+     * Retrieve the viewport dimension of {@link targetWindow}. Result is rounded.
      * @param {Window} [targetWindow] - Default to window.
      * @param {boolean} [scrollbar] - Whether to include horizontal and vertical scrollbars. Default to false.
      * @returns 
