@@ -368,14 +368,15 @@ export const ui = {
      */
     showMessage: function (message, level = MessageLevel.INFO, options, timeout = 4000) {
         if (!MessageLevel.test(level)) level = MessageLevel.INFO;
-        let frag = document.createDocumentFragment(), linkDiv = document.createElement('div');
-        linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
-        linkDiv.className = 'link-toast ' + level + ' ' + (options.fixed ? 'fixed' : '');
         let target = options.target;
         if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
-        document.querySelector('div.link-toast')?.remove();
+        let targetDoc = target.ownerDocument;
+        let frag = targetDoc.createDocumentFragment(), linkDiv = targetDoc.createElement('div');
+        linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
+        linkDiv.className = 'link-toast ' + level + ' ' + (options.fixed ? 'fixed' : '');
+        targetDoc.querySelector('div.link-toast')?.remove();
         frag.appendChild(linkDiv);
-        document.body.appendChild(frag);
+        targetDoc.body.appendChild(frag);
         let offset = getCoord(linkDiv, options);
         linkDiv.style.left = offset.left + 'px';
         linkDiv.style.top = offset.top + 'px';
