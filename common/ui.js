@@ -294,10 +294,10 @@ export const ui = {
      */
     scrollToElement(element) {
         if (!element) return;
-        let html = element.ownerDocument.documentElement;
         const offset = offset2(element);
+        const vw = ui.getViewPortDimension(false);
         const rect = element.getBoundingClientRect();
-        html.scrollTo(offset.left - (html.clientWidth - rect.width) / 2, offset.top - (html.clientHeight - rect.height) / 2);
+        element.ownerDocument.documentElement.scrollTo(offset.left - (vw.width - rect.width) / 2, offset.top - (vw.height - rect.height) / 2);
     },
     /**
      * Retrieve the dimension of viewport. Result is rounded.
