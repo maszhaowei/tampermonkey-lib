@@ -15,7 +15,7 @@ function _getOwnerWindow(element) {
  * @param {Window} w 
  * @returns 
  */
-function getScrollTop(w) {
+function _getScrollTop(w) {
     let doc = w.document;
     return w.scrollY || w.pageYOffset || (doc.documentElement && doc.documentElement.scrollTop || 0) || doc.body.scrollTop;
 }
@@ -24,7 +24,7 @@ function getScrollTop(w) {
  * @param {Window} w 
  * @returns 
  */
-function getScrollLeft(w) {
+function _getScrollLeft(w) {
     let doc = w.document;
     return w.scrollX || w.pageXOffset || (doc.documentElement && doc.documentElement.scrollLeft || 0) || doc.body.scrollLeft;
 }
@@ -35,7 +35,7 @@ function getScrollLeft(w) {
  * @param {Element} element 
  * @returns 
  */
-function offset2(element) {
+function _offset(element) {
     let offset = {
         top: 0,
         left: 0
@@ -50,8 +50,8 @@ function offset2(element) {
     let w = _getOwnerWindow(element), doc = w.document;
     let docElement = doc.documentElement;
     return {
-        top: rect.top + getScrollTop(w) - (docElement.clientTop || 0),
-        left: rect.left + getScrollLeft(w) - (docElement.clientLeft || 0)
+        top: rect.top + _getScrollTop(w) - (docElement.clientTop || 0),
+        left: rect.left + _getScrollLeft(w) - (docElement.clientLeft || 0)
     };
 }
 /**
@@ -60,7 +60,7 @@ function offset2(element) {
  * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
  * @returns 
  */
-function getViewPortDimension2(targetWindow = window, scrollbar = false) {
+function _getViewPortDimension(targetWindow = window, scrollbar = false) {
     let vh, vw;
     if (scrollbar) {
         vh = targetWindow.innerHeight;
@@ -84,9 +84,9 @@ function getViewPortDimension2(targetWindow = window, scrollbar = false) {
  * @param {import('./class').PositionOption} options
  * @returns 
  */
-function getCoord(displayElement, options) {
+function _getCoord(displayElement, options) {
     let targetRect = options.target.getBoundingClientRect(), tooltipRect = displayElement.getBoundingClientRect();
-    let tOffset = options.fixed ? targetRect : offset2(options.target);
+    let tOffset = options.fixed ? targetRect : _offset(options.target);
     let left = tOffset.left + options.left, top = tOffset.top + options.top;
     let position = options.position;
     if (position.startsWith('top')) {
@@ -116,7 +116,7 @@ function getCoord(displayElement, options) {
     let insideY = options.insideY;
     if (insideY && position.includes('right') || (!insideY && position.includes('left'))) left -= tooltipRect.width;
 
-    let vw = getViewPortDimension2(_getOwnerWindow(options.target), false);
+    let vw = _getViewPortDimension(_getOwnerWindow(options.target), false);
     if (options.ensureViewPort) {
         if (left < 0) left = 0;
         else if (vw.width < Math.round(left + tooltipRect.width)) left = vw.width - tooltipRect.width;
@@ -125,7 +125,7 @@ function getCoord(displayElement, options) {
     }
     return { left: left, top: top };
 }
-class Tooltip {
+class _Tooltip {
     /**
      * 
      * @param {string} tooltip
@@ -295,7 +295,7 @@ class Tooltip {
         if (options.arrow) {
             this.$zwtooltips.insertAdjacentHTML('beforeend', `<div class="arrow" style="left:${arrow}px;"></div>`);
         }
-        let offset = getCoord(this.$zwtooltips, options);
+        let offset = _getCoord(this.$zwtooltips, options);
         this.$zwtooltips.style.top = offset.top + 'px';
         this.$zwtooltips.style.left = offset.left + 'px';
     }
@@ -309,15 +309,15 @@ export const ui = {
      * @param {Element} element 
      * @returns 
      */
-    offset: offset2,
+    offset: _offset,
     /**
      * 
      * @param {HTMLElement} element 
      */
     scrollToElement(element) {
         if (!element) return;
-        const offset = offset2(element);
-        const vw = ui.getViewPortDimension(false);
+        const offset = _offset(element);
+        const vw = _getViewPortDimension(_getOwnerWindow(element), false);
         const rect = element.getBoundingClientRect();
         element.ownerDocument.documentElement.scrollTo(offset.left - (vw.width - rect.width) / 2, offset.top - (vw.height - rect.height) / 2);
     },
@@ -327,7 +327,7 @@ export const ui = {
      * @param {boolean} scrollbar - Whether to include horizontal and vertical scrollbars. Default to false.
      * @returns 
      */
-    getViewPortDimension: getViewPortDimension2,
+    getViewPortDimension: _getViewPortDimension,
     /**
      * 
      * @param {KeyboardEvent} e 
@@ -380,7 +380,7 @@ export const ui = {
             console.debug("Tooltip is blank");
             return;
         }
-        new Tooltip(tooltip, options, timeout);
+        new _Tooltip(tooltip, options, timeout);
     },
     /**
      * 
@@ -400,7 +400,7 @@ export const ui = {
         targetDoc.querySelector('div.link-toast')?.remove();
         frag.appendChild(linkDiv);
         targetDoc.body.appendChild(frag);
-        let offset = getCoord(linkDiv, options);
+        let offset = _getCoord(linkDiv, options);
         linkDiv.style.left = offset.left + 'px';
         linkDiv.style.top = offset.top + 'px';
         setTimeout((function () {
