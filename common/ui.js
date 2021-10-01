@@ -315,7 +315,7 @@ export const ui = {
      * @param {HTMLElement} element 
      */
     scrollToElement(element) {
-        if (!element) return;
+        if (!element || !(element instanceof Element)) throw new TypeError('Parameter is not an Element');
         const offset = _offset(element);
         const vw = _getViewPortDimension(_getOwnerWindow(element), false);
         const rect = element.getBoundingClientRect();
