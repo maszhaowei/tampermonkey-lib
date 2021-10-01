@@ -59,68 +59,82 @@ export const util = {
     updateEnum: async function (branch = 'master') {
         if (branch != 'dev' && branch != 'master') return Promise.reject('Invalid branch');
         const res = await tutil.gmGet(`https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/${branch}/conf/site.json`, undefined, undefined, true);
-        if (cutil.isObject(res)) {
-            let siteids = res['siteids'];
-            if (cutil.isObject(siteids)) {
-                for (let sid in siteids) {
-                    SiteIDs[sid] = siteids[sid];
-                }
-            }
-            let sitecategories = res['sitecategories'];
-            if (cutil.isObject(sitecategories)) {
-                for (let sc in sitecategories) {
-                    SiteCategories[sc] = sitecategories[sc];
-                }
-            }
-            let videocategories = res['videocategories'];
-            if (cutil.isObject(videocategories)) {
-                for (let vc in videocategories) {
-                    VideoCategories[vc] = videocategories[vc];
-                }
-            }
-            let sites = res['sites'];
-            if (Array.isArray(sites)) {
-                for (let site of sites) {
-                    let siteid = site.id;
-                    let newSite = new Site({
-                        id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
-                        siteCategories: site.siteCategories, subcategories: site.subcategories,
-                        originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
-                    });
-                    let oriSite = Sites.get(siteid);
-                    if (oriSite) cutil.assignNotEmpty(oriSite, [newSite], false, true);
-                    else Sites[siteid] = newSite;
-                }
-            }
-            let videosites = res['videosites'];
-            if (Array.isArray(videosites)) {
-                for (let vs of videosites) {
-                    let siteid = vs.id;
-                    let site = Sites.get(siteid);
-                    if (!site) continue;
-                    let oriVideoSite = VideoSites.get(siteid);
-                    let defaultPM;
-                    if (vs.defaultPlayerMetadata) defaultPM = DefaultPlayerMetadatas.get(vs.defaultPlayerMetadata);
-                    let newPM = new PlayerMetadata({
-                        containerSelector: vs.containerSelector, controlsSelector: vs.controlsSelector, topElementSelectors: vs.topElementSelectors,
-                        playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
-                        fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
-                    });
-                    if (defaultPM) newPM = cutil.assignNotEmpty(defaultPM.copy(), [newPM], false, true);
-                    if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
-                    else VideoSites[siteid] = new VideoSite(site, newPM);
-                }
-            }
-            let portalsites = res['videoportalsites'];
-            if (Array.isArray(portalsites)) {
-                for (let ps of portalsites) {
-                    let siteid = ps.id;
-                    let site = Sites.get(siteid);
-                    if (!site) continue;
-                    VideoPortalSites[siteid] = new VideoPortalSite(site);
-                }
+        /** @type {Error[]} */
+        let errors = [];
+        if (!cutil.isObject(res)) return Promise.reject('json content is not an object');
+        let siteids = res['siteids'];
+        if (cutil.isObject(siteids)) {
+            for (let sid in siteids) {
+                SiteIDs[sid] = siteids[sid];
             }
         }
-        return Promise.resolve();
+        else errors.push(new TypeError('Invalid format of siteids: ' + siteids));
+        let sitecategories = res['sitecategories'];
+        if (cutil.isObject(sitecategories)) {
+            for (let sc in sitecategories) {
+                SiteCategories[sc] = sitecategories[sc];
+            }
+        }
+        else errors.push(new TypeError('Invalid format of sitecategories: ' + sitecategories));
+        let videocategories = res['videocategories'];
+        if (cutil.isObject(videocategories)) {
+            for (let vc in videocategories) {
+                VideoCategories[vc] = videocategories[vc];
+            }
+        }
+        else errors.push(new TypeError('Invalid format of videocategories: ' + videocategories));
+        let sites = res['sites'];
+        if (Array.isArray(sites)) {
+            for (let site of sites) {
+                let siteid = site.id;
+                let newSite = new Site({
+                    id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
+                    siteCategories: site.siteCategories, subcategories: site.subcategories,
+                    originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
+                });
+                let oriSite = Sites.get(siteid);
+                if (oriSite) cutil.assignNotEmpty(oriSite, [newSite], false, true);
+                else Sites[siteid] = newSite;
+            }
+        }
+        else errors.push(new TypeError('Invalid format of sites: ' + sites));
+        let videosites = res['videosites'];
+        if (Array.isArray(videosites)) {
+            for (let vs of videosites) {
+                let siteid = vs.id;
+                let site = Sites.get(siteid);
+                if (!site) {
+                    errors.push(new Error('Unable to find site: ' + siteid));
+                    continue;
+                }
+                let oriVideoSite = VideoSites.get(siteid);
+                let defaultPM;
+                if (vs.defaultPlayerMetadata) defaultPM = DefaultPlayerMetadatas.get(vs.defaultPlayerMetadata);
+                let newPM = new PlayerMetadata({
+                    containerSelector: vs.containerSelector, controlsSelector: vs.controlsSelector, topElementSelectors: vs.topElementSelectors,
+                    playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
+                    fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
+                });
+                if (defaultPM) newPM = cutil.assignNotEmpty(defaultPM.copy(), [newPM], false, true);
+                if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
+                else VideoSites[siteid] = new VideoSite(site, newPM);
+            }
+        }
+        else errors.push(new TypeError('Invalid format of videosites: ' + videosites));
+        let portalsites = res['videoportalsites'];
+        if (Array.isArray(portalsites)) {
+            for (let ps of portalsites) {
+                let siteid = ps.id;
+                let site = Sites.get(siteid);
+                if (!site) {
+                    errors.push(new Error('Unable to find site: ' + siteid));
+                    continue;
+                }
+                VideoPortalSites[siteid] = new VideoPortalSite(site);
+            }
+        }
+        else errors.push(new TypeError('Invalid format of portalsites: ' + portalsites));
+        if (errors.length > 0) Promise.reject(errors);
+        else return Promise.resolve();
     }
 };
