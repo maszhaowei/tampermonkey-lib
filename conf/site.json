@@ -2,7 +2,8 @@
     "siteids": {
         "YOUDAO": "Youdao",
         "18COMIC": "18comic",
-        "Streamtape": "Streamtape"
+        "Streamtape": "Streamtape",
+        "HACG": "hacg"
     },
     "sitecategories": {},
     "videocategories": {
@@ -56,6 +57,14 @@
             "originWhitelist": [
                 "https://7mmtv.tv"
             ]
+        },
+        {
+            "id": "hacg",
+            "hrefRegEx": "^https://www\\.hacg\\.[a-z]+/wp/.+",
+            "additionalInfo": {
+                "prevBtnSelector": ".page_info+li:not(.active_page) a",
+                "nextBtnSelector": "#wp_page_numbers ul li:last-child:not(.active_page) a"
+            }
         }
     ],
     "videosites": [
