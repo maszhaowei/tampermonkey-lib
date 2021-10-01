@@ -120,8 +120,10 @@ export const ui = {
      * Collapse {@link element} to height of {@link collapseHeight}(px). Mouse over to restore height and mouse leave to collapse again.
      * @param {HTMLElement} element 
      * @param {number} [collapseHeight] - Default to 10.
+     * @param {()=>void} collapseCallback
+     * @param {()=>void} expandCallback
      */
-    collapse(element, collapseHeight = 10) {
+    collapse(element, collapseHeight = 10, collapseCallback, expandCallback) {
         let minHeight = window.getComputedStyle(element).minHeight;
         let height = window.getComputedStyle(element).height;
         CssCacheHelper.save(element, 'minHeight', () => element.style.minHeight = minHeight);
@@ -133,6 +135,7 @@ export const ui = {
         for (let i = 0; i < children.length; i++) {
             hideElement(children[i], true);
         }
+        collapseCallback && collapseCallback();
         element.addEventListener('mouseenter', () => {
             CssCacheHelper.restore(element, 'minHeight');
             CssCacheHelper.restore(element, 'height');
@@ -140,6 +143,7 @@ export const ui = {
             for (let i = 0; i < children.length; i++) {
                 restoreElementDisplay(children[i]);
             }
+            expandCallback && expandCallback();
         });
         element.addEventListener('mouseleave', () => {
             element.style.minHeight = h;
@@ -148,6 +152,7 @@ export const ui = {
             for (let i = 0; i < children.length; i++) {
                 hideElement(children[i], true);
             }
+            collapseCallback && collapseCallback();
         });
     }
 }
