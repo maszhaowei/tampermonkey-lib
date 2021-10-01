@@ -3,7 +3,8 @@
         "YOUDAO": "Youdao",
         "18COMIC": "18comic",
         "Streamtape": "Streamtape",
-        "HACG": "hacg"
+        "HACG": "hacg",
+        "wnacg": "wnacg"
     },
     "sitecategories": {},
     "videocategories": {
@@ -64,6 +65,14 @@
             "additionalInfo": {
                 "prevBtnSelector": ".page_info+li:not(.active_page) a",
                 "nextBtnSelector": "#wp_page_numbers ul li:last-child:not(.active_page) a"
+            }
+        },
+        {
+            "id": "wnacg",
+            "origin": "https://www.wnacg.com",
+            "additionalInfo": {
+                "prevBtnSelector": ".newpage .btntuzao:first-child,span.prev a",
+                "nextBtnSelector": ".newpage .btntuzao:last-child,span.next a"
             }
         }
     ],
