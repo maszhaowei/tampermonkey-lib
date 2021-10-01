@@ -87,6 +87,10 @@ export const util = {
         if (Array.isArray(sites)) {
             for (let site of sites) {
                 let siteid = site.id;
+                if (!SiteIDs.hasValue(siteid)) {
+                    errors.push(new Error(`Unable to find site id: ${siteid} in siteids`));
+                    continue;
+                }
                 let newSite = new Site({
                     id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
                     siteCategories: site.siteCategories, subcategories: site.subcategories,

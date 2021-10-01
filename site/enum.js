@@ -48,7 +48,18 @@ export const SiteIDs = {
     STEAM_STORE: 'STEAM_STORE',
     WALLHAVEN: 'WALLHAVEN',
     WUKONGMEIJU: 'WUKONGMEIJU',
-    YOUTUBE_EMBED: 'YOUTUBE_EMBED'
+    YOUTUBE_EMBED: 'YOUTUBE_EMBED',
+    /**
+     * 
+     * @param {string} value 
+     * @returns 
+     */
+    hasValue(value) {
+        for (let i in SiteIDs) {
+            if (SiteIDs[i] === value) return true;
+        }
+        return false;
+    }
 };
 /** 
  * @enum {Site} 
