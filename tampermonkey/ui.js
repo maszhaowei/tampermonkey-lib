@@ -2,6 +2,7 @@ import { util as cutil } from '../common/util';
 import { ApplyMethodSignature } from '../common/class';
 import { FORCE_HIDDEN_CLASSNAME } from './const';
 import '../css/common.css';
+import { CssCacheHelper } from './utils';
 
 /**
  * 
@@ -10,8 +11,20 @@ import '../css/common.css';
  */
 function hideElement(element, force = false) {
     if (!element) return;
+    let display = window.getComputedStyle(element).display;
+    CssCacheHelper.save(element, 'display', () => {
+        element.classList.remove(FORCE_HIDDEN_CLASSNAME);
+        element.style.display = display;
+    });
     element.style.display = 'none';
     if (force) element.classList.add(FORCE_HIDDEN_CLASSNAME);
+}
+/**
+ * 
+ * @param {HTMLElement} element 
+ */
+function restoreElementDisplay(element) {
+    CssCacheHelper.restore(element, 'display');
 }
 /**
  * 
@@ -102,5 +115,39 @@ export const ui = {
             });
         }
         else if (descendent instanceof HTMLElement) ui.hide(descendent.closest(parentSelector), force);
+    },
+    /**
+     * Collapse {@link element} to height of {@link collapseHeight}(px). Mouse over to restore height and mouse leave to collapse again.
+     * @param {HTMLElement} element 
+     * @param {number} [collapseHeight] - Default to 10.
+     */
+    collapse(element, collapseHeight = 10) {
+        let minHeight = window.getComputedStyle(element).minHeight;
+        let height = window.getComputedStyle(element).height;
+        CssCacheHelper.save(element, 'minHeight', () => element.style.minHeight = minHeight);
+        CssCacheHelper.save(element, 'height', () => element.style.height = height);
+        let h = collapseHeight + 'px';
+        element.style.minHeight = h;
+        element.style.height = h;
+        let children = element.children;
+        for (let i = 0; i < children.length; i++) {
+            hideElement(children[i], true);
+        }
+        element.addEventListener('mouseenter', () => {
+            CssCacheHelper.restore(element, 'minHeight');
+            CssCacheHelper.restore(element, 'height');
+            let children = element.children;
+            for (let i = 0; i < children.length; i++) {
+                restoreElementDisplay(children[i]);
+            }
+        });
+        element.addEventListener('mouseleave', () => {
+            element.style.minHeight = h;
+            element.style.height = h;
+            let children = element.children;
+            for (let i = 0; i < children.length; i++) {
+                hideElement(children[i], true);
+            }
+        });
     }
 }
