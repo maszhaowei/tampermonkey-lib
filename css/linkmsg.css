@@ -3,7 +3,7 @@
     padding:8px 16px;
     font-size:14px;
     border-radius:8px;
-    white-space:pre !important;
+    white-space:pre;
     color:#fff;
     -webkit-animation:link-msg-move-in-top cubic-bezier(.22,.58,.12,.98) .4s;
     animation:link-msg-move-in-top cubic-bezier(.22,.58,.12,.98) .4s;

@@ -395,6 +395,7 @@ export const ui = {
         if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
         let targetDoc = target.ownerDocument;
         let frag = targetDoc.createDocumentFragment(), linkDiv = targetDoc.createElement('div');
+        linkDiv.style.whiteSpace = 'pre';
         linkDiv.innerHTML = '<span class="toast-text">' + message + '</span>';
         linkDiv.className = 'link-toast ' + level + ' ' + (options.fixed ? 'fixed' : '');
         targetDoc.querySelector('div.link-toast')?.remove();
