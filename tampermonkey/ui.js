@@ -120,8 +120,8 @@ export const ui = {
      * Collapse {@link element} to height of {@link collapseHeight}(px). Mouse over to restore height and mouse leave to collapse again.
      * @param {HTMLElement} element 
      * @param {number} [collapseHeight] - Default to 10.
-     * @param {()=>void} collapseCallback
-     * @param {()=>void} expandCallback
+     * @param {()=>void} [collapseCallback]
+     * @param {()=>void} [expandCallback]
      */
     collapse(element, collapseHeight = 10, collapseCallback, expandCallback) {
         let minHeight = window.getComputedStyle(element).minHeight;
