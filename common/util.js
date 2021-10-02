@@ -303,12 +303,13 @@ export let util = {
         return Object.is(obj1, obj2) ? true : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
     },
     /**
-     * Convert a Date object to specified format.
-     * @param {Date} date 
+     * Convert datetime to specified format.
+     * @param {Date|string|number} date 
      * @param {string} [format] - Format character: {M - Month, d - Day, h - Hour, m - Minute, s - Second, q - Quarter, S - Millisecond}. Repeat characters except millisecond to output long format.  Default to "MM/dd/yyyy hh:mm:ss". 
      * @returns 
      */
     formatDate: function (date, format = 'MM/dd/yyyy hh:mm:ss') {
+        if (!(date instanceof Date)) date = new Date(date);
         var o = {
             "M+": date.getMonth() + 1, //month
             "d+": date.getDate(), //day
