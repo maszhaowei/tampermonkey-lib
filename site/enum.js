@@ -48,6 +48,7 @@ export const SiteIDs = {
     STEAM_STORE: 'STEAM_STORE',
     WALLHAVEN: 'WALLHAVEN',
     WUKONGMEIJU: 'WUKONGMEIJU',
+    YOUTUBE: "Youtube",
     YOUTUBE_EMBED: 'YOUTUBE_EMBED',
     /**
      * 
@@ -170,6 +171,10 @@ export const Sites = {
         id: SiteIDs.WUKONGMEIJU, origin: "https://m.wukongmeiju.com",
         siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
         originWhitelist: ["https://code.qxwk.net"]
+    }),
+    YOUTUBE: new Site({
+        id: SiteIDs.YOUTUBE, origin: "https://www.youtube.com",
+        siteCategories: [SiteCategories.VIDEO_SHARING]
     }),
     YOUTUBE_EMBED: new Site({
         id: SiteIDs.YOUTUBE_EMBED, origin: "https://www.youtube.com", hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+$/,

@@ -80,12 +80,12 @@ export let util = {
     },
     /**
      * 
-     * @param {string} variable 
+     * @param {string} key 
      * @returns 
      */
-    getQueryVariable: function (variable) {
+    getQueryParameter: function (key) {
         for (let [k, v] of new URLSearchParams(window.location.search).entries()) {
-            if (k === variable) return v;
+            if (k === key) return v;
         }
     },
     /**
