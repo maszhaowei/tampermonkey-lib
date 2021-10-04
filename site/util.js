@@ -20,7 +20,6 @@ function findCurrentSite(sites) {
             else {
                 handler = (e) => {
                     if (site.validateMessage(e)) tutil.printReceiveMessage(e);
-                    else e.stopImmediatePropagation();
                 };
                 messageHandlerMap.set(site, handler);
             }
