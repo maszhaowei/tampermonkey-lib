@@ -19,7 +19,7 @@ export const util = {
         cutil.printGroupDebug(scriptName, ...objs);
     },
     /**
-     * 
+     * Dependency: GM_xmlhttpRequest.
      * @param {string|URL} url 
      * @param {Object.<string,string>} [headers] 
      * @param {string} [responseType] - Default to "json".
@@ -42,7 +42,7 @@ export const util = {
         });
     },
     /**
-     * 
+     * Dependency: GM_xmlhttpRequest.
      * @param {string|URL} url 
      * @param {Object.<string,string>} [headers] - Default to { "Content-Type": "application/x-www-form-urlencoded" }.
      * @param {Document | XMLHttpRequestBodyInit} [data] 
@@ -66,7 +66,7 @@ export const util = {
         });
     },
     /**
-     * 
+     * Dependency: GM_xmlhttpRequest.
      * @param {string|URL} url 
      * @param {Object.<string,string>} [headers] 
      * @param {string} [responseType] - Default to "json".
