@@ -79,7 +79,7 @@ export class Site {
         return self !== top;
     }
     /**
-     * Validate if {@link e}.origin is allowed to act as the origin of Window.postMessage and {@link e}.data.type is a valid value of {@link MessageTypes}.
+     * 
      * @param {MessageEvent} e 
      * @param {SiteMessageData} e.data
      * @returns {boolean} 
@@ -88,18 +88,19 @@ export class Site {
         if (!e.data || !e.data.type || !e.data.src || !e.data.tag) return false;
         let origin = e.origin;
         return ((origin === window.location.origin || !!this.originWhitelist?.includes(origin))
-            && MessageTypes.test(e.data.type) && e.data.tag !== this.#uuid);
+            && MessageTypes.test(e.data.type) && (e.data.allowSelf || e.data.tag !== this.#uuid));
     }
     /**
-     * Call {@link targetWindow}.postMessage({ type: {@link messageType}, content: {@link messageContent}, src: window.location.href }, {@link targetOrigin})
+     * 
      * @param {Window} targetWindow 
-     * @param {string} messageType 
-     * @param {*} [messageContent] 
      * @param {string} targetOrigin 
+     * @param {string} messageType - Value of {@link MessageTypes}
+     * @param {*} [messageContent] 
+     * @param {boolean} [allowSelf] - Whether to allow to send to current site. Default to false.
      * @returns 
      */
-    postMessage(targetWindow, messageType, messageContent, targetOrigin) {
-        let message = { type: messageType, content: messageContent, src: window.location.href, tag: this.#uuid };
+    postMessage(targetWindow, targetOrigin, messageType, messageContent, allowSelf = false) {
+        let message = { type: messageType, content: messageContent, src: window.location.href, tag: this.#uuid, allowSelf: allowSelf };
         tutil.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
     }
