@@ -39,6 +39,7 @@ export const util = {
     },
     /**
      * This method is Idempotent.
+     * @returns {VideoSite}
      * @throws 
      */
     getCurrentVideoSite: function () {
@@ -46,6 +47,7 @@ export const util = {
     },
     /**
      * This method is Idempotent.
+     * @returns {VideoPortalSite}
      * @throws 
      */
     getCurrentVideoPortalSite: function () {
