@@ -1,6 +1,7 @@
 import { util as cutil } from "../common/util";
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
+import { v4 as uuidv4 } from 'uuid';
 export class PlayerMetadata {
     /**
      * Selector for video container. Must be ancestor of video.
@@ -46,6 +47,7 @@ export class PlayerMetadata {
 }
 export class Site {
     id;
+    #uuid;
     origin;
     hrefRegEx;
     siteCategories;
@@ -65,6 +67,7 @@ export class Site {
      */
     constructor({ id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
+        this.#uuid = uuidv4();
         this.origin = origin;
         this.hrefRegEx = hrefRegEx;
         this.siteCategories = siteCategories;
@@ -76,14 +79,16 @@ export class Site {
         return self !== top;
     }
     /**
-     * Check if {@link targetOrigin} is allowed to act as the origin of Window.postMessage and send message to {@link this}.
-     * @param {string} targetOrigin 
+     * Validate if {@link e}.origin is allowed to act as the origin of Window.postMessage and {@link e}.data.type is a valid value of {@link MessageTypes}.
+     * @param {MessageEvent} e 
+     * @param {SiteMessageData} e.data
      * @returns {boolean} 
      */
-    isMessageOriginAllowed(targetOrigin) {
-        if (!targetOrigin) return false;
-        if (targetOrigin === window.location.origin) return true;
-        return !!this.originWhitelist?.includes(targetOrigin);
+    validateMessage(e) {
+        if (!e.data || !e.data.type || !e.data.src || !e.data.tag) return false;
+        let origin = e.origin;
+        return ((origin === window.location.origin || !!this.originWhitelist?.includes(origin))
+            && MessageTypes.test(e.data.type) && e.data.tag !== this.#uuid);
     }
     /**
      * Call {@link targetWindow}.postMessage({ type: {@link messageType}, content: {@link messageContent}, src: window.location.href }, {@link targetOrigin})
@@ -91,12 +96,10 @@ export class Site {
      * @param {string} messageType 
      * @param {*} [messageContent] 
      * @param {string} targetOrigin 
-     * @param {boolean} allowSelf - Whether allow post message to current window. Default to false.
      * @returns 
      */
-    postMessage(targetWindow, messageType, messageContent, targetOrigin, allowSelf = false) {
-        if (!messageType || (!allowSelf && targetWindow === self)) return;
-        let message = { type: messageType, content: messageContent, src: window.location.href };
+    postMessage(targetWindow, messageType, messageContent, targetOrigin) {
+        let message = { type: messageType, content: messageContent, src: window.location.href, tag: this.#uuid };
         tutil.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
     }
@@ -108,14 +111,6 @@ export class Site {
         if (this.hrefRegEx) return this.hrefRegEx.test(window.location.href);
         else if (this.origin) return this.origin == window.location.origin;
         else return false;
-    }
-    /**
-     * 
-     * @param {MessageEvent} e 
-     * @returns 
-     */
-    isFromTampermonkey(e) {
-        return e.data && MessageTypes.test(e.data.type);
     }
 }
 /**

@@ -2,7 +2,7 @@ import { DefaultPlayerMetadatas, SiteCategories, SiteIDs, Sites, VideoCategories
 import { PlayerMetadata, Site, VideoPortalSite, VideoSite } from './class';
 import { util as cutil } from '../common/util';
 import { util as tutil } from '../tampermonkey/util';
-/** @type {WeakMap<import('./class').Site,(e:MessageEvent)=>void)>} */
+/** @type {WeakMap<Site,(e:MessageEvent)=>void)>} */
 let messageHandlerMap = new WeakMap();
 /**
  * 
@@ -14,13 +14,13 @@ function findCurrentSite(sites) {
     for (let s in sites) {
         const site = sites[s];
         if (site instanceof Site && site.test()) {
+            /** @type {(e:MessageEvent)=>void} */
             let handler;
             if (messageHandlerMap.has(site)) handler = messageHandlerMap.get(site);
             else {
                 handler = (e) => {
-                    if (site.isMessageOriginAllowed(e.origin) && site.isFromTampermonkey(e)) {
-                        tutil.printReceiveMessage(e);
-                    }
+                    if (site.validateMessage(e)) tutil.printReceiveMessage(e);
+                    else e.stopImmediatePropagation();
                 };
                 messageHandlerMap.set(site, handler);
             }
