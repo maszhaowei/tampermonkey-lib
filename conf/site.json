@@ -1,5 +1,6 @@
 {
     "siteids": {
+        "TEST": "test",
         "YOUDAO": "Youdao",
         "18COMIC": "18comic",
         "Streamtape": "Streamtape",
@@ -11,6 +12,9 @@
         "test": "test"
     },
     "sites": [
+        {
+            "id": "test"
+        },
         {
             "id": "Youdao",
             "origin": "https://www.youdao.com",
