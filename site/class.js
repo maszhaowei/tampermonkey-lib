@@ -86,7 +86,7 @@ export class Site {
         return !!this.originWhitelist?.includes(targetOrigin);
     }
     /**
-     * 
+     * Call {@link targetWindow}.postMessage({ type: {@link messageType}, content: {@link messageContent}, src: window.location.href }, {@link targetOrigin})
      * @param {Window} targetWindow 
      * @param {string} messageType 
      * @param {*} [messageContent] 
