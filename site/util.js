@@ -55,7 +55,7 @@ export const util = {
     },
     /**
      * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.
-     * @param {'dev'|'master'} branch 
+     * @param {'dev'|'master'} - Branch. Default to master.
      */
     updateEnum: async function (branch = 'master') {
         if (branch != 'dev' && branch != 'master') return Promise.reject('Invalid branch');
