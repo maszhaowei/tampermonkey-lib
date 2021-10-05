@@ -197,7 +197,7 @@ export const DefaultPlayerMetadatas = {
     AVLGE: new PlayerMetadata({
         containerSelector: "div#video-player", controlsSelector: "div.vjs-control-bar",
         playButtonSelector: "button.vjs-play-control",
-        fullscreenButtonSelector: "button.vjs-fullscreen-control", topElementSelectors: ".vjs-related-carousel-holder"
+        fullscreenButtonSelector: "button.vjs-fullscreen-control", topElementSelectors: [".vjs-related-carousel-holder"]
     }),
     DPLAYER: new PlayerMetadata({
         containerSelector: "div#dplayer, div#mvideo",
