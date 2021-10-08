@@ -85,7 +85,9 @@
             "id": "test",
             "containerSelector": ".containerSelector",
             "controlsSelector": ".controlsSelector",
-            "topElementSelectors": ".topElementSelectors",
+            "topElementSelectors": [
+                ".topElementSelectors"
+            ],
             "playButtonSelector": ".playButtonSelector",
             "volumeButtonSelector": ".volumeButtonSelector",
             "fullscreenButtonSelector": ".fullscreenButtonSelector",
@@ -100,6 +102,13 @@
         {
             "id": "Streamtape",
             "defaultPlayerMetadata": "JABLE"
+        },
+        {
+            "id": "BILIBILI_VIDEO",
+            "topElementSelectors": [
+                ".bilibili-player-hotkey-panel-container.active",
+                ".bilibili-player-video-info-container.active"
+            ]
         }
     ],
     "videoportalsites": [
