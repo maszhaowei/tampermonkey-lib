@@ -17,7 +17,6 @@ export const _VideoCustomEventTypes = {
 }
 class VideoEventDelegate {
     #previousSiblingSelector;
-    #topElementSelectors;
     #defaultDelegate;
     /** @type {Element} */
     #delegate;
@@ -26,12 +25,10 @@ class VideoEventDelegate {
     /**
      * @param {Element} defaultDelegate 
      * @param {string} [previousSiblingSelector] 
-     * @param {string[]} [topElementSelectors]
      */
-    constructor(defaultDelegate, previousSiblingSelector, topElementSelectors) {
+    constructor(defaultDelegate, previousSiblingSelector) {
         this.#defaultDelegate = defaultDelegate;
         this.#previousSiblingSelector = previousSiblingSelector;
-        this.#topElementSelectors = topElementSelectors || [];
     }
     /**
      * Create event delegate for video after controls if there isn't one.
@@ -41,7 +38,6 @@ class VideoEventDelegate {
         let previousSiblingSelector = this.#previousSiblingSelector;
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
-            let topElementSelector = this.#topElementSelectors.join(',');
             document.arrive(previousSiblingSelector, { existing: true }, function () {
                 /** @type {HTMLDivElement} */
                 let eventDelegate = this.parentElement.querySelector(Const.eventDelegateSelector);
@@ -50,11 +46,6 @@ class VideoEventDelegate {
                     eventDelegate.classList.add(Const.eventDelegateClassName);
                     this.after(eventDelegate);
                     this.classList.add(Const.topOverlayClassName);
-                    if (topElementSelector) {
-                        document.arrive(topElementSelector, { existing: true }, function () {
-                            this.classList.add(Const.topOverlayClassName);
-                        });
-                    }
                 }
                 resolve(eventDelegate);
             });
@@ -211,7 +202,7 @@ export class VideoInstance {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip(video.muted ? "静音" : ("音量" + Math.round(video.volume * 100) + "%"));
         });
-        let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector, this.playerMetadata.topElementSelectors);
+        let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector);
         this.videoDelegate = videoDelegate;
         return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
     }
@@ -243,6 +234,14 @@ export class VideoInstance {
     async init(initData, playerMetadata) {
         this.#initData = initData;
         this.#playerMetadata = playerMetadata;
+        let topElementSelectors = this.playerMetadata.topElementSelectors;
+        if (topElementSelectors.length > 0) {
+            topElementSelectors.forEach((topElementSelector) => {
+                document.arrive(topElementSelector, { existing: true }, function () {
+                    this.classList.add(Const.topOverlayClassName);
+                });
+            });
+        }
         return this.#bindEvent().then(() => this);
     }
     /**
