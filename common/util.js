@@ -257,25 +257,32 @@ export let util = {
      * @param  {any[]} sources 
      * @param {boolean} [deep] - Default to false.
      * @param {boolean} [mergeArray] - Default to false.
-     * @returns The modified target object.
+     * @returns The target object.
      * @throws
      */
     assignNotEmpty: function (target, sources, deep = false, mergeArray = false) {
-        if (!Array.isArray(sources)) throw "Invalid sources";
+        if (!Array.isArray(sources)) throw new TypeError("Invalid sources");
         sources.forEach((source) => {
             Object.keys(source).forEach((key) => {
                 let sourceValue = source[key];
                 let targetValue = target[key];
                 if (sourceValue === undefined || sourceValue === null || Object.is(NaN, sourceValue)) return;
                 else if (Array.isArray(targetValue)) {
-                    if (mergeArray && Array.isArray(sourceValue)) {
+                    if (!Array.isArray(sourceValue)) throw new TypeError(`${key} of source is not an array`);
+                    if (mergeArray) {
                         sourceValue.forEach((v) => {
                             if (!targetValue.includes(v)) targetValue.push(v);
                         })
                     }
                     else target[key] = sourceValue;
                 }
-                else if (deep && util.isObject(sourceValue) && util.isObject(targetValue)) util.assignNotEmpty(targetValue, [sourceValue], deep, mergeArray);
+                else if (util.isObject(targetValue)) {
+                    if (!util.isObject(sourceValue)) throw new TypeError(`${key} of source is not an object`);
+                    if (deep) {
+                        util.assignNotEmpty(targetValue, [sourceValue], deep, mergeArray);
+                    }
+                    else target[key] = sourceValue;
+                }
                 else target[key] = sourceValue;
             });
         })
