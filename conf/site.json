@@ -59,7 +59,9 @@
         {
             "id": "Streamtape",
             "origin": "https://streamtape.com",
-            "siteCategories": "Video Hosting",
+            "siteCategories": [
+                "Video Hosting"
+            ],
             "originWhitelist": [
                 "https://7mmtv.tv"
             ]
@@ -93,6 +95,9 @@
         {
             "id": "jxbdzyw",
             "origin": "https://jx.jxbdzyw.com",
+            "siteCategories": [
+                "Video Hosting"
+            ],
             "originWhitelist": [
                 "https://www.meijubs.com"
             ]
