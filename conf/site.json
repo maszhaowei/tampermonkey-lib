@@ -115,6 +115,13 @@
     "videoportalsites": [
         {
             "id": "test"
+        },
+        {
+            "id": "MEIJUBS",
+            "additionalInfo": {
+                "prevEpisodeSelector": "i.icon-rewind1",
+                "nextEpisodeSelector": "i.icon-fastforward"
+            }
         }
     ]
 }
