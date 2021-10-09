@@ -78,6 +78,13 @@
                 "prevBtnSelector": ".newpage .btntuzao:first-child,span.prev a",
                 "nextBtnSelector": ".newpage .btntuzao:last-child,span.next a"
             }
+        },
+        {
+            "id": "MEIJUBS",
+            "additionalInfo": {
+                "prevEpisodeSelector": "i.icon-rewind1",
+                "nextEpisodeSelector": "i.icon-fastforward"
+            }
         }
     ],
     "videosites": [
@@ -115,13 +122,6 @@
     "videoportalsites": [
         {
             "id": "test"
-        },
-        {
-            "id": "MEIJUBS",
-            "additionalInfo": {
-                "prevEpisodeSelector": "i.icon-rewind1",
-                "nextEpisodeSelector": "i.icon-fastforward"
-            }
         }
     ]
 }
