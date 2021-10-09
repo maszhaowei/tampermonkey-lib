@@ -139,7 +139,6 @@
             "containerSelector": "#playerCnt",
             "controlsSelector": ".prism-controlbar",
             "playButtonSelector": ".prism-play-btn",
-            "volumeButtonSelector": ".volume-icon",
             "fullscreenButtonSelector": ".prism-fullscreen-btn"
         }
     ],
