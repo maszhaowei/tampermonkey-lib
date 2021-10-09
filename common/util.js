@@ -1,5 +1,6 @@
 import { DEFAULT_LOG_GROUP } from "./const";
 import { IEquatable } from "./interface";
+const _common_used_numerals = { '零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10, '百': 100, '千': 1000, '万': 10000, '亿': 100000000 };
 export let util = {
     /**
      * Output message to web console in gourp {@link grouName}.
@@ -136,7 +137,7 @@ export let util = {
      * @returns 
      */
     isChineseDigits: function (str) {
-        let cDigits = Object.keys(this._common_used_numerals);
+        let cDigits = Object.keys(_common_used_numerals);
         for (const s of str) {
             if (!cDigits.includes(s)) return false;
         }
@@ -153,7 +154,7 @@ export let util = {
 
         let total = 0, weight = 1;
         for (let i = zhstr.length - 1; i >= 0; i--) {
-            let val = this._common_used_numerals[zhstr[i]];
+            let val = _common_used_numerals[zhstr[i]];
             if (val >= 10 && i == 0) {
                 if (val > weight) {
                     weight = val;
