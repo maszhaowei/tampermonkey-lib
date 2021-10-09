@@ -29,7 +29,7 @@ export class PlayerMetadata {
      * @param {string} [options.fullscreenButtonSelector] 
      * @param {string} [options.webFullscreenButtonSelector] 
      */
-    constructor({ containerSelector, controlsSelector, topElementSelectors,
+    constructor({ containerSelector, controlsSelector, topElementSelectors = [],
         playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector }) {
         this.containerSelector = containerSelector;
         this.controlsSelector = controlsSelector;
