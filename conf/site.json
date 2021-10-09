@@ -107,7 +107,8 @@
             "id": "BILIBILI_VIDEO",
             "topElementSelectors": [
                 ".bilibili-player-hotkey-panel-container.active",
-                ".bilibili-player-video-info-container.active"
+                ".bilibili-player-video-info-container.active",
+                ".bilibili-player-drag-mask-close"
             ]
         }
     ],
