@@ -142,8 +142,7 @@ export class VideoSite extends Site {
  * {@link Site} 
  */
 export class VideoPortalSite extends Site {
-    #additionalInfo;
-    get additionalInfo() { return this.#additionalInfo }
+    additionalInfo;
     /**
      * @hideconstructor
      * @param {Site} site 
@@ -155,6 +154,6 @@ export class VideoPortalSite extends Site {
             siteCategories: site.siteCategories, subcategories: site.subcategories,
             originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
         });
-        this.#additionalInfo = additionalInfo;
+        this.additionalInfo = additionalInfo;
     }
 }
