@@ -5,7 +5,8 @@
         "18COMIC": "18comic",
         "Streamtape": "Streamtape",
         "HACG": "hacg",
-        "wnacg": "wnacg"
+        "wnacg": "wnacg",
+        "jxbdzyw": "jxbdzyw"
     },
     "sitecategories": {},
     "videocategories": {
@@ -81,10 +82,20 @@
         },
         {
             "id": "MEIJUBS",
+            "originWhitelist": [
+                "https://jx.jxbdzyw.com"
+            ],
             "additionalInfo": {
                 "prevEpisodeSelector": "i.icon-rewind1",
                 "nextEpisodeSelector": "i.icon-fastforward"
             }
+        },
+        {
+            "id": "jxbdzyw",
+            "origin": "https://jx.jxbdzyw.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ]
         }
     ],
     "videosites": [
@@ -117,6 +128,14 @@
                 ".bilibili-player-video-info-container.active",
                 ".bilibili-player-drag-mask-close"
             ]
+        },
+        {
+            "id": "jxbdzyw",
+            "containerSelector": "#playerCnt",
+            "controlsSelector": ".prism-controlbar",
+            "playButtonSelector": ".prism-play-btn",
+            "volumeButtonSelector": ".volume-icon",
+            "fullscreenButtonSelector": ".prism-fullscreen-btn"
         }
     ],
     "videoportalsites": [
