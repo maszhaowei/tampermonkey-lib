@@ -98,7 +98,7 @@ export const util = {
                     originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                 });
                 let oriSite = Sites.get(siteid);
-                if (oriSite) cutil.assignNotEmpty(oriSite, [newSite], false, true);
+                if (oriSite) cutil.assignNotEmpty(oriSite, [newSite], true, true);
                 else Sites[siteid] = newSite;
             }
         }
@@ -120,7 +120,7 @@ export const util = {
                     playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
                     fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
                 });
-                if (defaultPM) newPM = cutil.assignNotEmpty(defaultPM.copy(), [newPM], false, true);
+                if (defaultPM) newPM = cutil.assignNotEmpty(defaultPM.copy(), [newPM], true, true);
                 if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
                 else VideoSites[siteid] = new VideoSite(site, newPM);
             }
@@ -135,7 +135,7 @@ export const util = {
                     errors.push(new Error('Unable to find site: ' + siteid));
                     continue;
                 }
-                VideoPortalSites[siteid] = new VideoPortalSite(site);
+                VideoPortalSites[siteid] = new VideoPortalSite(site, ps.additionalInfo);
             }
         }
         else errors.push(new TypeError('Invalid format of portalsites: ' + portalsites));

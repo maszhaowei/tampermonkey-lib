@@ -86,11 +86,7 @@
             "id": "MEIJUBS",
             "originWhitelist": [
                 "https://jx.jxbdzyw.com"
-            ],
-            "additionalInfo": {
-                "prevEpisodeSelector": "i.icon-rewind1",
-                "nextEpisodeSelector": "i.icon-fastforward"
-            }
+            ]
         },
         {
             "id": "jxbdzyw",
@@ -145,6 +141,13 @@
     "videoportalsites": [
         {
             "id": "test"
+        },
+        {
+            "id": "MEIJUBS",
+            "additionalInfo": {
+                "prevEpisodeSelector": "i.icon-rewind1",
+                "nextEpisodeSelector": "i.icon-fastforward"
+            }
         }
     ]
 }
