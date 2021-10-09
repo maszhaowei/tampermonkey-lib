@@ -131,7 +131,7 @@ export class VideoSite extends Site {
         super({
             id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx,
             siteCategories: site.siteCategories, subcategories: site.subcategories,
-            originWhitelist: site.originWhitelist
+            originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
         });
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
     }
@@ -150,7 +150,7 @@ export class VideoPortalSite extends Site {
         super({
             id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx,
             siteCategories: site.siteCategories, subcategories: site.subcategories,
-            originWhitelist: site.originWhitelist
+            originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
         });
     }
 }
