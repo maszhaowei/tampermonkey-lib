@@ -61,20 +61,27 @@ export const MediaReadyState = {
  * @enum {string}
  */
 export const MediaEvents = {
+    ABORT: 'abort',
+    CAN_PLAY: 'canplay',
+    CAN_PLAY_THROUGH: 'canplaythrough',
     DURATION_CHANGE: 'durationchange',
+    ENDED: 'ended',
     LOADED_METADATA: 'loadedmetadata',
     PAUSE: 'pause',
     PLAY: 'play',
+    RATE_CHANGE: 'ratechange',
+    TIME_UPDATE: 'timeupdate',
     VOLUME_CHANGE: 'volumechange'
 };
 /**
  * @enum {string}
  */
 export const GlobalEvents = {
-    WHEEL: 'wheel',
-    MOUSEDOWN: 'mousedown',
     CLICK: 'click',
-    DBLCLICK: 'dblclick'
+    DBLCLICK: 'dblclick',
+    KEYDOWN: 'keydown',
+    MOUSEDOWN: 'mousedown',
+    WHEEL: 'wheel'
 }
 /**
  * @enum {string}
