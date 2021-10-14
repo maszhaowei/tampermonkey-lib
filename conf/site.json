@@ -32,18 +32,22 @@
         {
             "id": "JAVLIBRARY",
             "additionalInfo": {
-                "firstBtnSelector": "a.first",
-                "prevBtnSelector": "a.prev",
-                "nextBtnSelector": "a.next",
-                "lastBtnSelector": "a.last"
+                "paginationInfo": {
+                    "firstBtnSelector": "a.first",
+                    "prevBtnSelector": "a.prev",
+                    "nextBtnSelector": "a.next",
+                    "lastBtnSelector": "a.last"
+                }
             }
         },
         {
             "id": "18comic",
             "origin": "https://18comic.org",
             "additionalInfo": {
-                "prevBtnSelector": "ul.pagination li:nth-child(1) a",
-                "nextBtnSelector": "ul.pagination a.prevnext"
+                "paginationInfo":{
+                    "prevBtnSelector": "ul.pagination li:nth-child(1) a",
+                    "nextBtnSelector": "ul.pagination a.prevnext"
+                }
             }
         },
         {
@@ -52,8 +56,10 @@
                 "https://streamtape.com"
             ],
             "additionalInfo": {
-                "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
-                "nextBtnSelector": "li.current+li a"
+                "paginationInfo":{
+                    "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
+                    "nextBtnSelector": "li.current+li a"
+                }
             }
         },
         {
@@ -70,16 +76,20 @@
             "id": "hacg",
             "hrefRegEx": "^https://www\\.hacg\\.[a-z]+/wp/.+",
             "additionalInfo": {
-                "prevBtnSelector": ".page_info+li:not(.active_page) a",
-                "nextBtnSelector": "#wp_page_numbers ul li:last-child:not(.active_page) a"
+                "paginationInfo":{
+                    "prevBtnSelector": ".page_info+li:not(.active_page) a",
+                    "nextBtnSelector": "#wp_page_numbers ul li:last-child:not(.active_page) a"
+                }
             }
         },
         {
             "id": "wnacg",
             "origin": "https://www.wnacg.com",
             "additionalInfo": {
-                "prevBtnSelector": ".newpage .btntuzao:first-child,span.prev a",
-                "nextBtnSelector": ".newpage .btntuzao:last-child,span.next a"
+                "paginationInfo":{
+                    "prevBtnSelector": ".newpage .btntuzao:first-child,span.prev a",
+                    "nextBtnSelector": ".newpage .btntuzao:last-child,span.next a"
+                }
             }
         },
         {
@@ -97,6 +107,16 @@
             "originWhitelist": [
                 "https://www.meijubs.com"
             ]
+        },
+        {
+            "id": "NEXUSMODS",
+            "additionalInfo": {
+                "paginationInfo": {
+                    "currentBtnSelector": "a.page-selected",
+                    "currentWrapperSelector": "li",
+                    "currentWrapperDescendantSelector": "a"
+                }
+            }
         }
     ],
     "videosites": [
