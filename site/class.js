@@ -67,7 +67,7 @@ export class Site {
      * @param {string[]} [options.originWhitelist] 
      * @param {*} [options.additionalInfo]
      */
-    constructor({ id, baseSiteId = id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
+    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
         this.baseSiteId = baseSiteId;
         this.#uuid = uuidv4();
