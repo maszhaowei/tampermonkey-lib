@@ -2,11 +2,15 @@
     "siteids": {
         "TEST": "test",
         "YOUDAO": "Youdao",
+        "YOUDAO_DICT": "Youdao Dictionary",
         "18COMIC": "18comic",
         "Streamtape": "Streamtape",
         "HACG": "hacg",
+        "HACG_BLOG": "Hacg Blog",
         "wnacg": "wnacg",
-        "jxbdzyw": "jxbdzyw"
+        "jxbdzyw": "jxbdzyw",
+        "FANDOM": "Fandom",
+        "FANDOM_WIKI": "Fandom Wiki"
     },
     "sitecategories": {},
     "videocategories": {
@@ -17,7 +21,8 @@
             "id": "test"
         },
         {
-            "id": "Youdao",
+            "id": "Youdao Dictionary",
+            "baseSiteId": "Youdao",
             "origin": "https://www.youdao.com",
             "hrefRegEx": "^https://www\\.youdao\\.com/w/.+",
             "siteCategories": [
@@ -42,9 +47,10 @@
         },
         {
             "id": "18comic",
+            "baseSiteId": "18comic",
             "origin": "https://18comic.org",
             "additionalInfo": {
-                "paginationInfo":{
+                "paginationInfo": {
                     "prevBtnSelector": "ul.pagination li:nth-child(1) a",
                     "nextBtnSelector": "ul.pagination a.prevnext"
                 }
@@ -56,7 +62,7 @@
                 "https://streamtape.com"
             ],
             "additionalInfo": {
-                "paginationInfo":{
+                "paginationInfo": {
                     "prevBtnSelector": "li.previous-next:first-child a,li.previous-next:nth-child(2) a",
                     "nextBtnSelector": "li.current+li a"
                 }
@@ -64,6 +70,7 @@
         },
         {
             "id": "Streamtape",
+            "baseSiteId": "Streamtape",
             "origin": "https://streamtape.com",
             "siteCategories": [
                 "Video Hosting"
@@ -73,10 +80,11 @@
             ]
         },
         {
-            "id": "hacg",
+            "id": "Hacg Blog",
+            "baseSiteId": "hacg",
             "hrefRegEx": "^https://www\\.hacg\\.[a-z]+/wp/.+",
             "additionalInfo": {
-                "paginationInfo":{
+                "paginationInfo": {
                     "prevBtnSelector": ".page_info+li:not(.active_page) a",
                     "nextBtnSelector": "#wp_page_numbers ul li:last-child:not(.active_page) a"
                 }
@@ -84,9 +92,10 @@
         },
         {
             "id": "wnacg",
+            "baseSiteId": "wnacg",
             "origin": "https://www.wnacg.com",
             "additionalInfo": {
-                "paginationInfo":{
+                "paginationInfo": {
                     "prevBtnSelector": ".newpage .btntuzao:first-child,span.prev a",
                     "nextBtnSelector": ".newpage .btntuzao:last-child,span.next a"
                 }
@@ -100,6 +109,7 @@
         },
         {
             "id": "jxbdzyw",
+            "baseSiteId": "jxbdzyw",
             "origin": "https://jx.jxbdzyw.com",
             "siteCategories": [
                 "Video Hosting"
@@ -117,6 +127,11 @@
                     "currentWrapperDescendantSelector": "a"
                 }
             }
+        },
+        {
+            "id": "Fandom Wiki",
+            "baseSiteId":"Fandom",
+            "hrefRegEx": "^https://\\w+\\.fandom\\.com/wiki/.+"
         }
     ],
     "videosites": [
