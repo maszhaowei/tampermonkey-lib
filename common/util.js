@@ -149,7 +149,7 @@ export let util = {
      * @returns {number|undefined}
      */
     zh2Digits: function (zhstr) {
-        if (util.isInteger(zhstr)) return zhstr;
+        if (util.isInteger(zhstr)) return parseInt(zhstr);
         else if (!this.isChineseDigits(zhstr)) return;
 
         let total = 0, weight = 1;
