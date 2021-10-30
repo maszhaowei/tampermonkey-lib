@@ -47,6 +47,7 @@ export class PlayerMetadata {
 }
 export class Site {
     id;
+    baseSiteId;
     #uuid;
     origin;
     hrefRegEx;
@@ -58,6 +59,7 @@ export class Site {
      * @hideconstructor
      * @param {object} options
      * @param {string} options.id 
+     * @param {string} options.baseSiteId 
      * @param {string} options.origin 
      * @param {RegExp} [options.hrefRegEx] 
      * @param {string[]} [options.siteCategories] 
@@ -65,8 +67,9 @@ export class Site {
      * @param {string[]} [options.originWhitelist] 
      * @param {*} [options.additionalInfo]
      */
-    constructor({ id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
+    constructor({ id, baseSiteId = id, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
+        this.baseSiteId = baseSiteId;
         this.#uuid = uuidv4();
         this.origin = origin;
         this.hrefRegEx = hrefRegEx;
@@ -78,8 +81,11 @@ export class Site {
     isEmbedded() {
         return self !== top;
     }
+    isBaseSite() {
+        return this.baseSiteId === this.id;
+    }
     /**
-     * 
+     * Validate if {@link e} is from a valid script of another {@link Site}.
      * @param {MessageEvent} e 
      * @param {SiteMessageData} e.data
      * @returns {boolean} 

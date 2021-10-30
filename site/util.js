@@ -93,7 +93,8 @@ export const util = {
                     continue;
                 }
                 let newSite = new Site({
-                    id: site.id, origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
+                    id: site.id, baseSiteId: site.baseSiteId,
+                    origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
                     siteCategories: site.siteCategories, subcategories: site.subcategories,
                     originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                 });

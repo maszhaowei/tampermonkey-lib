@@ -86,7 +86,8 @@ export const Sites = {
         siteCategories: [SiteCategories.VIDEO_SHARING]
     }),
     BILIBILI_BANGUMI: new Site({
-        id: SiteIDs.BILIBILI_BANGUMI, origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/,
+        id: SiteIDs.BILIBILI_BANGUMI, baseSiteId: SiteIDs.BILIBILI,
+        origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/,
         siteCategories: [SiteCategories.VIDEO_SHARING]
     }),
     BILIBILI_LIVE: new Site({
@@ -94,7 +95,8 @@ export const Sites = {
         siteCategories: [SiteCategories.LIVE_STREAMING]
     }),
     BILIBILI_VIDEO: new Site({
-        id: SiteIDs.BILIBILI_VIDEO, origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/video\/.+/,
+        id: SiteIDs.BILIBILI_VIDEO, baseSiteId: SiteIDs.BILIBILI,
+        origin: "https://www.bilibili.com", hrefRegEx: /^https:\/\/www\.bilibili\.com\/video\/.+/,
         siteCategories: [SiteCategories.VIDEO_SHARING]
     }),
     BUYCAR5: new Site({
@@ -187,9 +189,17 @@ export const Sites = {
      * @returns {Site|undefined}
      */
     get(id) {
+        let candidate;
         for (let i in Sites) {
-            if (Sites[i].id === id) return Sites[i];
+            /** @type {Site} */
+            let site = Sites[i];
+            if (!(site instanceof Site)) continue;
+            if (site.id === id) {
+                if (site.isBaseSite() && !candidate) candidate = site;
+                else return site;
+            }
         }
+        return candidate;
     }
 };
 
