@@ -36,8 +36,25 @@ export class CssCacheHelper {
         return false;
     }
 }
-
+/**
+ * @typedef {object} StorageObj
+ * @property {any} value
+ * @property {number} expireDays
+ * @property {number} expireTime
+ * @property {boolean} autoRenew
+ */
 export class GMStorageHelper {
+    /**
+     * 
+     * @param {StorageObj} storageObj 
+     * @returns 
+     */
+    static #isSupported(storageObj) {
+        return storageObj && storageObj.expireTime !== undefined;
+    }
+    static #calExpireTime(expireDays) {
+        return expireDays > 0 ? (Date.now() + expireDays * 24 * 3600 * 1000) : 0;
+    }
     /**
      * 
      * @param {string} name 
@@ -45,31 +62,35 @@ export class GMStorageHelper {
      * @returns 
      */
     static getValue(name, defaultValue) {
-        let valueObj = GM_getValue(name, defaultValue);
-        if (valueObj && valueObj.value && valueObj.expireTime !== undefined) return valueObj.value;
-        else return valueObj;
+        let storageObj = GM_getValue(name, defaultValue);
+        if (this.#isSupported(storageObj)) return storageObj.value;
+        else return storageObj;
     }
     /**
      * 
      * @param {string} name 
      * @param {*} value 
      * @param {number} [expireDays] Expiration timeout in days. Default to 30. Set to 0 to never expire.
+     * @param {boolen} [autoRenew] Auto renew this name. Default to true.
      */
-    static setValue(name, value, expireDays = 30) {
-        let expireTime = expireDays > 0 ? (Date.now() + expireDays * 24 * 3600 * 1000) : 0;
-        GM_setValue(name, { value: value, expireTime: expireTime });
+    static setValue(name, value, expireDays = 30, autoRenew = true) {
+        GM_setValue(name, { value: value, expireDays: expireDays, expireTime: this.#calExpireTime(expireDays), autoRenew: autoRenew });
     }
     /**
      * Dependency: GM_listValues, GM_deleteValue.
      */
-    static clearExpiredValues() {
+    static clearExpiredValuesAndRenew() {
         let names = GM_listValues();
         let count = 0;
         names.forEach((name) => {
-            let valueObj = GM_getValue(name);
-            let expireTime = valueObj.expireTime;
-            if (!expireTime) return;
-            if (Date.now() > expireTime) {
+            /** @type {StorageObj} */
+            let storageObj = GM_getValue(name);
+            if (!this.#isSupported(storageObj)) return;
+            let expireTime = storageObj.expireTime;
+            if (expireTime == 0) return;
+            let autoRenew = storageObj.autoRenew;
+            if (autoRenew) this.setValue(name, storageObj.value, storageObj.expireDays, autoRenew);
+            else if (Date.now() > expireTime) {
                 GM_deleteValue(name);
                 count++;
             }
