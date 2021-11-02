@@ -46,7 +46,7 @@ export class GMStorageHelper {
      */
     static getValue(name, defaultValue) {
         let valueObj = GM_getValue(name, defaultValue);
-        if (valueObj && valueObj.value && valueObj.expireTime) return valueObj.value;
+        if (valueObj && valueObj.value && valueObj.expireTime !== undefined) return valueObj.value;
         else return valueObj;
     }
     /**
