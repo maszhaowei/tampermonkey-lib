@@ -56,7 +56,7 @@ export class GMStorageHelper {
         return expireDays > 0 ? (Date.now() + expireDays * 24 * 3600 * 1000) : 0;
     }
     /**
-     * 
+     * Dependency: GM_getValue.
      * @param {string} name 
      * @param {*} [defaultValue] 
      * @returns 
@@ -67,7 +67,7 @@ export class GMStorageHelper {
         else return storageObj;
     }
     /**
-     * 
+     * Dependency: GM_setValue.
      * @param {string} name 
      * @param {*} value 
      * @param {number} [expireDays] Expiration timeout in days. Default to 30. Set to 0 to never expire.
@@ -77,7 +77,7 @@ export class GMStorageHelper {
         GM_setValue(name, { value: value, expireDays: expireDays, expireTime: this.#calExpireTime(expireDays), autoRenew: autoRenew });
     }
     /**
-     * Dependency: GM_listValues, GM_deleteValue.
+     * Dependency: GM_listValues, GM_getValue, GM_setValue, GM_deleteValue.
      */
     static clearExpiredValuesAndRenew() {
         let names = GM_listValues();
