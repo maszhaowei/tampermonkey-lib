@@ -67,7 +67,7 @@ export class GMStorageHelper {
         else return storageObj;
     }
     /**
-     * Dependency: GM_setValue.
+     * Dependency: GM_getValue, GM_setValue.
      * @param {string} name 
      * @param {*} value 
      * @param {number} [expireDays] Expiration timeout in days. Default to previously stored value or 30. Set to 0 to never expire.
