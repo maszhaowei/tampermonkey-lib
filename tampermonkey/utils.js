@@ -100,7 +100,7 @@ export class GMStorageHelper {
                 count++;
             }
         });
-        util.debug(`Deleted ${count} records from storage.`)
+        util.debug(`Deleted ${count} expired records from storage.`)
     }
     /**
      * Dependency: GM_listValues, GM_deleteValue.
