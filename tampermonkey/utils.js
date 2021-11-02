@@ -70,11 +70,16 @@ export class GMStorageHelper {
      * Dependency: GM_setValue.
      * @param {string} name 
      * @param {*} value 
-     * @param {number} [expireDays] Expiration timeout in days. Default to 30. Set to 0 to never expire.
-     * @param {boolen} [autoRenew] Auto renew this name. Default to true.
+     * @param {number} [expireDays] Expiration timeout in days. Default to previously stored value or 30. Set to 0 to never expire.
+     * @param {boolen} [autoRenew] Default to previously stored value or true.
      */
-    static setValue(name, value, expireDays = 30, autoRenew = true) {
-        GM_setValue(name, { value: value, expireDays: expireDays, expireTime: this.#calExpireTime(expireDays), autoRenew: autoRenew });
+    static setValue(name, value, expireDays, autoRenew) {
+        /** @type {StorageObj} */
+        let storageObj = GM_getValue(name);
+        expireDays = expireDays ?? storageObj?.expireDays ?? 30;
+        let expireTime = storageObj?.expireTime ?? this.#calExpireTime(expireDays);
+        autoRenew = autoRenew ?? storageObj?.autoRenew ?? true;
+        GM_setValue(name, { value: value, expireDays: expireDays, expireTime: expireTime, autoRenew: autoRenew });
     }
     /**
      * Dependency: GM_listValues, GM_getValue, GM_setValue, GM_deleteValue.
