@@ -29,9 +29,6 @@ class VideoEventDelegate {
     constructor(defaultDelegate, previousSiblingSelector) {
         this.#defaultDelegate = defaultDelegate;
         this.#previousSiblingSelector = previousSiblingSelector;
-        document.leave(Const.eventDelegateSelector, (delegate) => {
-            if (delegate.isSameNode(this.#delegate)) this.createEventDelegate();
-        });
     }
     /**
      * Create event delegate for video after controls if there isn't one.
@@ -42,7 +39,7 @@ class VideoEventDelegate {
         let createdDelegate = false;
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
-            document.arrive(previousSiblingSelector, { existing: true, onceOnly: true }, (prevSibling) => {
+            document.arrive(previousSiblingSelector, { existing: true }, (prevSibling) => {
                 /** @type {HTMLDivElement} */
                 let eventDelegate = prevSibling.parentElement.querySelector(Const.eventDelegateSelector);
                 if (!eventDelegate) {
