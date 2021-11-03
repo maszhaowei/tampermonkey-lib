@@ -31,7 +31,11 @@ class VideoEventDelegate {
         this.#previousSiblingSelector = previousSiblingSelector;
         document.arrive(previousSiblingSelector, { existing: true }, (preSibling) => {
             preSibling.parentElement.leave(Const.eventDelegateSelector, () => {
-                console.debug('delegate leave');
+                this.createEventDelegate();
+            });
+        });
+        document.leave(previousSiblingSelector, (preSibling) => {
+            preSibling.parentElement.leave(Const.eventDelegateSelector, () => {
                 this.createEventDelegate();
             });
         });
