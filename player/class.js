@@ -29,6 +29,10 @@ class VideoEventDelegate {
     constructor(defaultDelegate, previousSiblingSelector) {
         this.#defaultDelegate = defaultDelegate;
         this.#previousSiblingSelector = previousSiblingSelector;
+        document.leave(previousSiblingSelector, () => {
+            this.#delegate?.remove();
+            this.#delegate = null;
+        });
     }
     /**
      * Create event delegate for video after controls if there isn't one.
