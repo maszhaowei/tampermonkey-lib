@@ -35,7 +35,7 @@ class VideoEventDelegate {
         });
     }
     /**
-     * Create event delegate for video after controls if there isn't one.
+     * Create event delegate after controls of video if there isn't one.
      * @returns 
      */
     async createEventDelegate() {
@@ -156,9 +156,7 @@ export class VideoInstance {
     get container() { return this.#video.closest(this.#playerMetadata.containerSelector) }
     /** @type {VideoEventDelegate} */
     videoDelegate;
-    get tooltipWrap() {
-        return this.container;
-    }
+    get tooltipWrap() { return this.container; }
     /**
      * @param {VideoInstanceData} initData 
      */
@@ -181,7 +179,7 @@ export class VideoInstance {
         if (this.#title) this.showTooltip(this.#title);
         let progress = this.#initProgress;
         if (progress != undefined) {
-            tutil.debug(`Restore saved progress(s): ${progress}`);
+            tutil.debug(`Set init progress(s): ${progress}`);
             video.currentTime = progress;
         }
         let volume = this.#initVolume;
