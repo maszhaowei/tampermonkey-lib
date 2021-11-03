@@ -39,31 +39,34 @@ class VideoEventDelegate {
      */
     async createEventDelegate() {
         let previousSiblingSelector = this.#previousSiblingSelector;
+        let createdDelegate = false;
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
-            document.arrive(previousSiblingSelector, { existing: true }, function () {
+            document.arrive(previousSiblingSelector, { existing: true }, (prevSibling) => {
                 /** @type {HTMLDivElement} */
-                let eventDelegate = this.parentElement.querySelector(Const.eventDelegateSelector);
+                let eventDelegate = prevSibling.parentElement.querySelector(Const.eventDelegateSelector);
                 if (!eventDelegate) {
                     eventDelegate = document.createElement('div');
                     eventDelegate.classList.add(Const.eventDelegateClassName);
-                    this.after(eventDelegate);
-                    this.classList.add(Const.topOverlayClassName);
-                    for (let i in GlobalEvents) {
-                        let type = GlobalEvents[i];
-                        this.#delegate.addEventListener(type, (e) => {
-                            let sigs = this.#eventsObserverMap.get(type);
-                            if (sigs) sigs.forEach((sig) => {
-                                sig.fn.call(sig.context, e);
-                            });
-                        });
-                    }
+                    prevSibling.after(eventDelegate);
+                    prevSibling.classList.add(Const.topOverlayClassName);
+                    createdDelegate = true;
                 }
-                resolve(eventDelegate);
+                resolve(this.#delegate = eventDelegate);
             });
-        }) : Promise.resolve();
-        return promiseCreate.then((createDelegate) => {
-            this.#delegate = createDelegate || this.#defaultDelegate;
+        }) : Promise.resolve(this.#delegate = this.#defaultDelegate);
+        return promiseCreate.then(() => {
+            if (createdDelegate) {
+                for (let i in GlobalEvents) {
+                    let type = GlobalEvents[i];
+                    this.#delegate.addEventListener(type, (e) => {
+                        let sigs = this.#eventsObserverMap.get(type);
+                        if (sigs) sigs.forEach((sig) => {
+                            sig.fn.call(sig.context, e);
+                        });
+                    });
+                }
+            }
         });
     }
     /**
