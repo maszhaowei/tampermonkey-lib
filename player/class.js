@@ -31,7 +31,7 @@ class VideoEventDelegate {
         this.#previousSiblingSelector = previousSiblingSelector;
         document.leave(previousSiblingSelector, () => {
             this.#delegate?.remove();
-            this.#delegate = null;
+            this.clean();
         });
     }
     /**
@@ -67,6 +67,12 @@ class VideoEventDelegate {
                         });
                     });
                 }
+                document.leave(Const.eventDelegateSelector, (delegate) => {
+                    if (delegate.isSameNode(this.#delegate)) {
+                        delegate.remove();
+                        this.clean();
+                    }
+                });
             }
         });
     }
