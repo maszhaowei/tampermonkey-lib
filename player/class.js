@@ -30,7 +30,10 @@ class VideoEventDelegate {
         this.#defaultDelegate = defaultDelegate;
         this.#previousSiblingSelector = previousSiblingSelector;
         document.arrive(previousSiblingSelector, { existing: true }, (preSibling) => {
-            preSibling.parentElement.leave(Const.eventDelegateSelector, () => this.createEventDelegate());
+            preSibling.parentElement.leave(Const.eventDelegateSelector, () => {
+                console.debug('delegate leave');
+                this.createEventDelegate();
+            });
         });
     }
     /**
