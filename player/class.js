@@ -129,33 +129,26 @@ export class VideoInstance {
     #initVolume;
     #playerMetadata;
     /* #region Controls */
-    /** @type {HTMLElement} */
-    #playButton;
+    /**
+     * 
+     * @param {string} selector 
+     * @returns 
+     */
+    #getControl(selector) {
+        let playerMetadata = this.#playerMetadata;
+        return cui.querySelectorFirst(selector, playerMetadata.controlsSelector, playerMetadata.containerSelector);
+    }
     get playButton() {
-        if (this.#playButton) return this.#playButton;
-        let playerMetadata = this.#playerMetadata;
-        return this.#playButton = cui.querySelectorFirst(playerMetadata.playButtonSelector, playerMetadata.controlsSelector, this.container);
+        return this.#getControl(this.#playerMetadata.playButtonSelector);
     }
-    /** @type {HTMLElement} */
-    #volumeButton;
     get volumeButton() {
-        if (this.#volumeButton) return this.#volumeButton;
-        let playerMetadata = this.#playerMetadata;
-        return this.#volumeButton = cui.querySelectorFirst(playerMetadata.volumeButtonSelector, playerMetadata.controlsSelector, this.container);
+        return this.#getControl(this.#playerMetadata.volumeButtonSelector);
     }
-    /** @type {HTMLElement} */
-    #fullscreenButton;
     get fullscreenButton() {
-        if (this.#fullscreenButton) return this.#fullscreenButton;
-        let playerMetadata = this.#playerMetadata;
-        return this.#fullscreenButton = cui.querySelectorFirst(playerMetadata.fullscreenButtonSelector, playerMetadata.controlsSelector, this.container);
+        return this.#getControl(this.#playerMetadata.fullscreenButtonSelector);
     }
-    /** @type {HTMLElement} */
-    #webFullscreenButton;
     get webFullscreenButton() {
-        if (this.#webFullscreenButton) return this.#webFullscreenButton;
-        let playerMetadata = this.#playerMetadata;
-        return this.#webFullscreenButton = cui.querySelectorFirst(playerMetadata.webFullscreenButtonSelector, playerMetadata.controlsSelector, this.container);
+        return this.#getControl(this.#playerMetadata.webFullscreenButtonSelector);
     }
     /* #endregion */
     /** @type {Element} */
