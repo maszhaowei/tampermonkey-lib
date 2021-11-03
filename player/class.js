@@ -42,7 +42,7 @@ class VideoEventDelegate {
         let createdDelegate = false;
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
-            document.arrive(previousSiblingSelector, { existing: true }, (prevSibling) => {
+            document.arrive(previousSiblingSelector, { existing: true, onceOnly: true }, (prevSibling) => {
                 /** @type {HTMLDivElement} */
                 let eventDelegate = prevSibling.parentElement.querySelector(Const.eventDelegateSelector);
                 if (!eventDelegate) {
