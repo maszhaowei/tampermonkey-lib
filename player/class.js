@@ -102,99 +102,95 @@ class VideoEventDelegate {
 }
 export class VideoInstanceData {
     video;
-    container;
+    playerMetadata;
     title;
     progress;
     volume;
     /**
-     * 
-     * @param {HTMLVideoElement} video 
-     * @param {Element} container 
-     * @param {string} [title] 
-     * @param {number} [progress] 
-     * @param {number} [volume] 
+     * @param {object} options
+     * @param {HTMLVideoElement} options.video 
+     * @param {import('../site/class').PlayerMetadata} options.playerMetadata
+     * @param {string} [options.title] 
+     * @param {number} [options.progress] 
+     * @param {number} [options.volume] 
      */
-    constructor(video, container, title, progress, volume) {
+    constructor({ video, playerMetadata, title, progress, volume }) {
         this.video = video;
-        this.container = container;
+        this.playerMetadata = playerMetadata;
         this.title = title;
         this.progress = progress;
         this.volume = volume;
     }
-    clean() {
-        this.video = this.container = null;
-    }
 }
 export class VideoInstance {
-    #site;
-    /** @type {import('../site/class').PlayerMetadata} */
+    #video;
+    #title;
+    #initProgress;
+    #initVolume;
     #playerMetadata;
-    get playerMetadata() { return this.#playerMetadata || this.#site.defaultPlayerMetadata }
-    /** @type {VideoInstanceData} */
-    #initData;
     /* #region Controls */
     /** @type {HTMLElement} */
     #playButton;
     get playButton() {
         if (this.#playButton) return this.#playButton;
-        let playerMetadata = this.playerMetadata;
+        let playerMetadata = this.#playerMetadata;
         return this.#playButton = cui.querySelectorFirst(playerMetadata.playButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /** @type {HTMLElement} */
     #volumeButton;
     get volumeButton() {
         if (this.#volumeButton) return this.#volumeButton;
-        let playerMetadata = this.playerMetadata;
+        let playerMetadata = this.#playerMetadata;
         return this.#volumeButton = cui.querySelectorFirst(playerMetadata.volumeButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /** @type {HTMLElement} */
     #fullscreenButton;
     get fullscreenButton() {
         if (this.#fullscreenButton) return this.#fullscreenButton;
-        let playerMetadata = this.playerMetadata;
+        let playerMetadata = this.#playerMetadata;
         return this.#fullscreenButton = cui.querySelectorFirst(playerMetadata.fullscreenButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /** @type {HTMLElement} */
     #webFullscreenButton;
     get webFullscreenButton() {
         if (this.#webFullscreenButton) return this.#webFullscreenButton;
-        let playerMetadata = this.playerMetadata;
+        let playerMetadata = this.#playerMetadata;
         return this.#webFullscreenButton = cui.querySelectorFirst(playerMetadata.webFullscreenButtonSelector, playerMetadata.controlsSelector, this.container);
     }
     /* #endregion */
-    /** @type {HTMLVideoElement} */
-    get video() { return this.#initData.video }
     /** @type {Element} */
-    get container() { return this.#initData.container }
+    get container() { return this.#video.closest(this.#playerMetadata.containerSelector) }
     /** @type {VideoEventDelegate} */
     videoDelegate;
     get tooltipWrap() {
         return this.container;
     }
     /**
-     * @hideconstructor
-     * @param {import('../site/class').VideoSite} videoSite 
+     * @param {VideoInstanceData} initData 
      */
-    constructor(videoSite) {
-        this.#site = videoSite;
+    constructor(initData) {
+        this.#video = initData.video;
+        this.#playerMetadata = initData.playerMetadata;
+        this.#title = initData.title;
+        this.#initProgress = initData.progress;
+        this.#initVolume = initData.volume;
     }
     #triggerCustomEvent(eventType, data) {
         tutil.debug('CustomEvent:', eventType, data);
-        this.video.dispatchEvent(new CustomEvent(eventType, { bubbles: false, detail: data }));
+        this.#video.dispatchEvent(new CustomEvent(eventType, { bubbles: false, detail: data }));
     }
     #initVideo() {
-        let video = this.video;
+        let video = this.#video;
         video.removeAttribute('autoplay');
-        if (this.#site.isEmbedded()) video.crossOrigin = 'anonymous';
+        video.crossOrigin = 'anonymous';
 
-        let initData = this.#initData;
-        if (initData.title) this.showTooltip(initData.title);
-        let progress = initData.progress;
+        if (this.#title) this.showTooltip(this.#title);
+        let progress = this.#initProgress;
         if (progress != undefined) {
             tutil.debug(`Restore saved progress(s): ${progress}`);
             video.currentTime = progress;
         }
-        let volume = initData.volume;
+        let volume = this.#initVolume;
         if (volume != undefined) {
             tutil.debug(`Set init volume: ${volume}`);
             video.volume = volume;
@@ -203,17 +199,17 @@ export class VideoInstance {
     }
     async #onLoadedMetadata() {
         this.#initVideo();
-        let video = this.video;
+        let video = this.#video;
         video.addEventListener(MediaEvents.VOLUME_CHANGE, () => {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip(video.muted ? "静音" : ("音量" + Math.round(video.volume * 100) + "%"));
         });
-        let videoDelegate = new VideoEventDelegate(this.container, this.playerMetadata.controlsSelector);
+        let videoDelegate = new VideoEventDelegate(this.container, this.#playerMetadata.controlsSelector);
         this.videoDelegate = videoDelegate;
         return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
     }
     async #bindEvent() {
-        let video = this.video;
+        let video = this.#video;
         video.addEventListener(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
             this.#triggerCustomEvent(_VideoCustomEventTypes.PLAY);
@@ -236,11 +232,10 @@ export class VideoInstance {
      * 
      * @param {VideoInstanceData} initData
      * @param {import('../site/class').PlayerMetadata} [playerMetadata]
+     * @returns {Promise<void>}
      */
-    async init(initData, playerMetadata) {
-        this.#initData = initData;
-        this.#playerMetadata = playerMetadata;
-        let topElementSelectors = this.playerMetadata.topElementSelectors;
+    async init() {
+        let topElementSelectors = this.#playerMetadata.topElementSelectors;
         if (topElementSelectors.length > 0) {
             topElementSelectors.forEach((topElementSelector) => {
                 document.arrive(topElementSelector, { existing: true }, function () {
@@ -248,7 +243,7 @@ export class VideoInstance {
                 });
             });
         }
-        return this.#bindEvent().then(() => this);
+        return this.#bindEvent();
     }
     /**
      * 
@@ -261,14 +256,14 @@ export class VideoInstance {
         cui.showTooltip(tooltip, new PositionOption({ target: this.tooltipWrap, position: position, top: top, left: left }));
     }
     changeVolume(deltaVolume) {
-        let video = this.video;
+        let video = this.#video;
         let volume;
         if (deltaVolume >= 0) volume = Math.min(video.volume + deltaVolume, 1);
         else volume = Math.max(video.volume + deltaVolume, 0);
         video.volume = volume.toFixed(2);
     }
     saveVideoFrame(fileName = document.title) {
-        let video = this.video;
+        let video = this.#video;
         let videoWidth = video.videoWidth;
         let videoHeight = video.videoHeight;
         let canvas = document.createElement('canvas');
@@ -281,11 +276,11 @@ export class VideoInstance {
     /* #region Video Control */
     togglePlay() {
         if (this.playButton) this.playButton.click();
-        else this.video.paused ? this.video.play() : this.video.pause();
+        else this.#video.paused ? this.#video.play() : this.#video.pause();
     }
     toggleMute() {
         if (this.volumeButton) this.volumeButton.click();
-        else this.video.muted = !this.video.muted;
+        else this.#video.muted = !this.#video.muted;
     }
     /**
      * Default implementation: Check if body contains class {@link Const.bodyWebFullscreenClassName}.
@@ -369,8 +364,7 @@ export class VideoInstance {
     }
     /* #endregion */
     clean() {
-        this.#initData.clean();
         this.videoDelegate.clean();
-        this.#site = this.#playerMetadata = this.#initData = this.videoDelegate = null;
+        this.#video = this.#playerMetadata = this.videoDelegate = null;
     }
 }
