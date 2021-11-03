@@ -39,7 +39,6 @@ class VideoEventDelegate {
      */
     async createEventDelegate() {
         let previousSiblingSelector = this.#previousSiblingSelector;
-        let createdDelegate = false;
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
             document.arrive(previousSiblingSelector, { existing: true }, function () {
@@ -50,24 +49,21 @@ class VideoEventDelegate {
                     eventDelegate.classList.add(Const.eventDelegateClassName);
                     this.after(eventDelegate);
                     this.classList.add(Const.topOverlayClassName);
-                    createdDelegate = true;
+                    for (let i in GlobalEvents) {
+                        let type = GlobalEvents[i];
+                        this.#delegate.addEventListener(type, (e) => {
+                            let sigs = this.#eventsObserverMap.get(type);
+                            if (sigs) sigs.forEach((sig) => {
+                                sig.fn.call(sig.context, e);
+                            });
+                        });
+                    }
                 }
                 resolve(eventDelegate);
             });
         }) : Promise.resolve();
         return promiseCreate.then((createDelegate) => {
             this.#delegate = createDelegate || this.#defaultDelegate;
-            if (createdDelegate) {
-                for (let i in GlobalEvents) {
-                    let type = GlobalEvents[i];
-                    this.#delegate.addEventListener(type, (e) => {
-                        let sigs = this.#eventsObserverMap.get(type);
-                        if (sigs) sigs.forEach((sig) => {
-                            sig.fn.call(sig.context, e);
-                        });
-                    });
-                }
-            }
         });
     }
     /**
