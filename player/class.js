@@ -52,7 +52,7 @@ class VideoEventDelegate {
                     prevSibling.classList.add(Const.topOverlayClassName);
                     for (let i in GlobalEvents) {
                         let type = GlobalEvents[i];
-                        this.#delegate.addEventListener(type, (e) => {
+                        eventDelegate.addEventListener(type, (e) => {
                             let sigs = this.#eventsObserverMap.get(type);
                             if (sigs) sigs.forEach((sig) => {
                                 sig.fn.call(sig.context, e);
