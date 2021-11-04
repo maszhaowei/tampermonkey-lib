@@ -31,7 +31,7 @@ class VideoEventDelegate {
         this.#previousSiblingSelector = previousSiblingSelector;
         document.leave(previousSiblingSelector, () => {
             this.#delegate?.remove();
-            this.clean();
+            this.clean(true);
         });
     }
     /**
@@ -66,7 +66,7 @@ class VideoEventDelegate {
         document.leave(Const.eventDelegateSelector, (delegate) => {
             if (delegate.isSameNode(this.#delegate)) {
                 delegate.remove();
-                this.clean();
+                this.clean(true);
             }
         });
         return promiseCreate;
@@ -97,9 +97,13 @@ class VideoEventDelegate {
             }
         });
     }
-    clean() {
+    /**
+     * 
+     * @param {boolean} onlyReference - Only clean object references for GC of referenced objects. Default to false.
+     */
+    clean(onlyReference = false) {
         this.#defaultDelegate = this.#delegate = null;
-        this.#eventsObserverMap.clear();
+        if (!onlyReference) this.#eventsObserverMap.clear();
     }
 }
 export class VideoInstanceData {
