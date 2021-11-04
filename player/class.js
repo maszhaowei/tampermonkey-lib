@@ -16,70 +16,75 @@ export const _VideoCustomEventTypes = {
     EXIT_WEBFULLSCREEN: 'video_exit_webfullscreen'
 }
 class VideoEventDelegate {
-    #video;
-    #containerSelector;
-    #controlsSelector;
     /** @type {Element} */
     #delegate;
-    #delegateCreatedByThis = false;
     /** @type {Map<string,ApplyMethodSignature[]>} */
     #eventsObserverMap = new Map();
+    /** @type {WeakMap<Element,HTMLVideoElement[]>} - Delegate element to videos map. */
+    static #bindedVideosMap = new WeakMap();
+    /** @type {WeakMap<Element,VideoEventDelegate>} - Delegate element to {@link VideoEventDelegate} map. */
+    static #delegateMap = new WeakMap();
+    /**
+     * @hideconstructor
+     */
+    constructor() {
+        document.leave(Const.eventDelegateSelector, (delegateEle) => {
+            if (delegateEle.isSameNode(this.#delegate)) {
+                this.#clean();
+            }
+        });
+    }
     /**
      * 
+     * Create event delegate after controls of video if there isn't one.
      * @param {HTMLVideoElement} video 
      * @param {string} containerSelector 
      * @param {string} [controlsSelector] 
      */
-    constructor(video, containerSelector, controlsSelector) {
-        this.#video = video;
-        this.#containerSelector = containerSelector;
-        this.#controlsSelector = controlsSelector;
-        if (controlsSelector) document.leave(controlsSelector, () => {
-            this.clean(false);
-        });
-    }
-    /**
-     * Create event delegate after controls of video if there isn't one.
-     * @returns 
-     */
-    async createEventDelegate() {
-        let previousSiblingSelector = this.#controlsSelector;
-        this.#delegateCreatedByThis = false;
+    static getDelegate(video, containerSelector, controlsSelector) {
         /** @type {Promise<Element>} */
-        let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
-            document.arrive(previousSiblingSelector, { existing: true }, (prevSibling) => {
+        let promiseCreate = controlsSelector ? new Promise((resolve) => {
+            document.arrive(controlsSelector, { existing: true }, (controls) => {
                 /** @type {HTMLDivElement} */
-                let eventDelegate = prevSibling.parentElement.querySelector(Const.eventDelegateSelector);
-                if (!eventDelegate) {
-                    eventDelegate = document.createElement('div');
-                    eventDelegate.classList.add(Const.eventDelegateClassName);
-                    prevSibling.after(eventDelegate);
-                    prevSibling.classList.add(Const.topOverlayClassName);
+                let delegateEle = controls.parentElement.querySelector(Const.eventDelegateSelector);
+                if (!delegateEle) {
+                    delegateEle = document.createElement('div');
+                    delegateEle.classList.add(Const.eventDelegateClassName);
+                    controls.after(delegateEle);
+                    controls.classList.add(Const.topOverlayClassName);
                     for (let i in GlobalEvents) {
                         let type = GlobalEvents[i];
-                        eventDelegate.addEventListener(type, (e) => {
+                        delegateEle.addEventListener(type, (e) => {
                             let sigs = this.#eventsObserverMap.get(type);
                             if (sigs) sigs.forEach((sig) => {
                                 sig.fn.call(sig.context, e);
                             });
                         });
                     }
-                    this.#delegateCreatedByThis = true;
                 }
-                resolve(this.#delegate = eventDelegate);
+                resolve(delegateEle);
             });
-        }) : Promise.resolve(this.#delegate = this.#video.closest(this.#containerSelector));
-        document.leave(Const.eventDelegateSelector, (delegate) => {
-            if (delegate.isSameNode(this.#delegate)) {
-                this.clean(false);
+        }) : Promise.resolve(video.closest(containerSelector));
+        return promiseCreate.then((delegateEle) => {
+            if (!delegateEle) throw new Error('No event delegate');
+
+            let bindedVideosMap = VideoEventDelegate.#bindedVideosMap;
+            if (bindedVideosMap.has(delegateEle)) bindedVideosMap.get(delegateEle).push(video);
+            else bindedVideosMap.set(delegateEle, [video]);
+
+            let delegateMap = VideoEventDelegate.#delegateMap;
+            if (delegateMap.has(delegateEle)) return delegateMap.get(delegateEle);
+            else {
+                let delegate = new VideoEventDelegate();
+                delegateMap.set(delegateEle, delegate);
+                return delegate;
             }
         });
-        return promiseCreate;
     }
     /**
      * 
      * @param {string} eventType 
-     * @param {function} handler 
+     * @param {(e:Event)=>void} handler 
      * @param {*} [context] 
      */
     registerEventHandler(eventType, handler, context) {
@@ -102,14 +107,27 @@ class VideoEventDelegate {
             }
         });
     }
+    #clean() {
+        let delegateEle = this.#delegate;
+        VideoEventDelegate.#bindedVideosMap.delete(delegateEle);
+        VideoEventDelegate.#delegateMap.delete(delegateEle);
+        delegateEle.remove();
+        this.#delegate = null;
+        this.#eventsObserverMap.clear();
+    }
     /**
      * 
-     * @param {boolean} clearEventObserver - Default to true.
+     * @param {HTMLVideoElement} video 
      */
-    clean(clearEventObserver = true) {
-        if (this.#delegateCreatedByThis) this.#delegate?.remove();
-        this.#delegate = null;
-        if (clearEventObserver) this.#eventsObserverMap.clear();
+    unbindVideo(video) {
+        let delegateEle = this.#delegate;
+        let bindedVideos = VideoEventDelegate.#bindedVideosMap.get(delegateEle);
+        if (bindedVideos) {
+            let index = bindedVideos.indexOf(video);
+            if (index >= 0) bindedVideos.splice(index, 1);
+            if (bindedVideos.length == 0) this.#clean();
+        }
+        else this.#clean();
     }
 }
 export class VideoInstanceData {
@@ -166,7 +184,7 @@ export class VideoInstance {
     /** @type {Element} */
     get container() { return this.#video.closest(this.#playerMetadata.containerSelector) }
     /** @type {VideoEventDelegate} */
-    videoDelegate;
+    #videoDelegate;
     get tooltipWrap() { return this.container; }
     /**
      * @param {VideoInstanceData} initData 
@@ -207,9 +225,11 @@ export class VideoInstance {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip(video.muted ? "静音" : ("音量" + Math.round(video.volume * 100) + "%"));
         });
-        let videoDelegate = new VideoEventDelegate(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector);
-        this.videoDelegate = videoDelegate;
-        return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
+        return VideoEventDelegate.getDelegate(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector)
+            .then((videoDelegate) => {
+                this.#videoDelegate = videoDelegate;
+                this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY)
+            });
     }
     async #bindEvent() {
         let video = this.#video;
@@ -260,6 +280,15 @@ export class VideoInstance {
         if (volume != undefined) this.#initVolume = volume;
         this.#initVideo();
         this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {(e:Event)=>void} handler 
+     * @param {*} [context] 
+     */
+    registerEventHandler(eventType, handler, context) {
+        this.#videoDelegate.registerEventHandler(eventType, handler, context);
     }
     /**
      * 
@@ -380,7 +409,7 @@ export class VideoInstance {
     }
     /* #endregion */
     clean() {
-        this.videoDelegate.clean();
-        this.#video = this.#playerMetadata = this.videoDelegate = null;
+        this.#videoDelegate.unbindVideo(this.#video);
+        this.#video = this.#playerMetadata = this.#videoDelegate = null;
     }
 }
