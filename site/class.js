@@ -8,7 +8,7 @@ export class PlayerMetadata {
      */
     containerSelector;
     /**
-     * Selector for video controls. Should be higher than video in the stacking context.
+     * Selector for video controls.Must be sibling of video's ancestor.
      */
     controlsSelector;
     /**
