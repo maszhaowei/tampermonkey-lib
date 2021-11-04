@@ -16,22 +16,26 @@ export const _VideoCustomEventTypes = {
     EXIT_WEBFULLSCREEN: 'video_exit_webfullscreen'
 }
 class VideoEventDelegate {
-    #previousSiblingSelector;
-    #defaultDelegate;
+    #video;
+    #containerSelector;
+    #controlsSelector;
     /** @type {Element} */
     #delegate;
+    #delegateCreatedByThis = false;
     /** @type {Map<string,ApplyMethodSignature[]>} */
     #eventsObserverMap = new Map();
     /**
-     * @param {Element} defaultDelegate 
-     * @param {string} [previousSiblingSelector] 
+     * 
+     * @param {HTMLVideoElement} video 
+     * @param {string} containerSelector 
+     * @param {string} [controlsSelector] 
      */
-    constructor(defaultDelegate, previousSiblingSelector) {
-        this.#defaultDelegate = defaultDelegate;
-        this.#previousSiblingSelector = previousSiblingSelector;
-        document.leave(previousSiblingSelector, () => {
-            this.#delegate?.remove();
-            this.clean(true);
+    constructor(video, containerSelector, controlsSelector) {
+        this.#video = video;
+        this.#containerSelector = containerSelector;
+        this.#controlsSelector = controlsSelector;
+        if (controlsSelector) document.leave(controlsSelector, () => {
+            this.clean(false);
         });
     }
     /**
@@ -39,7 +43,8 @@ class VideoEventDelegate {
      * @returns 
      */
     async createEventDelegate() {
-        let previousSiblingSelector = this.#previousSiblingSelector;
+        let previousSiblingSelector = this.#controlsSelector;
+        this.#delegateCreatedByThis = false;
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
             document.arrive(previousSiblingSelector, { existing: true }, (prevSibling) => {
@@ -59,14 +64,14 @@ class VideoEventDelegate {
                             });
                         });
                     }
+                    this.#delegateCreatedByThis = true;
                 }
                 resolve(this.#delegate = eventDelegate);
             });
-        }) : Promise.resolve(this.#delegate = this.#defaultDelegate);
+        }) : Promise.resolve(this.#delegate = this.#video.closest(this.#containerSelector));
         document.leave(Const.eventDelegateSelector, (delegate) => {
             if (delegate.isSameNode(this.#delegate)) {
-                delegate.remove();
-                this.clean(true);
+                this.clean(false);
             }
         });
         return promiseCreate;
@@ -99,11 +104,12 @@ class VideoEventDelegate {
     }
     /**
      * 
-     * @param {boolean} onlyReference - Only clean object references for GC of referenced objects. Default to false.
+     * @param {boolean} clearEventObserver - Default to true.
      */
-    clean(onlyReference = false) {
-        this.#defaultDelegate = this.#delegate = null;
-        if (!onlyReference) this.#eventsObserverMap.clear();
+    clean(clearEventObserver = true) {
+        if (this.#delegateCreatedByThis) this.#delegate?.remove();
+        this.#delegate = null;
+        if (clearEventObserver) this.#eventsObserverMap.clear();
     }
 }
 export class VideoInstanceData {
@@ -201,7 +207,7 @@ export class VideoInstance {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip(video.muted ? "静音" : ("音量" + Math.round(video.volume * 100) + "%"));
         });
-        let videoDelegate = new VideoEventDelegate(this.container, this.#playerMetadata.controlsSelector);
+        let videoDelegate = new VideoEventDelegate(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector);
         this.videoDelegate = videoDelegate;
         return videoDelegate.createEventDelegate().then(() => this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY));
     }
