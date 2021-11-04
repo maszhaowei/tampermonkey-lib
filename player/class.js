@@ -244,6 +244,19 @@ export class VideoInstance {
     }
     /**
      * 
+     * @param {string} [title] 
+     * @param {number} [progress] 
+     * @param {number} [volume] 
+     */
+    async reload(title, progress, volume) {
+        if (title != undefined) this.#title = title;
+        if (progress != undefined) this.#initProgress = progress;
+        if (volume != undefined) this.#initVolume = volume;
+        this.#initVideo();
+        this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
+    }
+    /**
+     * 
      * @param {string} tooltip 
      * @param {string} [position]
      * @param {number} [top] 
