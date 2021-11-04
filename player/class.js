@@ -26,10 +26,12 @@ class VideoEventDelegate {
     static #delegateMap = new WeakMap();
     /**
      * @hideconstructor
+     * @param {Element} delegateEle
      */
-    constructor() {
-        document.leave(Const.eventDelegateSelector, (delegateEle) => {
-            if (delegateEle.isSameNode(this.#delegate)) {
+    constructor(delegateEle) {
+        this.#delegate = delegateEle;
+        document.leave(Const.eventDelegateSelector, (leaveEle) => {
+            if (leaveEle.isSameNode(this.#delegate)) {
                 this.#clean();
             }
         });
@@ -52,15 +54,6 @@ class VideoEventDelegate {
                     delegateEle.classList.add(Const.eventDelegateClassName);
                     controls.after(delegateEle);
                     controls.classList.add(Const.topOverlayClassName);
-                    for (let i in GlobalEvents) {
-                        let type = GlobalEvents[i];
-                        delegateEle.addEventListener(type, (e) => {
-                            let sigs = this.#eventsObserverMap.get(type);
-                            if (sigs) sigs.forEach((sig) => {
-                                sig.fn.call(sig.context, e);
-                            });
-                        });
-                    }
                 }
                 resolve(delegateEle);
             });
@@ -75,11 +68,23 @@ class VideoEventDelegate {
             let delegateMap = VideoEventDelegate.#delegateMap;
             if (delegateMap.has(delegateEle)) return delegateMap.get(delegateEle);
             else {
-                let delegate = new VideoEventDelegate();
+                let delegate = new VideoEventDelegate(delegateEle);
+                delegate.#bindEventObserver();
                 delegateMap.set(delegateEle, delegate);
                 return delegate;
             }
         });
+    }
+    #bindEventObserver() {
+        for (let i in GlobalEvents) {
+            let type = GlobalEvents[i];
+            this.#delegate.addEventListener(type, (e) => {
+                let sigs = this.#eventsObserverMap.get(type);
+                if (sigs) sigs.forEach((sig) => {
+                    sig.fn.call(sig.context, e);
+                });
+            });
+        }
     }
     /**
      * 
