@@ -85,24 +85,32 @@ export class Site {
         return this.baseSiteId === this.id;
     }
     /**
+     * @typedef {object} SiteMessageData
+     * @property {string} SiteMessageData.type
+     * @property {*} SiteMessageData.content
+     * @property {string} SiteMessageData.src
+     * @property {string} SiteMessageData.tag
+     * @property {boolean} SiteMessageData.allowSelf
+     */
+    /**
      * Validate if {@link e} is from a valid script of another {@link Site}.
-     * @param {MessageEvent} e 
-     * @param {SiteMessageData} e.data
+     * @param {MessageEvent<SiteMessageData>} e 
      * @returns {boolean} 
      */
     validateMessage(e) {
-        if (!e.data || !e.data.type || !e.data.src || !e.data.tag) return false;
+        let data = e.data;
+        if (!data || !data.type || !data.src || !data.tag) return false;
         let origin = e.origin;
         return ((origin === window.location.origin || !!this.originWhitelist?.includes(origin))
-            && MessageTypes.test(e.data.type) && (e.data.allowSelf || e.data.tag !== this.#uuid));
+            && MessageTypes.test(data.type) && (data.allowSelf || data.tag !== this.#uuid));
     }
     /**
      * 
      * @param {Window} targetWindow 
      * @param {string} targetOrigin 
-     * @param {string} messageType - Value of {@link MessageTypes}
+     * @param {string} messageType - Value of {@link MessageTypes}.
      * @param {*} [messageContent] 
-     * @param {boolean} [allowSelf] - Whether to allow to send to current site. Default to false.
+     * @param {boolean} [allowSelf] - Whether to allow to send to current {@link Site}. Default to false.
      * @returns 
      */
     postMessage(targetWindow, targetOrigin, messageType, messageContent, allowSelf = false) {
