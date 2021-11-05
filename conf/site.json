@@ -140,6 +140,9 @@
             "origin": "https://sod.bunediy.com",
             "siteCategories": [
                 "Video Hosting"
+            ],
+            "originWhitelist": [
+                "https://www.meijubs.com"
             ]
         }
     ],
@@ -189,10 +192,7 @@
             "playButtonSelector": ".dplayer-play-icon",
             "volumeButtonSelector": ".dplayer-volume",
             "fullscreenButtonSelector": ".dplayer-full",
-            "webFullscreenButtonSelector": ".dplayer-full-in-icon",
-            "originWhitelist": [
-                "https://www.meijubs.com"
-            ]
+            "webFullscreenButtonSelector": ".dplayer-full-in-icon"
         }
     ],
     "videoportalsites": [
