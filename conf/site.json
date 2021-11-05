@@ -183,7 +183,7 @@
             "fullscreenButtonSelector": ".prism-fullscreen-btn"
         },
         {
-            "id": "小度云",
+            "id": "bunediy",
             "containerSelector": "#dpplayer",
             "controlsSelector": ".dplayer-controller",
             "playButtonSelector": ".dplayer-play-icon",
