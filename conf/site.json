@@ -10,7 +10,8 @@
         "wnacg": "wnacg",
         "jxbdzyw": "jxbdzyw",
         "FANDOM": "Fandom",
-        "FANDOM_WIKI": "Fandom Wiki"
+        "FANDOM_WIKI": "Fandom Wiki",
+        "bunediy": "bunediy"
     },
     "sitecategories": {},
     "videocategories": {
@@ -104,7 +105,8 @@
         {
             "id": "MEIJUBS",
             "originWhitelist": [
-                "https://jx.jxbdzyw.com"
+                "https://jx.jxbdzyw.com",
+                "https://sod.bunediy.com"
             ]
         },
         {
@@ -130,13 +132,21 @@
         },
         {
             "id": "Fandom Wiki",
-            "baseSiteId":"Fandom",
+            "baseSiteId": "Fandom",
             "hrefRegEx": "^https://\\w+\\.fandom\\.com/wiki/.+"
+        },
+        {
+            "id": "bunediy",
+            "origin": "https://sod.bunediy.com",
+            "siteCategories": [
+                "Video Hosting"
+            ]
         }
     ],
     "videosites": [
         {
             "id": "test",
+            "defaultPlayerMetadata": "test",
             "containerSelector": ".containerSelector",
             "controlsSelector": ".controlsSelector",
             "topElementSelectors": [
@@ -171,6 +181,18 @@
             "controlsSelector": ".prism-controlbar",
             "playButtonSelector": ".prism-play-btn",
             "fullscreenButtonSelector": ".prism-fullscreen-btn"
+        },
+        {
+            "id": "小度云",
+            "containerSelector": "#dpplayer",
+            "controlsSelector": ".dplayer-controller",
+            "playButtonSelector": ".dplayer-play-icon",
+            "volumeButtonSelector": ".dplayer-volume",
+            "fullscreenButtonSelector": ".dplayer-full",
+            "webFullscreenButtonSelector": ".dplayer-full-in-icon",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ]
         }
     ],
     "videoportalsites": [
