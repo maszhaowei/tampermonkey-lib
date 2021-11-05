@@ -54,6 +54,81 @@ export class ApplyMethodSignature {
     }
 }
 
+export class EventHandlerWrapper extends ApplyMethodSignature {
+    useCapture;
+    /**
+     * 
+     * @param {(e:Event)=>void} handler 
+     * @param {boolean} [useCapture] - Default to false. 
+     * @param {*} [context] 
+     */
+    constructor(handler, useCapture = false, context) {
+        super(handler, context);
+        this.useCapture = useCapture;
+    }
+}
+
+export class EventObserverWrapper {
+    #target;
+    #supportedEventTypes;
+    /** @type {Map<string,EventHandlerWrapper[]>} */
+    #eventsObserverMap = new Map();
+    /**
+     * 
+     * @param {EventTarget} target 
+     * @param {string[]} eventTypes
+     */
+    constructor(target, eventTypes) {
+        this.#target = target;
+        this.#supportedEventTypes = eventTypes;
+        eventTypes.forEach((eventType) => {
+            let wrappers = this.#eventsObserverMap.get(eventType);
+            if (wrappers) {
+                wrappers.forEach((wrapper) => {
+                    this.#target.addEventListener(eventType, wrapper.fn, wrapper.useCapture);
+                });
+            }
+        });
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {(e:Event)=>void} handler 
+     * @param {boolean} [useCapture] - Default to false.
+     * @param {*} [context] 
+     */
+    registerEventHandler(eventType, handler, useCapture, context) {
+        let handlerWrapper = new EventHandlerWrapper((e) => handler.call(context, e), useCapture, context);
+        if (this.#eventsObserverMap.has(eventType)) {
+            this.#eventsObserverMap.get(eventType).push(handlerWrapper);
+        }
+        else {
+            this.#eventsObserverMap.set(eventType, [handlerWrapper]);
+        }
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {*} [context] 
+     */
+    unregisterEventType(eventType, context) {
+        let wrappers = this.#eventsObserverMap.get(eventType);
+        if (!wrappers) return;
+        wrappers.forEach((wrapper) => {
+            if (util.isEqual(context, wrapper.context)) this.#target.removeEventListener(eventType, wrapper.fn, wrapper.useCapture);
+        });
+    }
+    /**
+     * 
+     * @param {string} [eventType] - Default to unregister all supported event types.
+     * @param {*} [context] 
+     */
+    unregisterEventHandlers(eventType, context) {
+        if (eventType) this.unregisterEventType(eventType, context);
+        else this.#supportedEventTypes.forEach((et) => this.unregisterEventType(et, context));
+    }
+}
+
 export class Tuple extends IEquatable {
     #items;
     get size() { return this.#items.length }
