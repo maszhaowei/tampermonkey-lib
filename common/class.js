@@ -151,8 +151,8 @@ export class EventObserverWrapper {
     #supportedEventTypes;
     /** @type {LooseMap<Tuple,ApplyMethodSignature[]>} */
     #eventsObserverMap = new LooseMap();
-    /** @type {LooseMap<Tuple,(e:Event)=>void>} - Save handler for removeEventListener. Will call set whenever an event is triggered. */
-    #aggregatedHandlerMap = new LooseMap();
+    /** @type {Map<boolean,(e:Event)=>void>} */
+    #aggregatedHandlerMap = new Map();
     #captureOptions = [true, false];
     /**
      * 
@@ -162,47 +162,34 @@ export class EventObserverWrapper {
     constructor(target, eventTypes) {
         this.#target = target;
         this.#supportedEventTypes = eventTypes;
+        this.#captureOptions.forEach((captureOption) => {
+            this.#aggregatedHandlerMap.set(captureOption, this.#buildAggregatedHandler(captureOption));
+        });
         eventTypes.forEach((eventType) => {
             this.#captureOptions.forEach((captureOption) => {
-                /** @type {(e:Event)=>void} */
-                let handler = (e) => {
-                    let aggregatedHandler = this.#buildAggregatedHandler(new Tuple(e.type, captureOption));
-                    if (aggregatedHandler) {
-                        aggregatedHandler(e);
-                    }
-                };
-                this.#aggregatedHandlerMap.set(new Tuple(eventType, captureOption), handler);
                 // All operations which depend on mutable property should be put in aggregatedHandler.(e.g. get #eventsObserverMap value)
-                // Event -> handler -> aggregatedHandler -> ApplyMethodSignature.fn.call(in #buildAggregatedHandler).
-                this.#target.addEventListener(eventType, handler, captureOption);
+                // Event -> aggregatedHandler -> ApplyMethodSignature.fn.call(in #buildAggregatedHandler).
+                this.#target.addEventListener(eventType, this.#aggregatedHandlerMap.get(captureOption), captureOption);
             });
         });
     }
     /**
      * 
-     * @param {Tuple} key 
-     */
-    #buildAggregatedHandler(key) {
-        let sigs = this.#eventsObserverMap.get(key);
-        if (sigs && sigs.length > 0) {
-            return (e) => sigs.forEach((sig) => {
-                sig.fn.call(sig.context, e);
-            });
-        }
-    }
-    /**
-     * 
-     * @param {string} eventType 
      * @param {boolean} useCapture 
+     * @returns {(e:Event)=>void}
      */
-    #updateAggregatedHandlerMap(eventType, useCapture) {
-        let aggregatedHandler = this.#buildAggregatedHandler(eventType, useCapture);
-        let key = new Tuple(eventType, useCapture);
-        if (aggregatedHandler) { this.#aggregatedHandlerMap.set(key, aggregatedHandler); }
-        else this.#aggregatedHandlerMap.delete(key);
+    #buildAggregatedHandler(useCapture) {
+        return (e) => {
+            let sigs = this.#eventsObserverMap.get(new Tuple(e.type, useCapture));
+            if (sigs) {
+                sigs.forEach((sig) => {
+                    sig.fn.call(sig.context, e);
+                });
+            }
+        };
     }
     /**
-     * 
+     * stopImmediatePropagation in handler doesn't work on other handlers of same <eventType, useCapture>.
      * @param {string} eventType 
      * @param {(e:Event)=>void} handler 
      * @param {boolean} [useCapture] - Default to false.
@@ -234,23 +221,19 @@ export class EventObserverWrapper {
                 i--;
             }
         }
-        if (sigs.length == 0) {
-            let aggregatedHandler = this.#aggregatedHandlerMap.get(key);
-            if (aggregatedHandler) {
-                this.#target.removeEventListener(eventType, aggregatedHandler, useCapture);
-                this.#aggregatedHandlerMap.delete(key);
-            }
-        }
     }
     /**
      * 
-     * @param {string} [eventType] - Default to unregister all supported event types.
      * @param {*} [context] 
      */
     clean() {
-        this.#captureOptions.forEach((captureOption) => {
-            this.#supportedEventTypes.forEach((et) => this.unregisterEventHandler(et, captureOption, context));
+        this.#supportedEventTypes.forEach((eventType) => {
+            this.#aggregatedHandlerMap.forEach((handler, useCapture) => {
+                this.#target.removeEventListener(eventType, handler, useCapture);
+            })
         });
+        this.#eventsObserverMap.clear();
+        this.#aggregatedHandlerMap.clear();
     }
 }
 
