@@ -37,97 +37,6 @@ export class KeyboardKeyCode {
         this.key = key;
     }
 }
-export class ApplyMethodSignature {
-    context;
-    fn;
-    args;
-    /**
-     * 
-     * @param {function} fn 
-     * @param {*} [context]
-     * @param {any[]} [args] 
-     */
-    constructor(fn, context, args) {
-        this.fn = fn;
-        this.context = context;
-        this.args = args || [];
-    }
-}
-
-export class EventHandlerWrapper extends ApplyMethodSignature {
-    useCapture;
-    /**
-     * 
-     * @param {(e:Event)=>void} handler 
-     * @param {boolean} [useCapture] - Default to false. 
-     * @param {*} [context] 
-     */
-    constructor(handler, useCapture = false, context) {
-        super(handler, context);
-        this.useCapture = useCapture;
-    }
-}
-
-export class EventObserverWrapper {
-    #target;
-    #supportedEventTypes;
-    /** @type {Map<string,EventHandlerWrapper[]>} */
-    #eventsObserverMap = new Map();
-    /**
-     * 
-     * @param {EventTarget} target 
-     * @param {string[]} eventTypes
-     */
-    constructor(target, eventTypes) {
-        this.#target = target;
-        this.#supportedEventTypes = eventTypes;
-        eventTypes.forEach((eventType) => {
-            let wrappers = this.#eventsObserverMap.get(eventType);
-            if (wrappers) {
-                wrappers.forEach((wrapper) => {
-                    this.#target.addEventListener(eventType, wrapper.fn, wrapper.useCapture);
-                });
-            }
-        });
-    }
-    /**
-     * 
-     * @param {string} eventType 
-     * @param {(e:Event)=>void} handler 
-     * @param {boolean} [useCapture] - Default to false.
-     * @param {*} [context] 
-     */
-    registerEventHandler(eventType, handler, useCapture, context) {
-        let handlerWrapper = new EventHandlerWrapper((e) => handler.call(context, e), useCapture, context);
-        if (this.#eventsObserverMap.has(eventType)) {
-            this.#eventsObserverMap.get(eventType).push(handlerWrapper);
-        }
-        else {
-            this.#eventsObserverMap.set(eventType, [handlerWrapper]);
-        }
-    }
-    /**
-     * 
-     * @param {string} eventType 
-     * @param {*} [context] 
-     */
-    unregisterEventType(eventType, context) {
-        let wrappers = this.#eventsObserverMap.get(eventType);
-        if (!wrappers) return;
-        wrappers.forEach((wrapper) => {
-            if (util.isEqual(context, wrapper.context)) this.#target.removeEventListener(eventType, wrapper.fn, wrapper.useCapture);
-        });
-    }
-    /**
-     * 
-     * @param {string} [eventType] - Default to unregister all supported event types.
-     * @param {*} [context] 
-     */
-    unregisterEventHandlers(eventType, context) {
-        if (eventType) this.unregisterEventType(eventType, context);
-        else this.#supportedEventTypes.forEach((et) => this.unregisterEventType(et, context));
-    }
-}
 
 export class Tuple extends IEquatable {
     #items;
@@ -158,8 +67,20 @@ export class Tuple extends IEquatable {
 /**
  * @classdesc Key equality: Based on the sameValueZero algorithm and NaN equals NaN. Will compare each element if key is an array and call equals method if key implements IEquatable.
  * @extends Map
+ * @template K,V
  */
 export class LooseMap extends Map {
+    /**
+     * @returns {LooseMap<K,V>}
+     */
+    constructor() {
+        super();
+    }
+    /**
+     * 
+     * @param {K} key 
+     * @returns {V}
+     */
     get(key) {
         let i = this.entries();
         let ir;
@@ -168,6 +89,12 @@ export class LooseMap extends Map {
             if (util.isEqual(k, key)) return v;
         }
     }
+    /**
+     * 
+     * @param {K} key 
+     * @param {V} value 
+     * @returns 
+     */
     set(key, value) {
         let i = this.keys();
         let ir;
@@ -176,6 +103,11 @@ export class LooseMap extends Map {
         }
         super.set(key, value);
     }
+    /**
+     * 
+     * @param {K} key 
+     * @returns 
+     */
     has(key) {
         let i = this.keys();
         let ir;
@@ -184,12 +116,141 @@ export class LooseMap extends Map {
         }
         return false;
     }
+    /**
+     * 
+     * @param {K} key 
+     * @returns 
+     */
     delete(key) {
         let i = this.keys();
         let ir;
         while (!(ir = i.next()).done) {
             if (util.isEqual(ir.value, key)) return super.delete(ir.value);
         }
+    }
+}
+export class ApplyMethodSignature {
+    context;
+    fn;
+    args;
+    /**
+     * 
+     * @param {function} fn 
+     * @param {*} [context]
+     * @param {any[]} [args] 
+     */
+    constructor(fn, context, args) {
+        this.fn = fn;
+        this.context = context;
+        this.args = args || [];
+    }
+}
+
+export class EventObserverWrapper {
+    #target;
+    #supportedEventTypes;
+    /** @type {LooseMap<Tuple,ApplyMethodSignature[]>} */
+    #eventsObserverMap = new LooseMap();
+    /** @type {LooseMap<Tuple,(e:Event)=>void>} - Save handler for removeEventListener. Will call set whenever an event is triggered. */
+    #aggregatedHandlerMap = new LooseMap();
+    #captureOptions = [true, false];
+    /**
+     * 
+     * @param {EventTarget} target 
+     * @param {string[]} eventTypes
+     */
+    constructor(target, eventTypes) {
+        this.#target = target;
+        this.#supportedEventTypes = eventTypes;
+        eventTypes.forEach((eventType) => {
+            this.#captureOptions.forEach((captureOption) => {
+                /** @type {(e:Event)=>void} */
+                let handler = (e) => {
+                    let aggregatedHandler = this.#buildAggregatedHandler(new Tuple(e.type, captureOption));
+                    if (aggregatedHandler) {
+                        aggregatedHandler(e);
+                    }
+                };
+                this.#aggregatedHandlerMap.set(new Tuple(eventType, captureOption), handler);
+                // All operations which depend on mutable property should be put in aggregatedHandler.(e.g. get #eventsObserverMap value)
+                // Event -> handler -> aggregatedHandler -> ApplyMethodSignature.fn.call(in #buildAggregatedHandler).
+                this.#target.addEventListener(eventType, handler, captureOption);
+            });
+        });
+    }
+    /**
+     * 
+     * @param {Tuple} key 
+     */
+    #buildAggregatedHandler(key) {
+        let sigs = this.#eventsObserverMap.get(key);
+        if (sigs && sigs.length > 0) {
+            return (e) => sigs.forEach((sig) => {
+                sig.fn.call(sig.context, e);
+            });
+        }
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {boolean} useCapture 
+     */
+    #updateAggregatedHandlerMap(eventType, useCapture) {
+        let aggregatedHandler = this.#buildAggregatedHandler(eventType, useCapture);
+        let key = new Tuple(eventType, useCapture);
+        if (aggregatedHandler) { this.#aggregatedHandlerMap.set(key, aggregatedHandler); }
+        else this.#aggregatedHandlerMap.delete(key);
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {(e:Event)=>void} handler 
+     * @param {boolean} [useCapture] - Default to false.
+     * @param {*} [context] 
+     */
+    registerEventHandler(eventType, handler, useCapture = false, context) {
+        let sig = new ApplyMethodSignature(handler, context);
+        let key = new Tuple(eventType, useCapture);
+        if (this.#eventsObserverMap.has(key)) {
+            this.#eventsObserverMap.get(key).push(sig);
+        }
+        else {
+            this.#eventsObserverMap.set(key, [sig]);
+        }
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {(e:Event)=>void} handler 
+     * @param {boolean} [useCapture] - Default to false.
+     */
+    unregisterEventHandler(eventType, handler, useCapture = false) {
+        let key = new Tuple(eventType, useCapture);
+        let sigs = this.#eventsObserverMap.get(key);
+        if (!sigs) return;
+        for (let i = 0; i < sigs.length; i++) {
+            if (handler == sigs[i].fn) {
+                sigs.splice(i, 1);
+                i--;
+            }
+        }
+        if (sigs.length == 0) {
+            let aggregatedHandler = this.#aggregatedHandlerMap.get(key);
+            if (aggregatedHandler) {
+                this.#target.removeEventListener(eventType, aggregatedHandler, useCapture);
+                this.#aggregatedHandlerMap.delete(key);
+            }
+        }
+    }
+    /**
+     * 
+     * @param {string} [eventType] - Default to unregister all supported event types.
+     * @param {*} [context] 
+     */
+    clean() {
+        this.#captureOptions.forEach((captureOption) => {
+            this.#supportedEventTypes.forEach((et) => this.unregisterEventHandler(et, captureOption, context));
+        });
     }
 }
 
