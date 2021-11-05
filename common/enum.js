@@ -83,6 +83,10 @@ export const GlobalEvents = {
     KEYDOWN: 'keydown',
     MOUSEDOWN: 'mousedown',
     WHEEL: 'wheel',
+    /**
+     * 
+     * @returns {string[]}
+     */
     toValueArray: function () {
         return EnumHelper.toValueArray(GlobalEvents);
     }
