@@ -1,10 +1,11 @@
 import '../css/video.css';
 import * as Const from './const';
-import { ApplyMethodSignature, PositionOption } from '../common/class';
+import { EventObserverWrapper, PositionOption } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
 import { CssCacheHelper } from '../tampermonkey/utils';
+import { EnumHelper } from '../common/utils';
 
 export const _VideoCustomEventTypes = {
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
@@ -15,11 +16,9 @@ export const _VideoCustomEventTypes = {
     REQUEST_WEBFULLSCREEN: 'video_request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'video_exit_webfullscreen'
 }
-class VideoEventDelegate {
+class VideoEventDelegate extends EventObserverWrapper {
     /** @type {Element} */
     #delegate;
-    /** @type {Map<string,ApplyMethodSignature[]>} */
-    #eventsObserverMap = new Map();
     /** @type {WeakMap<Element,HTMLVideoElement[]>} - Delegate element to videos map. */
     static #bindedVideosMap = new WeakMap();
     /** @type {WeakMap<Element,VideoEventDelegate>} - Delegate element to {@link VideoEventDelegate} map. */
@@ -29,6 +28,7 @@ class VideoEventDelegate {
      * @param {Element} delegateEle
      */
     constructor(delegateEle) {
+        super(delegateEle, GlobalEvents.toValueArray());
         this.#delegate = delegateEle;
         document.leave(Const.eventDelegateSelector, (leaveEle) => {
             if (leaveEle.isSameNode(this.#delegate)) {
@@ -38,15 +38,39 @@ class VideoEventDelegate {
     }
     /**
      * 
+     * @param {Element} delegateEle 
+     * @param {HTMLVideoElement} video 
+     */
+    static #bindVideo(delegateEle, video) {
+        let bindedVideosMap = VideoEventDelegate.#bindedVideosMap;
+        if (bindedVideosMap.has(delegateEle)) bindedVideosMap.get(delegateEle).push(video);
+        else bindedVideosMap.set(delegateEle, [video]);
+    }
+    /**
+     * 
+     * @param {Element} delegateEle 
+     * @returns 
+     */
+    static #createInstance(delegateEle) {
+        let delegateMap = VideoEventDelegate.#delegateMap;
+        if (delegateMap.has(delegateEle)) return delegateMap.get(delegateEle);
+        else {
+            let delegate = new VideoEventDelegate(delegateEle);
+            delegateMap.set(delegateEle, delegate);
+            return delegate;
+        }
+    }
+    /**
+     * 
      * Create event delegate after controls of video if there isn't one.
      * @param {HTMLVideoElement} video 
      * @param {string} containerSelector 
      * @param {string} [controlsSelector] 
      */
-    static getDelegate(video, containerSelector, controlsSelector) {
+    static getInstance(video, containerSelector, controlsSelector) {
         /** @type {Promise<Element>} */
         let promiseCreate = controlsSelector ? new Promise((resolve) => {
-            document.arrive(controlsSelector, { existing: true }, (controls) => {
+            document.arrive(controlsSelector, { existing: true, onceOnly: true }, (controls) => {
                 /** @type {HTMLDivElement} */
                 let delegateEle = controls.parentElement.querySelector(Const.eventDelegateSelector);
                 if (!delegateEle) {
@@ -61,55 +85,8 @@ class VideoEventDelegate {
         return promiseCreate.then((delegateEle) => {
             if (!delegateEle) throw new Error('No event delegate');
 
-            let bindedVideosMap = VideoEventDelegate.#bindedVideosMap;
-            if (bindedVideosMap.has(delegateEle)) bindedVideosMap.get(delegateEle).push(video);
-            else bindedVideosMap.set(delegateEle, [video]);
-
-            let delegateMap = VideoEventDelegate.#delegateMap;
-            if (delegateMap.has(delegateEle)) return delegateMap.get(delegateEle);
-            else {
-                let delegate = new VideoEventDelegate(delegateEle);
-                delegate.#bindEventObserver();
-                delegateMap.set(delegateEle, delegate);
-                return delegate;
-            }
-        });
-    }
-    #bindEventObserver() {
-        for (let i in GlobalEvents) {
-            let type = GlobalEvents[i];
-            this.#delegate.addEventListener(type, (e) => {
-                let sigs = this.#eventsObserverMap.get(type);
-                if (sigs) sigs.forEach((sig) => {
-                    sig.fn.call(sig.context, e);
-                });
-            });
-        }
-    }
-    /**
-     * 
-     * @param {string} eventType 
-     * @param {(e:Event)=>void} handler 
-     * @param {*} [context] 
-     */
-    registerEventHandler(eventType, handler, context) {
-        let sig = new ApplyMethodSignature(handler, context);
-        if (this.#eventsObserverMap.has(eventType)) {
-            this.#eventsObserverMap.get(eventType).push(sig);
-        }
-        else {
-            this.#eventsObserverMap.set(eventType, [sig]);
-        }
-    }
-    unregisterContext(context) {
-        this.#eventsObserverMap.forEach((sigs) => {
-            for (let i = 0; i < sigs.length; i++) {
-                let sig = sigs[i];
-                if (sig.context == context) {
-                    sigs.splice(i, 1);
-                    i--;
-                }
-            }
+            VideoEventDelegate.#bindVideo(delegateEle, video);
+            return VideoEventDelegate.#createInstance(delegateEle);
         });
     }
     #clean() {
@@ -118,7 +95,7 @@ class VideoEventDelegate {
         VideoEventDelegate.#delegateMap.delete(delegateEle);
         delegateEle.remove();
         this.#delegate = null;
-        this.#eventsObserverMap.clear();
+        this.unregisterEventHandlers();
     }
     /**
      * 
@@ -157,7 +134,7 @@ export class VideoInstanceData {
         this.volume = volume;
     }
 }
-export class VideoInstance {
+export class VideoInstance extends EventObserverWrapper {
     #video;
     #title;
     #initProgress;
@@ -195,6 +172,7 @@ export class VideoInstance {
      * @param {VideoInstanceData} initData 
      */
     constructor(initData) {
+        super(initData.video, EnumHelper.toValueArray(_VideoCustomEventTypes));
         this.#video = initData.video;
         this.#playerMetadata = initData.playerMetadata;
         this.#title = initData.title;
@@ -226,33 +204,33 @@ export class VideoInstance {
     async #onLoadedMetadata() {
         this.#initVideo();
         let video = this.#video;
-        video.addEventListener(MediaEvents.VOLUME_CHANGE, () => {
+        this.registerEventHandler(MediaEvents.VOLUME_CHANGE, () => {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip(video.muted ? "静音" : ("音量" + Math.round(video.volume * 100) + "%"));
-        });
-        return VideoEventDelegate.getDelegate(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector)
+        }, false, this);
+        return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector)
             .then((videoDelegate) => {
                 this.#videoDelegate = videoDelegate;
-                this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY)
+                this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
             });
     }
     async #bindEvent() {
         let video = this.#video;
-        video.addEventListener(MediaEvents.PLAY, () => {
+        this.registerEventHandler(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
             this.#triggerCustomEvent(_VideoCustomEventTypes.PLAY);
-        }, true);
-        video.addEventListener(MediaEvents.PAUSE, () => {
+        }, true, this);
+        this.registerEventHandler(MediaEvents.PAUSE, () => {
             this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
             this.#triggerCustomEvent(_VideoCustomEventTypes.PAUSE);
-        }, true);
+        }, true, this);
         return new Promise((resolve) => {
             if (video.readyState >= MediaReadyState.HAVE_METADATA) return this.#onLoadedMetadata().then(() => resolve());
             else {
                 // 使用箭头表达式将handler的上下文由e.target切换为Player
-                video.addEventListener(MediaEvents.LOADED_METADATA, () => {
+                this.registerEventHandler(MediaEvents.LOADED_METADATA, () => {
                     this.#onLoadedMetadata().then(() => resolve());
-                }, true);
+                }, true, this);
             }
         });
     }
@@ -287,13 +265,22 @@ export class VideoInstance {
         this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
     }
     /**
-     * 
+     * Register event handler on video.
      * @param {string} eventType 
      * @param {(e:Event)=>void} handler 
      * @param {*} [context] 
      */
-    registerEventHandler(eventType, handler, context) {
-        this.#videoDelegate.registerEventHandler(eventType, handler, context);
+    registerVideoEventHandler(eventType, handler, context) {
+        this.registerEventHandler(eventType, handler, false, context);
+    }
+    /**
+     * Register event handler on video event delegate.
+     * @param {string} eventType 
+     * @param {(e:Event)=>void} handler 
+     * @param {*} [context] 
+     */
+    registerDelegateEventHandler(eventType, handler, context) {
+        this.#videoDelegate.registerEventHandler(eventType, handler, false, context);
     }
     /**
      * 
@@ -416,5 +403,6 @@ export class VideoInstance {
     clean() {
         this.#videoDelegate.unbindVideo(this.#video);
         this.#video = this.#playerMetadata = this.#videoDelegate = null;
+        this.unregisterEventHandlers();
     }
 }
