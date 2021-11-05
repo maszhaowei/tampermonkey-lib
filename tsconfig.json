@@ -7,18 +7,27 @@
 		"declaration": true,
 		// This compiler run should
 		// only output d.ts files
-		"emitDeclarationOnly": true,
+		"emitDeclarationOnly": false,
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
 		// Types should go into this directory.
 		// Removing this would place the .d.ts files
 		// next to the .js files
 		"outDir": "dist",
-		"target": "ES2020"
+		"target": "ES2020",
+		"module": "ES2020",
+		"strictNullChecks": true,
+		"strictBindCallApply": true,
+		"noImplicitAny": true,
+		"useUnknownInCatchVariables": true
 	},
 	"exclude": [
 		"build",
 		"node_modules",
 		"public",
-		"webpack.config.js",
-		"dist"
-	]
+		"webpack.config.js"
+	],
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Recommended"
 }
