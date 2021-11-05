@@ -95,7 +95,7 @@ class VideoEventDelegate extends EventObserverWrapper {
         VideoEventDelegate.#delegateMap.delete(delegateEle);
         delegateEle.remove();
         this.#delegate = null;
-        this.unregisterEventHandlers();
+        super.clean();
     }
     /**
      * 
@@ -172,7 +172,7 @@ export class VideoInstance extends EventObserverWrapper {
      * @param {VideoInstanceData} initData 
      */
     constructor(initData) {
-        super(initData.video, EnumHelper.toValueArray(_VideoCustomEventTypes));
+        super(initData.video, EnumHelper.toValueArray(MediaEvents).concat(EnumHelper.toValueArray(_VideoCustomEventTypes)));
         this.#video = initData.video;
         this.#playerMetadata = initData.playerMetadata;
         this.#title = initData.title;
@@ -403,6 +403,6 @@ export class VideoInstance extends EventObserverWrapper {
     clean() {
         this.#videoDelegate.unbindVideo(this.#video);
         this.#video = this.#playerMetadata = this.#videoDelegate = null;
-        this.unregisterEventHandlers();
+        super.clean();
     }
 }
