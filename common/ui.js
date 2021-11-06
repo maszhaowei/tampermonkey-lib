@@ -334,8 +334,9 @@ export const ui = {
      * @returns 
      */
     isInputEvent(e) {
-        if (!e.target) return false;
-        return e.target.tagName.toUpperCase() == "TEXTAREA" || (e.target.tagName.toUpperCase() == "INPUT" && e.target.type == "text")
+        let target = e.target;
+        if (!target) return false;
+        return target.tagName.toUpperCase() == "TEXTAREA" || (target.tagName.toUpperCase() == "INPUT" && target.type == "text")
             || e.isComposing || e.keyCode === 229;
     },
     /**
@@ -344,7 +345,9 @@ export const ui = {
      * @returns 
      */
     isEventFromThisDoc(e) {
-        return e.target && e.target.getRootNode() == document;
+        let target = e.target;
+        if (!target) return false;
+        return (target instanceof Element && target.ownerDocument == document) || (target instanceof Document && target == document);
     },
     /**
      * Find the first {@link selector} in the context of {@link contexts}.
