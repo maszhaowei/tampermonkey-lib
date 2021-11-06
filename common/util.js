@@ -91,22 +91,6 @@ export let util = {
     },
     /**
      * 
-     * @param {object} context 
-     * @param {function} fn 
-     * @param {Array} args 
-     * @param {number} delay
-     * @returns 
-     */
-    asyncDelayedFn: function (context, fn, args, delay = 0) {
-        return new Promise((resolve, reject) => setTimeout(() => {
-            if (args === undefined) resolve(fn.apply(context));
-            else if (Array.isArray(args)) resolve(fn.apply(context, args));
-            else reject(args);
-            resolve(true);
-        }, delay));
-    },
-    /**
-     * 
      * @param {string} s 
      * @returns 
      */
