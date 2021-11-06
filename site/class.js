@@ -56,11 +56,12 @@ export class Site {
     originWhitelist;
     additionalInfo;
     /**
+     * [origin] and [hrefRegEx] can't both be empty. [hrefRegex] has higher priority than origin in {@link test} function.
      * @hideconstructor
      * @param {object} options
      * @param {string} options.id 
      * @param {string} options.baseSiteId 
-     * @param {string} options.origin 
+     * @param {string} [options.origin] 
      * @param {RegExp} [options.hrefRegEx] 
      * @param {string[]} [options.siteCategories] 
      * @param {string[]} [options.subcategories] 
@@ -87,10 +88,11 @@ export class Site {
     /**
      * @typedef {object} SiteMessageData
      * @property {string} SiteMessageData.type
-     * @property {*} SiteMessageData.content
+     * @property {*} [SiteMessageData.content]
      * @property {string} SiteMessageData.src
-     * @property {string} SiteMessageData.siteTag
+     * @property {string} SiteMessageData.srcSiteTag
      * @property {boolean} SiteMessageData.allowSiteSelf
+     * @property {string} [SiteMessageData.targetSiteTag]
      */
     /**
      * Validate if {@link e} is from a valid script of another {@link Site}.
@@ -99,27 +101,32 @@ export class Site {
      */
     validateMessage(e) {
         let data = e.data;
-        if (!data || !data.type || !data.src || !data.siteTag) return false;
-        let origin = e.origin;
-        return ((origin === window.location.origin || !!this.originWhitelist?.includes(origin))
-            && MessageTypes.test(data.type) && (data.allowSiteSelf || data.siteTag !== this.#uuid));
+        if (!data || !data.type || !data.src || !data.srcSiteTag) return false;
+        return (e.origin === window.location.origin) && MessageTypes.test(data.type)
+            && (data.allowSiteSelf || data.srcSiteTag !== this.#uuid) && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
     }
     /**
      * 
      * @param {Window} targetWindow 
      * @param {string} targetOrigin 
-     * @param {string} messageType - Value of {@link MessageTypes}.
-     * @param {*} [messageContent] 
-     * @param {boolean} [allowSiteSelf] - Whether to allow to send to current {@link Site}. Default to false.
+     * @param {object} MessageDataOptions
+     * @param {string} MessageDataOptions.messageType - Value of {@link MessageTypes}.
+     * @param {*} [MessageDataOptions.messageContent] 
+     * @param {boolean} [MessageDataOptions.allowSiteSelf] - Whether to allow to send to current {@link Site}. Default to false.
+     * @param {string} [MessageDataOptions.targetSiteTag]
      * @returns 
      */
-    postMessage(targetWindow, targetOrigin, messageType, messageContent, allowSiteSelf = false) {
-        let message = { type: messageType, content: messageContent, src: window.location.href, siteTag: this.#uuid, allowSiteSelf: allowSiteSelf };
+    postMessage(targetWindow, targetOrigin, { messageType, messageContent, allowSiteSelf = false, targetSiteTag }) {
+        /** @type {SiteMessageData} */
+        let message = {
+            type: messageType, content: messageContent, src: window.location.href,
+            srcSiteTag: this.#uuid, allowSiteSelf: allowSiteSelf, targetSiteTag: targetSiteTag
+        };
         tutil.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
     }
     /**
-     * Check if current site matches this.
+     * Check if current site matches this window.
      * @returns {boolean} 
      */
     test() {
