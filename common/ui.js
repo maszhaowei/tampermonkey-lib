@@ -334,8 +334,8 @@ export const ui = {
      * @returns 
      */
     isInputEvent(e) {
+        if (!(e instanceof KeyboardEvent)) return false;
         let target = e.target;
-        if (!target) return false;
         return target.tagName.toUpperCase() == "TEXTAREA" || (target.tagName.toUpperCase() == "INPUT" && target.type == "text")
             || e.isComposing || e.keyCode === 229;
     },
