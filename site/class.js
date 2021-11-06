@@ -110,16 +110,16 @@ export class Site {
      * @param {Window} targetWindow 
      * @param {string} targetOrigin 
      * @param {object} MessageDataOptions
-     * @param {string} MessageDataOptions.messageType - Value of {@link MessageTypes}.
-     * @param {*} [MessageDataOptions.messageContent] 
+     * @param {string} MessageDataOptions.type - Value of {@link MessageTypes}.
+     * @param {*} [MessageDataOptions.content] 
      * @param {boolean} [MessageDataOptions.allowSiteSelf] - Whether to allow to send to current {@link Site}. Default to false.
      * @param {string} [MessageDataOptions.targetSiteTag]
      * @returns 
      */
-    postMessage(targetWindow, targetOrigin, { messageType, messageContent, allowSiteSelf = false, targetSiteTag }) {
+    postMessage(targetWindow, targetOrigin, { type, content, allowSiteSelf = false, targetSiteTag }) {
         /** @type {SiteMessageData} */
         let message = {
-            type: messageType, content: messageContent, src: window.location.href,
+            type: type, content: content, src: window.location.href,
             srcSiteTag: this.#uuid, allowSiteSelf: allowSiteSelf, targetSiteTag: targetSiteTag
         };
         tutil.printSendMessage(targetOrigin, message);
