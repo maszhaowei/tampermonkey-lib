@@ -430,20 +430,19 @@ export const ui = {
     },
     isFullscreenEnabled() {
         // return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
-        return util.anyMemberNotEmpty(['fullscreenEnabled',
+        return util.getFirstTruthyMember(['fullscreenEnabled',
             'webkitFullscreenEnabled',
             'mozFullScreenEnabled',
-            'msFullscreenEnabled'], document)
+            'msFullscreenEnabled'], document);
     },
     /**
      * Returns the Element that is currently being presented in full-screen mode in this document.
-     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot.
-     * @returns {Element} 
+     * @param {boolean} [tryShadowRoot] - Whether or not to get full-screen element from ShadowRoot. Default to false.
+     * @returns 
      */
-    getFullscreenElement(tryShadowRoot) {
-        tryShadowRoot = void 0 === tryShadowRoot ? !1 : tryShadowRoot;
+    getFullscreenElement(tryShadowRoot = false) {
         /** @type {Element} */
-        var fsEle = util.anyMemberNotEmpty(['fullscreenElement',
+        var fsEle = util.getFirstTruthyMember(['fullscreenElement',
             'webkitFullscreenElement',
             'mozFullScreenElement',
             'msFullscreenElement'], document);

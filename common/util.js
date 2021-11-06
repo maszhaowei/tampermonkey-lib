@@ -202,18 +202,18 @@ export let util = {
         return !!httpcode && httpcode >= 200 && httpcode < 300;
     },
     /**
-     * 返回{obj}的{members}中第一个trueable成员，否则返回最后一个成员
+     * Return the first member of an object that is truthy.
      * @param {string[]} members 
      * @param {object} obj
-     * @returns {object} 
+     * @returns {*} 
      */
-    anyMemberNotEmpty: function (members, obj) {
+    getFirstTruthyMember: function (members, obj) {
         let value;
-        members.some((member) => {
+        let someResult = members.some((member) => {
             value = obj[member];
             return !!value;
         })
-        return value;
+        return someResult ? value : undefined;
     },
     /**
      * Check if parameter is an instance of Object or an object literal.
