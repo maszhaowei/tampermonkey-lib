@@ -49,6 +49,7 @@ export class Site {
     id;
     baseSiteId;
     #uuid;
+    get uuid() { return this.#uuid }
     origin;
     hrefRegEx;
     siteCategories;
@@ -91,7 +92,6 @@ export class Site {
      * @property {*} [SiteMessageData.content]
      * @property {string} SiteMessageData.src
      * @property {string} SiteMessageData.srcSiteTag
-     * @property {boolean} SiteMessageData.allowSiteSelf
      * @property {string} [SiteMessageData.targetSiteTag]
      */
     /**
@@ -103,7 +103,7 @@ export class Site {
         let data = e.data;
         if (!data || !data.type || !data.src || !data.srcSiteTag) return false;
         return (e.origin === window.location.origin) && MessageTypes.test(data.type)
-            && (data.allowSiteSelf || data.srcSiteTag !== this.#uuid) && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
+            && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
     }
     /**
      * 
@@ -112,15 +112,14 @@ export class Site {
      * @param {object} MessageDataOptions
      * @param {string} MessageDataOptions.type - Value of {@link MessageTypes}.
      * @param {*} [MessageDataOptions.content] 
-     * @param {boolean} [MessageDataOptions.allowSiteSelf] - Whether to allow to send to current {@link Site}. Default to false.
      * @param {string} [MessageDataOptions.targetSiteTag]
      * @returns 
      */
-    postMessage(targetWindow, targetOrigin, { type, content, allowSiteSelf = false, targetSiteTag }) {
+    postMessage(targetWindow, targetOrigin, { type, content, targetSiteTag }) {
         /** @type {SiteMessageData} */
         let message = {
             type: type, content: content, src: window.location.href,
-            srcSiteTag: this.#uuid, allowSiteSelf: allowSiteSelf, targetSiteTag: targetSiteTag
+            srcSiteTag: this.#uuid, targetSiteTag: targetSiteTag
         };
         tutil.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
