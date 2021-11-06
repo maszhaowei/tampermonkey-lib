@@ -89,8 +89,8 @@ export class Site {
      * @property {string} SiteMessageData.type
      * @property {*} SiteMessageData.content
      * @property {string} SiteMessageData.src
-     * @property {string} SiteMessageData.tag
-     * @property {boolean} SiteMessageData.allowSelf
+     * @property {string} SiteMessageData.siteTag
+     * @property {boolean} SiteMessageData.allowSiteSelf
      */
     /**
      * Validate if {@link e} is from a valid script of another {@link Site}.
@@ -99,10 +99,10 @@ export class Site {
      */
     validateMessage(e) {
         let data = e.data;
-        if (!data || !data.type || !data.src || !data.tag) return false;
+        if (!data || !data.type || !data.src || !data.siteTag) return false;
         let origin = e.origin;
         return ((origin === window.location.origin || !!this.originWhitelist?.includes(origin))
-            && MessageTypes.test(data.type) && (data.allowSelf || data.tag !== this.#uuid));
+            && MessageTypes.test(data.type) && (data.allowSiteSelf || data.siteTag !== this.#uuid));
     }
     /**
      * 
@@ -110,11 +110,11 @@ export class Site {
      * @param {string} targetOrigin 
      * @param {string} messageType - Value of {@link MessageTypes}.
      * @param {*} [messageContent] 
-     * @param {boolean} [allowSelf] - Whether to allow to send to current {@link Site}. Default to false.
+     * @param {boolean} [allowSiteSelf] - Whether to allow to send to current {@link Site}. Default to false.
      * @returns 
      */
-    postMessage(targetWindow, targetOrigin, messageType, messageContent, allowSelf = false) {
-        let message = { type: messageType, content: messageContent, src: window.location.href, tag: this.#uuid, allowSelf: allowSelf };
+    postMessage(targetWindow, targetOrigin, messageType, messageContent, allowSiteSelf = false) {
+        let message = { type: messageType, content: messageContent, src: window.location.href, siteTag: this.#uuid, allowSiteSelf: allowSiteSelf };
         tutil.printSendMessage(targetOrigin, message);
         targetWindow.postMessage(message, targetOrigin);
     }
