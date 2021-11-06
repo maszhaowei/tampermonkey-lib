@@ -1,4 +1,5 @@
 import { util } from "./util";
+export * as UUID from 'uuid';
 
 export class EnumHelper {
     static #validateEnum(enumObject) {

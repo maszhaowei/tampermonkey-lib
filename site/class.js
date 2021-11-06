@@ -1,7 +1,7 @@
 import { util as cutil } from "../common/util";
+import { UUID } from "../common/utils";
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
-import { v4 as uuidv4 } from 'uuid';
 export class PlayerMetadata {
     /**
      * Selector for video container. Must be ancestor of video.
@@ -70,7 +70,7 @@ export class Site {
     constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
         this.baseSiteId = baseSiteId;
-        this.#uuid = uuidv4();
+        this.#uuid = UUID.v4();
         this.origin = origin;
         this.hrefRegEx = hrefRegEx;
         this.siteCategories = siteCategories;
