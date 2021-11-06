@@ -206,7 +206,7 @@ export class VideoInstance extends EventObserverWrapper {
         let video = this.#video;
         this.registerEventHandler(MediaEvents.VOLUME_CHANGE, () => {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
-            this.showTooltip(video.muted ? "静音" : "音量" + Math.round(video.volume * 100) + "%");
+            this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
         }, false, this);
         return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector)
             .then((videoDelegate) => {
