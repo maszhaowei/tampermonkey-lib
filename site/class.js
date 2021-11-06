@@ -102,7 +102,8 @@ export class Site {
     validateMessage(e) {
         let data = e.data;
         if (!data || !data.type || !data.src || !data.srcSiteTag) return false;
-        return (e.origin === window.location.origin) && MessageTypes.test(data.type)
+        let srcOrigin = e.origin;
+        return (srcOrigin === window.location.origin || !!this.originWhitelist?.includes(srcOrigin)) && MessageTypes.test(data.type)
             && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
     }
     /**
