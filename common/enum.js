@@ -108,3 +108,12 @@ export const MessageLevel = {
         return EnumHelper.test(MessageLevel, value);
     }
 }
+/** @enum {string} */
+export const DocumentReadyState = {
+    // The document is still loading.
+    LOADING: 'loading',
+    // The document has finished loading and the document has been parsed but sub-resources such as scripts, images, stylesheets and frames are still loading. 
+    INTERACTIVE: 'interactive',
+    // The document and all sub-resources have finished loading. The state indicates that the load event is about to fire.
+    COMPLETE: 'complete'
+}
