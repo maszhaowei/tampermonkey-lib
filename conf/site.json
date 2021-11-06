@@ -161,12 +161,6 @@
             "webFullscreenButtonSelector": ".webFullscreenButtonSelector"
         },
         {
-            "id": "MM9842",
-            "playButtonSelector": "",
-            "volumeButtonSelector": "",
-            "fullscreenButtonSelector": ""
-        },
-        {
             "id": "Streamtape",
             "defaultPlayerMetadata": "JABLE"
         },
