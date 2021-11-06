@@ -81,6 +81,7 @@ export const GlobalEvents = {
     CLICK: 'click',
     DBLCLICK: 'dblclick',
     KEYDOWN: 'keydown',
+    MESSAGE: 'message',
     MOUSEDOWN: 'mousedown',
     WHEEL: 'wheel',
     /**
