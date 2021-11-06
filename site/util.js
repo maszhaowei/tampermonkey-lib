@@ -31,14 +31,14 @@ function findCurrentSite(sites) {
 }
 export const util = {
     /**
-     * This method is Idempotent.
+     * This method is idempotent.
      * @throws 
      */
     getCurrentSite: function () {
         return findCurrentSite(Sites);
     },
     /**
-     * This method is Idempotent.
+     * This method is idempotent.
      * @returns {VideoSite}
      * @throws 
      */
@@ -46,7 +46,7 @@ export const util = {
         return findCurrentSite(VideoSites);
     },
     /**
-     * This method is Idempotent.
+     * This method is idempotent.
      * @returns {VideoPortalSite}
      * @throws 
      */
