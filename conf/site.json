@@ -187,12 +187,8 @@
         },
         {
             "id": "bunediy",
-            "containerSelector": "#dpplayer",
-            "controlsSelector": ".dplayer-controller",
-            "playButtonSelector": ".dplayer-play-icon",
-            "volumeButtonSelector": ".dplayer-volume",
-            "fullscreenButtonSelector": ".dplayer-full",
-            "webFullscreenButtonSelector": ".dplayer-full-in-icon"
+            "defaultPlayerMetadata": "DPLAYER",
+            "containerSelector": "#dpplayer"
         }
     ],
     "videoportalsites": [

@@ -235,9 +235,9 @@ export const DefaultPlayerMetadatas = {
         fullscreenButtonSelector: "button.vjs-fullscreen-control", topElementSelectors: [".vjs-related-carousel-holder"]
     }),
     DPLAYER: new PlayerMetadata({
-        containerSelector: "div#dplayer, div#mvideo",
+        containerSelector: "div#dplayer, div#mvideo", controlsSelector: ".dplayer-controller",
         playButtonSelector: "button.dplayer-play-icon", volumeButtonSelector: "button.dplayer-volume-icon",
-        fullscreenButtonSelector: "button.dplayer-full-icon"
+        fullscreenButtonSelector: "button.dplayer-full-icon", webFullscreenButtonSelector: ".dplayer-full-in-icon"
     }),
     JABLE: new PlayerMetadata({
         containerSelector: "div.plyr.plyr--video", controlsSelector: "div.plyr__controls",
