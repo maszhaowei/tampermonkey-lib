@@ -392,6 +392,9 @@ export class VideoInstance extends EventObserverWrapper {
         }
         return cui.exitFullscreen();
     }
+    /**
+     * Request for full-screen was denied because Element.mozRequestFullScreen() was not called from inside a short running user-generated event handler.
+     */
     toggleFullscreen() {
         if (this.#fullscreenButton) {
             this.#fullscreenButton.click();
