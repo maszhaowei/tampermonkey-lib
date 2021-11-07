@@ -150,24 +150,24 @@ export class VideoInstance extends EventObserverWrapper {
         let playerMetadata = this.#playerMetadata;
         return cui.querySelectorFirst(selector, playerMetadata.controlsSelector, playerMetadata.containerSelector);
     }
-    get playButton() {
+    get #playButton() {
         return this.#getControl(this.#playerMetadata.playButtonSelector);
     }
-    get volumeButton() {
+    get #volumeButton() {
         return this.#getControl(this.#playerMetadata.volumeButtonSelector);
     }
-    get fullscreenButton() {
+    get #fullscreenButton() {
         return this.#getControl(this.#playerMetadata.fullscreenButtonSelector);
     }
-    get webFullscreenButton() {
+    get #webFullscreenButton() {
         return this.#getControl(this.#playerMetadata.webFullscreenButtonSelector);
     }
     /* #endregion */
     /** @type {Element} */
-    get container() { return this.#video.closest(this.#playerMetadata.containerSelector) }
+    get #container() { return this.#video.closest(this.#playerMetadata.containerSelector) }
     /** @type {VideoEventDelegate} */
     #videoDelegate;
-    get tooltipWrap() { return this.container; }
+    get #tooltipWrap() { return this.#container; }
     /**
      * @param {VideoInstanceData} initData 
      */
@@ -290,7 +290,7 @@ export class VideoInstance extends EventObserverWrapper {
      * @param {number} [left] 
      */
     showTooltip(tooltip, position, top, left) {
-        cui.showTooltip(tooltip, new PositionOption({ target: this.tooltipWrap, position: position, top: top, left: left }));
+        cui.showTooltip(tooltip, new PositionOption({ target: this.#tooltipWrap, position: position, top: top, left: left }));
     }
     changeVolume(deltaVolume) {
         let video = this.#video;
@@ -312,11 +312,11 @@ export class VideoInstance extends EventObserverWrapper {
 
     /* #region Video Control */
     togglePlay() {
-        if (this.playButton) this.playButton.click();
+        if (this.#playButton) this.#playButton.click();
         else this.#video.paused ? this.#video.play() : this.#video.pause();
     }
     toggleMute() {
-        if (this.volumeButton) this.volumeButton.click();
+        if (this.#volumeButton) this.#volumeButton.click();
         else this.#video.muted = !this.#video.muted;
     }
     /**
@@ -339,18 +339,18 @@ export class VideoInstance extends EventObserverWrapper {
         CssCacheHelper.restore(document.documentElement, 'scroll');
     }
     requestWebFullscreen() {
-        if (!this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
+        if (!this.isVideoInWebFullScreen() && this.#webFullscreenButton) this.#webFullscreenButton.click();
         else {
             this.#saveAndSetCss();
-            this.container.classList.add(Const.containerWebFullscreenClassName);
+            this.#container.classList.add(Const.containerWebFullscreenClassName);
             document.body.classList.add(Const.bodyWebFullscreenClassName);
         }
         this.#triggerCustomEvent(_VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
     }
     exitWebFullscreen() {
-        if (this.isVideoInWebFullScreen() && this.webFullscreenButton) this.webFullscreenButton.click();
+        if (this.isVideoInWebFullScreen() && this.#webFullscreenButton) this.#webFullscreenButton.click();
         else {
-            this.container.classList.remove(Const.containerWebFullscreenClassName);
+            this.#container.classList.remove(Const.containerWebFullscreenClassName);
             document.body.classList.remove(Const.bodyWebFullscreenClassName);
             this.#restoreCss();
         }
@@ -368,8 +368,8 @@ export class VideoInstance extends EventObserverWrapper {
         }
         else {
             let prevInWebFull = this.isVideoInWebFullScreen();
-            if (this.webFullscreenButton) {
-                this.webFullscreenButton.click();
+            if (this.#webFullscreenButton) {
+                this.#webFullscreenButton.click();
                 prevInWebFull ? this.#triggerCustomEvent(_VideoCustomEventTypes.EXIT_WEBFULLSCREEN) : this.#triggerCustomEvent(_VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
             }
             else prevInWebFull ? this.exitWebFullscreen() : this.requestWebFullscreen();
@@ -378,23 +378,23 @@ export class VideoInstance extends EventObserverWrapper {
     }
     requestFullscreen(preferButton = true) {
         if (cui.isFullscreen()) return Promise.resolve();
-        if (preferButton && this.fullscreenButton) {
-            this.fullscreenButton.click();
+        if (preferButton && this.#fullscreenButton) {
+            this.#fullscreenButton.click();
             return Promise.resolve();
         }
-        return cui.requestFullscreen(this.container);
+        return cui.requestFullscreen(this.#container);
     }
     exitFullscreen(preferButton = true) {
         if (!cui.isFullscreen()) return Promise.resolve();
-        if (preferButton && this.fullscreenButton) {
-            this.fullscreenButton.click();
+        if (preferButton && this.#fullscreenButton) {
+            this.#fullscreenButton.click();
             return Promise.resolve();
         }
         return cui.exitFullscreen();
     }
     toggleFullscreen() {
-        if (this.fullscreenButton) {
-            this.fullscreenButton.click();
+        if (this.#fullscreenButton) {
+            this.#fullscreenButton.click();
             return Promise.resolve();
         }
         else return cui.isFullscreen() ? this.exitFullscreen(false) : this.requestFullscreen(false);
