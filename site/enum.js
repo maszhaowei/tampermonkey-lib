@@ -214,16 +214,16 @@ export const Sites = {
      * @returns {Site|undefined}
      */
     get(id) {
-        let candidate;
+        let baseSiteCandidate;
         for (let i in Sites) {
             let site = Sites[i];
             if (!(site instanceof Site)) continue;
             if (site.id === id) {
-                if (site.isBaseSite() && !candidate) candidate = site;
+                if (site.isBaseSite() && !baseSiteCandidate) baseSiteCandidate = site;
                 else return site;
             }
         }
-        return candidate;
+        return baseSiteCandidate;
     }
 };
 
