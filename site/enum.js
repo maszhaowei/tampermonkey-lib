@@ -219,7 +219,9 @@ export const Sites = {
             let site = Sites[i];
             if (!(site instanceof Site)) continue;
             if (site.id === id) {
-                if (site.isBaseSite() && !baseSiteCandidate) baseSiteCandidate = site;
+                if (site.isBaseSite()) {
+                    if (!baseSiteCandidate) baseSiteCandidate = site;
+                }
                 else return site;
             }
         }
