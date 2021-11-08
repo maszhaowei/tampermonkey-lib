@@ -30,11 +30,11 @@ function findCurrentSite(sites) {
     let baseSiteCandidate;
     for (let s in sites) {
         const site = sites[s];
-        if (!(site instanceof Site)) continue;
+        if (!(site instanceof Site) || !site.test()) continue;
         if (site.isBaseSite()) {
             if (!baseSiteCandidate) baseSiteCandidate = site;
         }
-        else if (site.test()) {
+        else {
             bindMessageHandler(site);
             return site;
         }
