@@ -11,7 +11,9 @@
         "jxbdzyw": "jxbdzyw",
         "FANDOM": "Fandom",
         "FANDOM_WIKI": "Fandom Wiki",
-        "bunediy": "bunediy"
+        "bunediy": "bunediy",
+        "JavTrailers": "JavTrailers",
+        "JavTrailers_SEARCH": "JavTrailers_SEARCH"
     },
     "sitecategories": {},
     "videocategories": {
@@ -144,6 +146,19 @@
             "originWhitelist": [
                 "https://www.meijubs.com"
             ]
+        },
+        {
+            "id": "JavTrailers",
+            "baseSiteId": "JavTrailers",
+            "origin": "https://javtrailers.com",
+            "siteCategories": [
+                "Database"
+            ]
+        },
+        {
+            "id":"JavTrailers_SEARCH",
+            "baseSiteId": "JavTrailers",
+            "hrefRegEx": "^https://javtrailers\\.com/search/[^/]+$"
         }
     ],
     "videosites": [
