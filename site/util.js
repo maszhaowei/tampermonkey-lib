@@ -6,32 +6,48 @@ import { util as tutil } from '../tampermonkey/util';
 let messageHandlerMap = new WeakMap();
 /**
  * 
+ * @param {Site} site 
+ */
+function bindMessageHandler(site) {
+    /** @type {(e:MessageEvent)=>void} */
+    let handler;
+    if (messageHandlerMap.has(site)) handler = messageHandlerMap.get(site);
+    else {
+        handler = (e) => {
+            if (site.validateMessage(e)) tutil.printReceiveMessage(e);
+        };
+        messageHandlerMap.set(site, handler);
+    }
+    window.addEventListener('message', handler);
+}
+/**
+ * 
  * @param {Site[]} sites 
  * @returns 
  * @throws
  */
 function findCurrentSite(sites) {
+    let baseSiteCandidate;
     for (let s in sites) {
         const site = sites[s];
-        if (site instanceof Site && site.test()) {
-            /** @type {(e:MessageEvent)=>void} */
-            let handler;
-            if (messageHandlerMap.has(site)) handler = messageHandlerMap.get(site);
-            else {
-                handler = (e) => {
-                    if (site.validateMessage(e)) tutil.printReceiveMessage(e);
-                };
-                messageHandlerMap.set(site, handler);
-            }
-            window.addEventListener('message', handler);
+        if (!(site instanceof Site)) continue;
+        if (site.isBaseSite()) {
+            if (!baseSiteCandidate) baseSiteCandidate = site;
+        }
+        else if (site.test()) {
+            bindMessageHandler(site);
             return site;
         }
+    }
+    if (baseSiteCandidate) {
+        bindMessageHandler(baseSiteCandidate);
+        return baseSiteCandidate;
     }
     throw "No match for current site";
 }
 export const util = {
     /**
-     * This method is idempotent.
+     * Return the first non-base site that matches this window, otherwise return the first matching base site. This method is idempotent.
      * @throws 
      */
     getCurrentSite: function () {
