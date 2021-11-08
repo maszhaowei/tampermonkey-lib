@@ -216,7 +216,6 @@ export const Sites = {
     get(id) {
         let candidate;
         for (let i in Sites) {
-            /** @type {Site} */
             let site = Sites[i];
             if (!(site instanceof Site)) continue;
             if (site.id === id) {
