@@ -1,6 +1,7 @@
 import { scriptName } from './const';
 import { EMOJIS } from './enum';
 import { util as cutil } from '../common/util';
+import { ConsoleOutputLevel } from '../common/enum';
 /**
  * @typedef {object} RandomEmoji
  * @property {()=>string} RandomEmoji.angry
@@ -16,7 +17,14 @@ export const util = {
      * @param  {...any} objs 
      */
     debug: function (...objs) {
-        cutil.printGroupDebug(scriptName, ...objs);
+        cutil.consoleOutput(scriptName, ConsoleOutputLevel.DEBUG, ...objs);
+    },
+    /**
+     * Output message to web console in gourp {@link scriptName}.
+     * @param  {...any} objs 
+     */
+    error: function (...objs) {
+        cutil.consoleOutput(scriptName, ConsoleOutputLevel.ERROR, ...objs);
     },
     /**
      * Dependency: GM_xmlhttpRequest.

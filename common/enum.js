@@ -119,3 +119,11 @@ export const DocumentReadyState = {
     // The document and all sub-resources have finished loading. The state indicates that the load event is about to fire.
     COMPLETE: 'complete'
 }
+/** @enum {string} */
+export const ConsoleOutputLevel = {
+    DEBUG: 'debug',
+    INFO: 'info',
+    LOG: 'log',
+    WARN: 'warn',
+    ERROR: 'error'
+}

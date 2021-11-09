@@ -1,20 +1,41 @@
 import { DEFAULT_LOG_GROUP } from "./const";
+import { ConsoleOutputLevel } from "./enum";
 import { IEquatable } from "./interface";
 const _common_used_numerals = { '零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10, '百': 100, '千': 1000, '万': 10000, '亿': 100000000 };
 export let util = {
     /**
      * Output message to web console in gourp {@link grouName}.
-     * @param {string} grouName 
-     * @param  {...any} objs 
+     * @param {string} grouName - Default to {@link DEFAULT_LOG_GROUP}.
+     * @param {string} outputLevel - Default to {@link ConsoleOutputLevel.DEBUG}.
+     * @param  {...any} objs - Multiple objects to output or msg [, subst1, ..., substN] using string substitutions. @see https://developer.mozilla.org/en-US/docs/Web/API/console#outputting_text_to_the_console
      */
-    printGroupDebug: function (grouName = DEFAULT_LOG_GROUP, ...objs) {
+    consoleOutput(grouName = DEFAULT_LOG_GROUP, outputLevel = ConsoleOutputLevel.DEBUG, ...objs) {
         console.group(`[${grouName}]`);
         let arr = [];
         for (let i = 0; i < objs.length; i++) {
             /** Prevent browsers to output live value of objs. {@link https://developer.mozilla.org/en-US/docs/Web/API/console/log#logging_objects} */
             arr.push(util.isObject(objs[i]) ? JSON.parse(JSON.stringify(objs[i])) : objs[i]);
         }
-        console.debug(...arr);
+        switch (outputLevel) {
+            case ConsoleOutputLevel.DEBUG:
+                console.debug(...arr);
+                break;
+            case ConsoleOutputLevel.INFO:
+                console.info(...arr);
+                break;
+            case ConsoleOutputLevel.LOG:
+                console.log(...arr);
+                break;
+            case ConsoleOutputLevel.WARN:
+                console.warn(...arr);
+                break;
+            case ConsoleOutputLevel.ERROR:
+                console.error(...arr);
+                break;
+            default:
+                console.debug(...arr);
+                break;
+        }
         console.groupEnd();
     },
     /**
