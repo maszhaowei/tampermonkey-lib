@@ -350,29 +350,6 @@ export const ui = {
         return (target instanceof Element && target.ownerDocument == document) || (target instanceof Document && target == document);
     },
     /**
-     * Find the first {@link selector} in the context of {@link contexts}.
-     * @param {string} selector 
-     * @param {...string|Element|Document} contexts 
-     * @returns {HTMLElement}
-     */
-    querySelectorFirst(selector, ...contexts) {
-        if (!selector) {
-            util.printGroupDebug(undefined, "selector is empty");
-            return;
-        }
-        for (let i = 0; i < contexts.length; i++) {
-            let context = contexts[i];
-            if (!context) continue;
-            if (context instanceof Element || context instanceof Document) return context.querySelector(selector);
-            else {
-                for (let contextElement of document.querySelectorAll(context)) {
-                    let findElement = contextElement.querySelector(selector);
-                    if (findElement) return findElement;
-                }
-            }
-        }
-    },
-    /**
      * 
      * @param {string} tooltip
      * @param {import('./class').PositionOption} options
