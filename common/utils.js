@@ -1,4 +1,5 @@
 import { util } from "./util";
+import { util as cutil } from "../common/util";
 export * as UUID from 'uuid';
 
 export class EnumHelper {
@@ -13,7 +14,7 @@ export class EnumHelper {
     static test(enumObject, value) {
         this.#validateEnum(enumObject);
         for (let i in enumObject) {
-            if (enumObject[i] === value) return true;
+            if (cutil.isEqual(enumObject[i], value)) return true;
         }
         return false;
     }
