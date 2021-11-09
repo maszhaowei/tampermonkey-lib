@@ -91,7 +91,7 @@ export const ui = {
      * Hide {@link hideTarget} in {@link context}. Dependency: context.prototype.arrive.
      * @param {string|HTMLElement} hideTarget 
      * @param {boolean} [force] - Use css !important. Default to false.
-     * @param {Element|Document} [context] - Context to watch for {@link hideTarget} if it's selector. Default to document.
+     * @param {Element|Document} [context] - Context to watch for creation of {@link hideTarget} if it's a selector. Default to document.
      */
     hide: function (hideTarget, force = false, context = document) {
         if (cutil.isString(hideTarget)) {
