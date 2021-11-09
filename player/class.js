@@ -147,6 +147,7 @@ export class VideoInstance extends EventObserverWrapper {
      * @returns 
      */
     #getControl(selector) {
+        if (!selector) return null;
         let playerMetadata = this.#playerMetadata;
         if (playerMetadata.controlsSelector) return document.querySelector(playerMetadata.controlsSelector + ' ' + selector);
         else return document.querySelector(playerMetadata.containerSelector + ' ' + selector);
