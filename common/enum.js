@@ -107,7 +107,7 @@ export const MessageLevel = {
      * @returns 
      */
     test: function (value) {
-        return EnumHelper.test(MessageLevel, value);
+        return EnumHelper.test(this, value);
     }
 }
 /** @enum {string} */
