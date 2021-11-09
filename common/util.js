@@ -1,6 +1,6 @@
+import { _isEqual } from "./class";
 import { DEFAULT_LOG_GROUP } from "./const";
 import { ConsoleOutputLevel } from "./enum";
-import { IEquatable } from "./interface";
 const _common_used_numerals = { '零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10, '百': 100, '千': 1000, '万': 10000, '亿': 100000000 };
 export let util = {
     /**
@@ -305,16 +305,7 @@ export let util = {
      * @param {*} obj2 
      * @returns 
      */
-    isEqual: function (obj1, obj2) {
-        if (obj1 instanceof Array) {
-            if (!(obj2 instanceof Array) || obj1.length != obj2.length) return false;
-            for (let i = 0; i < obj1.length; i++) {
-                if (!util.isEqual(obj1[i], obj2[i])) return false;
-            }
-            return true;
-        }
-        return Object.is(obj1, obj2) ? true : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
-    },
+    isEqual: _isEqual,
     /**
      * Convert datetime to specified format.
      * @param {Date|string|number} date 

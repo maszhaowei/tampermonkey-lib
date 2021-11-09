@@ -1,5 +1,4 @@
 import { IEquatable } from "./interface";
-import { util } from "./util";
 
 /**
  * @enum {string}
@@ -18,6 +17,16 @@ export const _TooltipPosition = {
     RIGHT_CENTER: 'right-center',
     RIGHT_BOTTOM: 'right-bottom',
     CENTER_CENTER: 'center-center',
+}
+export function _isEqual(obj1, obj2) {
+    if (obj1 instanceof Array) {
+        if (!(obj2 instanceof Array) || obj1.length != obj2.length) return false;
+        for (let i = 0; i < obj1.length; i++) {
+            if (!_isEqual(obj1[i], obj2[i])) return false;
+        }
+        return true;
+    }
+    return Object.is(obj1, obj2) ? true : obj1 instanceof IEquatable ? obj1.equals(obj2) : obj1 === obj2;
 }
 /**
  * @enum {KeyboardKeyCode}
@@ -86,7 +95,7 @@ export class LooseMap extends Map {
         let ir;
         while (!(ir = i.next()).done) {
             let [k, v] = ir.value;
-            if (util.isEqual(k, key)) return v;
+            if (_isEqual(k, key)) return v;
         }
     }
     /**
@@ -99,7 +108,7 @@ export class LooseMap extends Map {
         let i = this.keys();
         let ir;
         while (!(ir = i.next()).done) {
-            if (util.isEqual(ir.value, key)) return super.set(ir.value, value);
+            if (_isEqual(ir.value, key)) return super.set(ir.value, value);
         }
         super.set(key, value);
     }
@@ -112,7 +121,7 @@ export class LooseMap extends Map {
         let i = this.keys();
         let ir;
         while (!(ir = i.next()).done) {
-            if (util.isEqual(ir.value, key)) return true;
+            if (_isEqual(ir.value, key)) return true;
         }
         return false;
     }
@@ -125,7 +134,7 @@ export class LooseMap extends Map {
         let i = this.keys();
         let ir;
         while (!(ir = i.next()).done) {
-            if (util.isEqual(ir.value, key)) return super.delete(ir.value);
+            if (_isEqual(ir.value, key)) return super.delete(ir.value);
         }
     }
 }
