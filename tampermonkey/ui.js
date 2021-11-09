@@ -88,7 +88,7 @@ export const ui = {
         return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(HTMLElement.prototype.click, context)), interval, waitTimeout);
     },
     /**
-     * Hide {@link hideTarget} in {@link context}. Dependency: context.prototype.arrive.
+     * Hide {@link hideTarget} in {@link context}. Dependency: context.arrive.
      * @param {string|HTMLElement} hideTarget 
      * @param {boolean} [force] - Use css !important. Default to false.
      * @param {Element|Document} [context] - Context to watch for creation of {@link hideTarget} if it's a selector. Default to document.
