@@ -100,15 +100,7 @@ export const MessageLevel = {
     SUCCESS: 'success',
     INFO: 'info',
     CAUTION: 'caution',
-    ERROR: 'error',
-    /**
-     * 
-     * @param {string} value 
-     * @returns 
-     */
-    test: function (value) {
-        return EnumHelper.test(this, value);
-    }
+    ERROR: 'error'
 }
 /** @enum {string} */
 export const DocumentReadyState = {

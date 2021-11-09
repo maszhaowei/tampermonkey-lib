@@ -2,6 +2,7 @@ import '../css/tooltip.css';
 import '../css/linkmsg.css';
 import { TooltipPosition, MessageLevel } from './enum';
 import { util } from './util';
+import { EnumHelper } from './utils';
 /**
  * 
  * @param {Element} element 
@@ -370,7 +371,7 @@ export const ui = {
      * @param {number} - [timeout] - Timeout(ms) before message begins to fade out. Default to 4000.
      */
     showMessage: function (message, options, level = MessageLevel.INFO, timeout = 4000) {
-        if (!MessageLevel.test(level)) level = MessageLevel.INFO;
+        if (!EnumHelper.test(MessageLevel, level)) level = MessageLevel.INFO;
         let target = options.target;
         if (!target.className && !target.attributes) throw new Error('[@blink-common/message] 传入 element 不是有效节点.');
         let targetDoc = target.ownerDocument;
