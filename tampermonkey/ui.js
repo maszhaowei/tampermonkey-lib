@@ -41,23 +41,23 @@ function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
             document.arrive(context, { existing: true, onceOnly: true }, function () {
                 applySig.fn.apply(this, applySig.args);
 
-                setTimeout(() => {
-                    if (restSigs.length > 0) {
+                if (restSigs.length > 0) {
+                    setTimeout(() => {
                         asyncRecursiveFn(restSigs.shift(), restSigs, interval, waitTimeout).then((result) => resolve([this].concat(result)), (result) => reject(result));
-                    }
-                    else resolve([this]);
-                }, interval);
+                    }, interval);
+                }
+                else resolve([this]);
             });
         }
         else {
             applySig.fn.apply(context, applySig.args);
 
-            setTimeout(() => {
-                if (restSigs.length > 0) {
+            if (restSigs.length > 0) {
+                setTimeout(() => {
                     asyncRecursiveFn(restSigs.shift(), restSigs, interval, waitTimeout).then((result) => resolve([context].concat(result)), (result) => reject(result));
-                }
-                else resolve([context]);
-            }, interval);
+                }, interval);
+            }
+            else resolve([context]);
         }
         setTimeout(() => {
             document.unbindArrive(context);
