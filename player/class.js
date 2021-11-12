@@ -341,7 +341,8 @@ export class VideoInstance extends EventObserverWrapper {
         CssCacheHelper.restore(document.documentElement, 'scroll');
     }
     requestWebFullscreen() {
-        if (!this.isVideoInWebFullScreen() && this.#webFullscreenButton) this.#webFullscreenButton.click();
+        if (this.isVideoInWebFullScreen()) return;
+        if (this.#webFullscreenButton) this.#webFullscreenButton.click();
         else {
             this.#saveAndSetCss();
             this.#container.classList.add(Const.containerWebFullscreenClassName);
@@ -350,7 +351,8 @@ export class VideoInstance extends EventObserverWrapper {
         this.#triggerCustomEvent(_VideoCustomEventTypes.REQUEST_WEBFULLSCREEN);
     }
     exitWebFullscreen() {
-        if (this.isVideoInWebFullScreen() && this.#webFullscreenButton) this.#webFullscreenButton.click();
+        if (!this.isVideoInWebFullScreen()) return;
+        if (this.#webFullscreenButton) this.#webFullscreenButton.click();
         else {
             this.#container.classList.remove(Const.containerWebFullscreenClassName);
             document.body.classList.remove(Const.bodyWebFullscreenClassName);
