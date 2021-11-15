@@ -244,6 +244,10 @@ export const DefaultPlayerMetadatas = {
         containerSelector: "div.plyr.plyr--video", controlsSelector: "div.plyr__controls",
         volumeButtonSelector: "button[data-plyr=mute]", fullscreenButtonSelector: "button[data-plyr=fullscreen]"
     }),
+    PRISM: new PlayerMetadata({
+        containerSelector: "#playerCnt", controlsSelector: ".prism-controlbar",
+        playButtonSelector: ".prism-play-btn", fullscreenButtonSelector: ".prism-fullscreen-btn"
+    }),
     /**
      * Get enum by key.
      * @param {string} key 

@@ -13,7 +13,8 @@
         "FANDOM_WIKI": "Fandom Wiki",
         "bunediy": "bunediy",
         "JavTrailers": "JavTrailers",
-        "JavTrailers_SEARCH": "JavTrailers_SEARCH"
+        "JavTrailers_SEARCH": "JavTrailers_SEARCH",
+        "huishij": "huishij"
     },
     "sitecategories": {},
     "videocategories": {
@@ -108,13 +109,25 @@
             "id": "MEIJUBS",
             "originWhitelist": [
                 "https://jx.jxbdzyw.com",
-                "https://sod.bunediy.com"
+                "https://sod.bunediy.com",
+                "https://jx.huishij.com"
             ]
         },
         {
             "id": "jxbdzyw",
             "baseSiteId": "jxbdzyw",
             "origin": "https://jx.jxbdzyw.com",
+            "siteCategories": [
+                "Video Hosting"
+            ],
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ]
+        },
+        {
+            "id": "huishij",
+            "baseSiteId": "huishij",
+            "origin": "https://jx.huishij.com",
             "siteCategories": [
                 "Video Hosting"
             ],
@@ -156,7 +169,7 @@
             ]
         },
         {
-            "id":"JavTrailers_SEARCH",
+            "id": "JavTrailers_SEARCH",
             "baseSiteId": "JavTrailers",
             "hrefRegEx": "^https://javtrailers\\.com/search/[^/]+$"
         }
@@ -195,15 +208,16 @@
         },
         {
             "id": "jxbdzyw",
-            "containerSelector": "#playerCnt",
-            "controlsSelector": ".prism-controlbar",
-            "playButtonSelector": ".prism-play-btn",
-            "fullscreenButtonSelector": ".prism-fullscreen-btn"
+            "defaultPlayerMetadata": "PRISM"
         },
         {
             "id": "bunediy",
             "defaultPlayerMetadata": "DPLAYER",
             "containerSelector": "#dpplayer"
+        },
+        {
+            "id": "huishij",
+            "defaultPlayerMetadata": "PRISM"
         }
     ],
     "videoportalsites": [
