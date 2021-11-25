@@ -71,9 +71,9 @@ export const util = {
     },
     /**
      * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.
-     * @param {'dev'|'master'} - Branch. Default to master.
+     * @param {'dev'|'master'} branch - Branch. Default to master.
      */
-    updateEnum: async function (branch = 'master') {
+    updateRemoteSiteConfig: async function (branch = 'master') {
         if (branch != 'dev' && branch != 'master') return Promise.reject('Invalid branch');
         const res = await tutil.gmGet(`https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/${branch}/conf/site.json`, undefined, undefined, true);
         /** @type {Error[]} */
