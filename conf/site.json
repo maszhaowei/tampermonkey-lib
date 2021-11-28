@@ -14,7 +14,8 @@
         "bunediy_小度云": "bunediy",
         "JavTrailers": "JavTrailers",
         "JavTrailers_SEARCH": "JavTrailers_SEARCH",
-        "huishij_天空云": "huishij"
+        "huishij_天空云": "huishij",
+        "aoxtv_八戒云": "aoxtv"
     },
     "sitecategories": {},
     "videocategories": {
@@ -110,7 +111,8 @@
             "originWhitelist": [
                 "https://jx.jxbdzyw.com",
                 "https://sod.bunediy.com",
-                "https://jx.huishij.com"
+                "https://jx.huishij.com",
+                "https://zy.aoxtv.com"
             ]
         },
         {
@@ -153,6 +155,16 @@
         {
             "id": "bunediy",
             "origin": "https://sod.bunediy.com",
+            "siteCategories": [
+                "Video Hosting"
+            ],
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ]
+        },
+        {
+            "id": "aoxtv",
+            "origin": "https://zy.aoxtv.com",
             "siteCategories": [
                 "Video Hosting"
             ],
@@ -212,12 +224,15 @@
         },
         {
             "id": "bunediy",
-            "defaultPlayerMetadata": "DPLAYER",
-            "containerSelector": "#dpplayer"
+            "defaultPlayerMetadata": "DPLAYER"
         },
         {
             "id": "huishij",
             "defaultPlayerMetadata": "PRISM"
+        },
+        {
+            "id": "aoxtv",
+            "defaultPlayerMetadata": "DPLAYER"
         }
     ],
     "videoportalsites": [
