@@ -53,7 +53,7 @@
         {
             "id": "18comic",
             "baseSiteId": "18comic",
-            "origin": "https://18comic.org",
+            "hrefRegEx": "^https://18comic\\.(org|vip)/.*",
             "additionalInfo": {
                 "paginationInfo": {
                     "prevBtnSelector": "ul.pagination li:nth-child(1) a",
