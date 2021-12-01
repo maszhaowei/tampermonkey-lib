@@ -160,7 +160,7 @@ export class EventObserverWrapper {
     #supportedEventTypes;
     /** @type {LooseMap<Tuple,ApplyMethodSignature[]>} */
     #eventsObserverMap = new LooseMap();
-    /** @type {Map<boolean,(e:Event)=>void>} */
+    /** @type {Map<boolean,(e:Event)=>void>} - Store aggregated handlers for unregistration. */
     #aggregatedHandlerMap = new Map();
     #captureOptions = [true, false];
     /**
@@ -198,7 +198,7 @@ export class EventObserverWrapper {
         };
     }
     /**
-     * stopImmediatePropagation in handler doesn't work on other handlers of same <eventType, useCapture>.
+     * Handlers will be called in the order of registration. stopImmediatePropagation in handler doesn't work on other handlers of same <eventType, useCapture> that are registered by this function.
      * @param {string} eventType 
      * @param {(e:Event)=>void} handler 
      * @param {boolean} [useCapture] - Default to false.
