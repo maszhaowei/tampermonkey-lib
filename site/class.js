@@ -53,7 +53,7 @@ export class Site {
     origin;
     hrefRegEx;
     siteCategories;
-    subcategories;
+    contentCategories;
     originWhitelist;
     additionalInfo;
     /**
@@ -65,18 +65,18 @@ export class Site {
      * @param {string} [options.origin] 
      * @param {RegExp} [options.hrefRegEx] 
      * @param {string[]} [options.siteCategories] 
-     * @param {string[]} [options.subcategories] 
+     * @param {string[]} [options.contentCategories] 
      * @param {string[]} [options.originWhitelist] 
      * @param {*} [options.additionalInfo]
      */
-    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], subcategories = [], originWhitelist = [], additionalInfo = {} }) {
+    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], contentCategories: contentCategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
         this.baseSiteId = baseSiteId;
         this.#uuid = UUID.v4();
         this.origin = origin;
         this.hrefRegEx = hrefRegEx;
         this.siteCategories = siteCategories;
-        this.subcategories = subcategories;
+        this.contentCategories = contentCategories;
         this.originWhitelist = originWhitelist;
         this.additionalInfo = additionalInfo;
     }
@@ -152,7 +152,7 @@ export class VideoSite extends Site {
         super({
             id: site.id, baseSiteId: site.baseSiteId,
             origin: site.origin, hrefRegEx: site.hrefRegEx,
-            siteCategories: site.siteCategories, subcategories: site.subcategories,
+            siteCategories: site.siteCategories, contentCategories: site.contentCategories,
             originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
         });
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
@@ -174,7 +174,7 @@ export class VideoPortalSite extends Site {
         super({
             id: site.id, baseSiteId: site.baseSiteId,
             origin: site.origin, hrefRegEx: site.hrefRegEx,
-            siteCategories: site.siteCategories, subcategories: site.subcategories,
+            siteCategories: site.siteCategories, contentCategories: site.contentCategories,
             originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
         });
         this.additionalInfo = additionalInfo;

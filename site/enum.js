@@ -71,19 +71,19 @@ export const Sites = {
     "7MM": new Site({
         id: SiteIDs["7MM"], baseSiteId: SiteIDs["7MM"],
         origin: "https://7mmtv.tv", hrefRegEx: /^https:\/\/7mmtv\.tv\/.*/,
-        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.JAV],
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_STREAMING], contentCategories: [VideoCategories.JAV],
         originWhitelist: ["https://mm9842.com", "https://avgle.com"]
     }),
     AVGLE_VIDEO: new Site({
         id: SiteIDs.AVGLE_VIDEO, baseSiteId: SiteIDs.AVGLE,
         origin: "https://avgle.com", hrefRegEx: /^https:\/\/avgle\.com\/video\/\w+/,
-        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], subcategories: [VideoCategories.JAV],
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], contentCategories: [VideoCategories.JAV],
         originWhitelist: ["https://7mmtv.tv"]
     }),
     AVGLE_EMBED: new Site({
         id: SiteIDs.AVGLE_EMBED, baseSiteId: SiteIDs.AVGLE,
         origin: "https://avgle.com", hrefRegEx: /^https:\/\/avgle\.com\/embed\/\w+$/,
-        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], subcategories: [VideoCategories.JAV],
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], contentCategories: [VideoCategories.JAV],
         originWhitelist: ["https://7mmtv.tv"]
     }),
     BILIBILI: new Site({
@@ -121,7 +121,7 @@ export const Sites = {
     JABLE: new Site({
         id: SiteIDs.JABLE, baseSiteId: SiteIDs.JABLE,
         origin: "https://jable.tv", hrefRegEx: /^https:\/\/jable.tv/,
-        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], subcategories: [VideoCategories.JAV]
+        siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_SHARING], contentCategories: [VideoCategories.JAV]
     }),
     JAVLIBRARY: new Site({
         id: SiteIDs.JAVLIBRARY, baseSiteId: SiteIDs.JAVLIBRARY,
@@ -137,19 +137,19 @@ export const Sites = {
     MEIJUBS: new Site({
         id: SiteIDs.MEIJUBS, baseSiteId: SiteIDs.MEIJUBS,
         origin: "https://www.meijubs.com",
-        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
+        siteCategories: [SiteCategories.VIDEO_STREAMING], contentCategories: [VideoCategories.TV_SERIES],
         originWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]
     }),
     MEIJUTTB: new Site({
         id: SiteIDs.MEIJUTTB, baseSiteId: SiteIDs.MEIJUTTB,
         origin: "https://www.meijuttb.com",
-        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
+        siteCategories: [SiteCategories.VIDEO_STREAMING], contentCategories: [VideoCategories.TV_SERIES],
         originWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn"]
     }),
     MINGTIAN6: new Site({
         id: SiteIDs.MINGTIAN6, baseSiteId: SiteIDs.MINGTIAN6,
         origin: "https://www.mingtian6.com",
-        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES, VideoCategories.MOVIE],
+        siteCategories: [SiteCategories.VIDEO_STREAMING], contentCategories: [VideoCategories.TV_SERIES, VideoCategories.MOVIE],
         originWhitelist: ["https://www.qingbeiban.com"]
     }),
     MM9842: new Site({
@@ -194,7 +194,7 @@ export const Sites = {
     WUKONGMEIJU: new Site({
         id: SiteIDs.WUKONGMEIJU, baseSiteId: SiteIDs.WUKONGMEIJU,
         origin: "https://m.wukongmeiju.com",
-        siteCategories: [SiteCategories.VIDEO_STREAMING], subcategories: [VideoCategories.TV_SERIES],
+        siteCategories: [SiteCategories.VIDEO_STREAMING], contentCategories: [VideoCategories.TV_SERIES],
         originWhitelist: ["https://code.qxwk.net"]
     }),
     YOUTUBE: new Site({

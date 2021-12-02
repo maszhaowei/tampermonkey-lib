@@ -33,7 +33,7 @@
             "siteCategories": [
                 "Dictionary"
             ],
-            "subcategories": [],
+            "contentCategories": [],
             "originWhitelist": [],
             "additionalInfo": {
                 "inputFieldSelector": "#query"

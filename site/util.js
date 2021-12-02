@@ -111,7 +111,7 @@ export const util = {
                 let newSite = new Site({
                     id: site.id, baseSiteId: site.baseSiteId,
                     origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
-                    siteCategories: site.siteCategories, subcategories: site.subcategories,
+                    siteCategories: site.siteCategories, contentCategories: site.contentCategories,
                     originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                 });
                 let oriSite = Sites.get(siteid);
