@@ -1,4 +1,4 @@
-import { Site, VideoSite, VideoPortalSite, PlayerMetadata, _VideoCategories } from "./class";
+import { Site, VideoSite, VideoPortalSite, PlayerMetadata, _VideoCategories, SearchSite } from "./class";
 /**
  * @enum {string}
  */
@@ -23,6 +23,7 @@ export const VideoCategories = _VideoCategories;
 export const SiteIDs = {
     '7MM': '7MM',
     '7MM_VIDEO': '7MM_VIDEO',
+    '7MM_SEARCH': '7MM_SEARCH',
     AVGLE: 'AVGLE',
     AVGLE_VIDEO: 'AVGLE_VIDEO',
     AVGLE_EMBED: 'AVGLE_EMBED',
@@ -35,8 +36,11 @@ export const SiteIDs = {
     DIOUS: 'DIOUS',
     DIOUS_VIDEO: 'DIOUS_VIDEO',
     JABLE: 'JABLE',
+    JABLE_SEARCH: 'JABLE_SEARCH',
     JABLE_VIDEO: 'JABLE_VIDEO',
     JAVLIBRARY: 'JAVLIBRARY',
+    JAVTRAILERS: "JavTrailers",
+    JAVTRAILERS_SEARCH: "JavTrailers_SEARCH",
     JX444662: 'JX444662',
     JX444662_VIDEO: 'JX444662_VIDEO',
     MEIJUBS: 'MEIJUBS',
@@ -112,6 +116,11 @@ export const Sites = {
         id: SiteIDs.JAVLIBRARY, baseSiteId: SiteIDs.JAVLIBRARY,
         origin: "https://www.javlibrary.com", hrefRegEx: /^https:\/\/www\.javlibrary\.com\/.*/,
         siteCategories: [SiteCategories.JAV, SiteCategories.DATABASE]
+    }),
+    JAVTRAILERS: new Site({
+        id: SiteIDs.JAVTRAILERS, baseSiteId: SiteIDs.JAVTRAILERS,
+        origin: "https://javtrailers.com",
+        siteCategories: ["Database"]
     }),
     JX444662: new Site({
         id: SiteIDs.JX444662, baseSiteId: SiteIDs.JX444662,
@@ -328,3 +337,10 @@ export const VideoPortalSites = {
         }
     }
 };
+/** @enum {SearchSite} */
+export const SearchSites = {
+    '7MM_SEARCH': new SearchSite(SiteIDs['7MM_SEARCH'], SiteIDs['7MM'], /^https:\/\/7mmtv\.tv\/\w+\/\w+_search\/all\/([^/]+)/,
+        '.breadcrumb-heading-row li:last-child a'),
+    JABLE_SEARCH: new SearchSite(SiteIDs.JABLE_SEARCH, SiteIDs.JABLE, /^https:\/\/jable\.tv\/search\/([^/]+)/),
+    JAVTRAILERS_SEARCH: new SearchSite(SiteIDs.JAVTRAILERS_SEARCH, SiteIDs.JAVTRAILERS, /^https:\/\/javtrailers\.com\/search\/([^/]+)/)
+}

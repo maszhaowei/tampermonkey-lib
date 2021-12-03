@@ -210,3 +210,31 @@ export class VideoPortalSite extends Site {
         else return videoCategories;
     }
 }
+
+export class SearchSite extends Site {
+    #searchFieldSelector;
+    /**
+     * @returns {string|undefined}
+     */
+    get searchKeyword() {
+        if (this.#searchFieldSelector) {
+            let searchField = document.querySelector(this.#searchFieldSelector);
+            return searchField.value || searchField.textContent;
+        }
+        else {
+            let urlMatch = window.location.href.match(this.hrefRegEx);
+            if (urlMatch) return urlMatch[1];
+        }
+    }
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} baseSiteId 
+     * @param {RegExp} hrefRegEx 
+     * @param {string} [searchFieldSelector] 
+     */
+    constructor(id, baseSiteId, hrefRegEx, searchFieldSelector) {
+        super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx });
+        this.#searchFieldSelector = searchFieldSelector;
+    }
+}

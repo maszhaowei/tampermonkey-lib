@@ -1,4 +1,4 @@
-import { DefaultPlayerMetadatas, SiteCategories, SiteIDs, Sites, VideoCategories, VideoPortalSites, VideoSites } from './enum';
+import { DefaultPlayerMetadatas, SearchSites, SiteCategories, SiteIDs, Sites, VideoCategories, VideoPortalSites, VideoSites } from './enum';
 import { PlayerMetadata, Site, VideoPortalSite, VideoSite } from './class';
 import { util as cutil } from '../common/util';
 import { util as tutil } from '../tampermonkey/util';
@@ -68,6 +68,16 @@ export const util = {
      */
     getCurrentVideoPortalSite: function () {
         return findCurrentSite(VideoPortalSites);
+    },
+    /**
+     * 
+     * @returns {import('./class').SearchSite}
+     */
+    getCurrentSearchSite: function () {
+        for (let s in SearchSites) {
+            const site = SearchSites[s];
+            if (site instanceof Site && site.test()) return site;
+        }
     },
     /**
      * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.

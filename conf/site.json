@@ -12,8 +12,6 @@
         "FANDOM": "Fandom",
         "FANDOM_WIKI": "Fandom Wiki",
         "bunediy_小度云": "bunediy",
-        "JavTrailers": "JavTrailers",
-        "JavTrailers_SEARCH": "JavTrailers_SEARCH",
         "huishij_天空云": "huishij",
         "aoxtv_八戒云": "aoxtv"
     },
@@ -117,19 +115,6 @@
             "id": "Fandom Wiki",
             "baseSiteId": "Fandom",
             "hrefRegEx": "^https://\\w+\\.fandom\\.com/wiki/.+"
-        },
-        {
-            "id": "JavTrailers",
-            "baseSiteId": "JavTrailers",
-            "origin": "https://javtrailers.com",
-            "siteCategories": [
-                "Database"
-            ]
-        },
-        {
-            "id": "JavTrailers_SEARCH",
-            "baseSiteId": "JavTrailers",
-            "hrefRegEx": "^https://javtrailers\\.com/search/[^/]+$"
         }
     ],
     "videosites": [
