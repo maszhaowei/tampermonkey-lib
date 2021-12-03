@@ -93,7 +93,7 @@
             }
         },
         {
-            "id": "MEIJUBS",
+            "id": "MEIJUBS_VIDEO_PORTAL",
             "originWhitelist": [
                 "https://jx.jxbdzyw.com",
                 "https://sod.bunediy.com",
@@ -161,6 +161,9 @@
             "id": "jxbdzyw",
             "baseSiteId": "jxbdzyw",
             "hrefRegEx": "^https://jx\\.jxbdzyw\\.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ],
             "playerMetadataTemplate": "PRISM"
         },
         {
