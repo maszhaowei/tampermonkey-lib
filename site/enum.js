@@ -22,14 +22,14 @@ export const VideoCategories = _VideoCategories;
  */
 export const SiteIDs = {
     '7MM': '7MM',
-    '7MM_VIDEO': '7MM_VIDEO',
+    '7MM_VIDEO_PORTAL': '7MM_VIDEO',
     '7MM_SEARCH': '7MM_SEARCH',
     AVGLE: 'AVGLE',
     AVGLE_VIDEO: 'AVGLE_VIDEO',
-    AVGLE_EMBED: 'AVGLE_EMBED',
+    AVGLE_EMBED_VIDEO: 'AVGLE_EMBED',
     BILIBILI: 'BILIBILI',
     BILIBILI_VIDEO: 'BILIBILI_VIDEO',
-    BILIBILI_BANGUMI: 'BILIBILI_BANGUMI',
+    BILIBILI_BANGUMI_VIDEO: 'BILIBILI_BANGUMI',
     BILIBILI_LIVE: 'BILIBILI_LIVE',
     BUYCAR5: 'BUYCAR5',
     BUYCAR5_VIDEO: 'BUYCAR5_VIDEO',
@@ -44,13 +44,13 @@ export const SiteIDs = {
     JX444662: 'JX444662',
     JX444662_VIDEO: 'JX444662_VIDEO',
     MEIJUBS: 'MEIJUBS',
-    MEIJUBS_VIDEO: 'MEIJUBS_VIDEO',
+    MEIJUBS_VIDEO_PORTAL: 'MEIJUBS_VIDEO',
     MEIJUTTB: 'MEIJUTTB',
     MINGTIAN6: 'MINGTIAN6',
     MM9842: 'MM9842',
     MM9842_VIDEO: 'MM9842_VIDEO',
     NEXUSMODS: 'NEXUSMODS',
-    NEXUSMODS_MODPAGE: 'NEXUSMODS_MODPAGE',
+    NEXUSMODS_VIDEO_PORTAL: 'NEXUSMODS_VIDEO_PORTAL',
     QINGBEIBAN: 'QINGBEIBAN',
     QXWK: 'QXWK',
     QXWK_VIDEO: 'QXWK_VIDEO',
@@ -60,7 +60,7 @@ export const SiteIDs = {
     WALLHAVEN: 'WALLHAVEN',
     WUKONGMEIJU: 'WUKONGMEIJU',
     YOUTUBE: "Youtube",
-    YOUTUBE_EMBED: 'YOUTUBE_EMBED',
+    YOUTUBE_EMBED_VIDEO: 'YOUTUBE_EMBED',
     /**
      * 
      * @param {string} value 
@@ -234,8 +234,8 @@ export const VideoSites = {
         defaultPlayerMetadata: DefaultPlayerMetadatas.AVLGE.copy(), videoCategories: [VideoCategories.JAV],
         originWhitelist: ["https://7mmtv.tv"]
     }),
-    AVGLE_EMBED: new VideoSite({
-        id: SiteIDs.AVGLE_EMBED, baseSiteId: SiteIDs.AVGLE, hrefRegEx: /^https:\/\/avgle\.com\/embed\/\w+$/,
+    AVGLE_EMBED_VIDEO: new VideoSite({
+        id: SiteIDs.AVGLE_EMBED_VIDEO, baseSiteId: SiteIDs.AVGLE, hrefRegEx: /^https:\/\/avgle\.com\/embed\/\w+$/,
         defaultPlayerMetadata: DefaultPlayerMetadatas.AVLGE.copy(), videoCategories: [VideoCategories.JAV],
         originWhitelist: ["https://7mmtv.tv"]
     }),
@@ -247,8 +247,8 @@ export const VideoSites = {
             fullscreenButtonSelector: "div.bilibili-player-video-btn-fullscreen button", webFullscreenButtonSelector: "div.bilibili-player-video-web-fullscreen button"
         })
     }),
-    BILIBILI_BANGUMI: new VideoSite({
-        id: SiteIDs.BILIBILI_BANGUMI, baseSiteId: SiteIDs.BILIBILI, hrefRegEx: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/,
+    BILIBILI_BANGUMI_VIDEO: new VideoSite({
+        id: SiteIDs.BILIBILI_BANGUMI_VIDEO, baseSiteId: SiteIDs.BILIBILI, hrefRegEx: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.+/,
         defaultPlayerMetadata: new PlayerMetadata({
             containerSelector: "div.bpx-player-video-area", controlsSelector: ".bpx-player-control-wrap",
             playButtonSelector: "div.squirtle-video-start", volumeButtonSelector: "div.squirtle-volume-icon",
@@ -289,8 +289,8 @@ export const VideoSites = {
         defaultPlayerMetadata: DefaultPlayerMetadatas.DPLAYER.copy(),
         originWhitelist: ["https://m.wukongmeiju.com"]
     }),
-    YOUTUBE_EMBED: new VideoSite({
-        id: SiteIDs.YOUTUBE_EMBED, baseSiteId: SiteIDs.YOUTUBE, hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+$/,
+    YOUTUBE_EMBED_VIDEO: new VideoSite({
+        id: SiteIDs.YOUTUBE_EMBED_VIDEO, baseSiteId: SiteIDs.YOUTUBE, hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+$/,
         defaultPlayerMetadata: new PlayerMetadata({
             containerSelector: "div#player", controlsSelector: ".ytp-chrome-bottom", topElementSelectors: [".ytp-pause-overlay"],
             playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
@@ -311,18 +311,18 @@ export const VideoSites = {
 };
 /** @enum {VideoPortalSite} */
 export const VideoPortalSites = {
-    "7MM": new VideoPortalSite({
-        id: SiteIDs["7MM_VIDEO"], baseSiteId: SiteIDs["7MM"], hrefRegEx: /^https:\/\/7mmtv\.tv\/.+/,
+    "7MM_VIDEO_PORTAL": new VideoPortalSite({
+        id: SiteIDs["7MM_VIDEO_PORTAL"], baseSiteId: SiteIDs["7MM"], hrefRegEx: /^https:\/\/7mmtv\.tv\/.+/,
         videoCategories: [VideoCategories.JAV],
         originWhitelist: ["https://mm9842.com", "https://avgle.com"]
     }),
-    MEIJUBS_VIDEO: new VideoPortalSite({
-        id: SiteIDs.MEIJUBS_VIDEO, baseSiteId: SiteIDs.MEIJUBS, hrefRegEx: /^https:\/\/www\.meijubs\.com\/play\/.+/,
+    MEIJUBS_VIDEO_PORTAL: new VideoPortalSite({
+        id: SiteIDs.MEIJUBS_VIDEO_PORTAL, baseSiteId: SiteIDs.MEIJUBS, hrefRegEx: /^https:\/\/www\.meijubs\.com\/play\/.+/,
         videoCategories: [VideoCategories.TV_SERIES],
         originWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]
     }),
-    NEXUSMODS: new VideoPortalSite({
-        id: SiteIDs.NEXUSMODS_MODPAGE, baseSiteId: SiteIDs.NEXUSMODS, hrefRegEx: /^https:\/\/www\.nexusmods\.com\/[^/]+\/mods\/\d+/,
+    NEXUSMODS_VIDEO_PORTAL: new VideoPortalSite({
+        id: SiteIDs.NEXUSMODS_VIDEO_PORTAL, baseSiteId: SiteIDs.NEXUSMODS, hrefRegEx: /^https:\/\/www\.nexusmods\.com\/[^/]+\/mods\/\d+/,
         videoCategories: [SiteCategories.GAMING],
         originWhitelist: ["https://www.youtube.com"]
     }),
