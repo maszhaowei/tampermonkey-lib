@@ -140,15 +140,13 @@ export const util = {
                 if (playerMetadataTemplate) newPM = cutil.assignNotEmpty(playerMetadataTemplate.copy(), [newPM], true, true);
                 let siteid = vs.id;
                 let oriVideoSite = VideoSites.get(siteid);
-                if (oriVideoSite) {
-                    cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
-                    if (vs.videoCategories) oriVideoSite.videoCategories = oriVideoSite.videoCategories.concat(vs.videoCategories);
-                }
-                else VideoSites[siteid] = new VideoSite({
+                let newVideoSite = new VideoSite({
                     id: vs.id, baseSiteId: vs.baseSiteId, hrefRegEx: vs.hrefRegEx ? new RegExp(vs.hrefRegEx) : undefined,
                     defaultPlayerMetadata: newPM, videoCategories: vs.videoCategories,
                     originWhitelist: vs.originWhitelist
                 });
+                if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite, [newVideoSite], true, true);
+                else VideoSites[siteid] = newVideoSite;
             }
         }
         else errors.push(new TypeError('Invalid format of videosites: ' + videosites));
@@ -157,12 +155,13 @@ export const util = {
             for (let ps of portalsites) {
                 let siteid = ps.id;
                 let oriVideoPortalSite = VideoPortalSites.get(siteid);
-                if (oriVideoPortalSite && ps.videoCategories) oriVideoPortalSite.videoCategories = oriVideoPortalSite.videoCategories.concat(ps.videoCategories);
-                else VideoPortalSites[siteid] = new VideoPortalSite({
+                let newVideoPortalSite = new VideoPortalSite({
                     id: ps.id, baseSiteId: ps.baseSiteId, hrefRegEx: ps.hrefRegEx ? new RegExp(ps.hrefRegEx) : undefined,
                     videoCategories: ps.videoCategories,
                     originWhitelist: ps.originWhitelist, additionalInfo: ps.additionalInfo
-                });
+                })
+                if (oriVideoPortalSite) cutil.assignNotEmpty(oriVideoPortalSite, [newVideoPortalSite], true, true);
+                else VideoPortalSites[siteid] = newVideoPortalSite;
             }
         }
         else errors.push(new TypeError('Invalid format of video portal sites: ' + portalsites));
