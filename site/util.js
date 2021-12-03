@@ -24,7 +24,6 @@ function bindMessageHandler(site) {
  * 
  * @param {Site[]} sites 
  * @returns 
- * @throws
  */
 function findCurrentSite(sites) {
     let baseSiteCandidate;
@@ -43,12 +42,10 @@ function findCurrentSite(sites) {
         bindMessageHandler(baseSiteCandidate);
         return baseSiteCandidate;
     }
-    throw "No match for current site";
 }
 export const util = {
     /**
      * Return the first non-base site that matches this window, otherwise return the first matching base site. This method is idempotent.
-     * @throws 
      */
     getCurrentSite: function () {
         return findCurrentSite(Sites);
@@ -56,7 +53,6 @@ export const util = {
     /**
      * This method is idempotent.
      * @returns {VideoSite}
-     * @throws 
      */
     getCurrentVideoSite: function () {
         return findCurrentSite(VideoSites);
@@ -64,7 +60,6 @@ export const util = {
     /**
      * This method is idempotent.
      * @returns {VideoPortalSite}
-     * @throws 
      */
     getCurrentVideoPortalSite: function () {
         return findCurrentSite(VideoPortalSites);
