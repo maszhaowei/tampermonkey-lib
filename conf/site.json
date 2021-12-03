@@ -33,7 +33,6 @@
             "siteCategories": [
                 "Dictionary"
             ],
-            "contentCategories": [],
             "originWhitelist": [],
             "additionalInfo": {
                 "inputFieldSelector": "#query"
@@ -74,17 +73,6 @@
             }
         },
         {
-            "id": "Streamtape",
-            "baseSiteId": "Streamtape",
-            "origin": "https://streamtape.com",
-            "siteCategories": [
-                "Video Hosting"
-            ],
-            "originWhitelist": [
-                "https://7mmtv.tv"
-            ]
-        },
-        {
             "id": "Hacg Blog",
             "baseSiteId": "hacg",
             "hrefRegEx": "^https://www\\.hacg\\.[a-z]+/wp/.+",
@@ -116,28 +104,6 @@
             ]
         },
         {
-            "id": "jxbdzyw",
-            "baseSiteId": "jxbdzyw",
-            "origin": "https://jx.jxbdzyw.com",
-            "siteCategories": [
-                "Video Hosting"
-            ],
-            "originWhitelist": [
-                "https://www.meijubs.com"
-            ]
-        },
-        {
-            "id": "huishij",
-            "baseSiteId": "huishij",
-            "origin": "https://jx.huishij.com",
-            "siteCategories": [
-                "Video Hosting"
-            ],
-            "originWhitelist": [
-                "https://www.meijubs.com"
-            ]
-        },
-        {
             "id": "NEXUSMODS",
             "additionalInfo": {
                 "paginationInfo": {
@@ -151,26 +117,6 @@
             "id": "Fandom Wiki",
             "baseSiteId": "Fandom",
             "hrefRegEx": "^https://\\w+\\.fandom\\.com/wiki/.+"
-        },
-        {
-            "id": "bunediy",
-            "origin": "https://sod.bunediy.com",
-            "siteCategories": [
-                "Video Hosting"
-            ],
-            "originWhitelist": [
-                "https://www.meijubs.com"
-            ]
-        },
-        {
-            "id": "aoxtv",
-            "origin": "https://zy.aoxtv.com",
-            "siteCategories": [
-                "Video Hosting"
-            ],
-            "originWhitelist": [
-                "https://www.meijubs.com"
-            ]
         },
         {
             "id": "JavTrailers",
@@ -189,7 +135,7 @@
     "videosites": [
         {
             "id": "test",
-            "defaultPlayerMetadata": "test",
+            "playerMetadataTemplate": "test",
             "containerSelector": ".containerSelector",
             "controlsSelector": ".controlsSelector",
             "topElementSelectors": [
@@ -208,7 +154,15 @@
         },
         {
             "id": "Streamtape",
-            "defaultPlayerMetadata": "JABLE"
+            "baseSiteId": "Streamtape",
+            "hrefRegEx": "https://streamtape.com",
+            "siteCategories": [
+                "Video Hosting"
+            ],
+            "originWhitelist": [
+                "https://7mmtv.tv"
+            ],
+            "playerMetadataTemplate": "JABLE"
         },
         {
             "id": "BILIBILI_VIDEO",
@@ -220,19 +174,34 @@
         },
         {
             "id": "jxbdzyw",
-            "defaultPlayerMetadata": "PRISM"
+            "baseSiteId": "jxbdzyw",
+            "hrefRegEx": "^https://jx\\.jxbdzyw\\.com",
+            "playerMetadataTemplate": "PRISM"
         },
         {
             "id": "bunediy",
-            "defaultPlayerMetadata": "DPLAYER"
+            "hrefRegEx": "^https://sod\\.bunediy\\.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ],
+            "playerMetadataTemplate": "DPLAYER"
         },
         {
             "id": "huishij",
-            "defaultPlayerMetadata": "PRISM"
+            "baseSiteId": "huishij",
+            "hrefRegEx": "https://jx.huishij.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ],
+            "playerMetadataTemplate": "PRISM"
         },
         {
             "id": "aoxtv",
-            "defaultPlayerMetadata": "DPLAYER"
+            "hrefRegEx": "https://zy.aoxtv.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ],
+            "playerMetadataTemplate": "DPLAYER"
         }
     ],
     "videoportalsites": [
