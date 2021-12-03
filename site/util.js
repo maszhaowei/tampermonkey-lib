@@ -111,7 +111,7 @@ export const util = {
                 let newSite = new Site({
                     id: site.id, baseSiteId: site.baseSiteId,
                     origin: site.origin, hrefRegEx: site.hrefRegEx ? new RegExp(site.hrefRegEx) : undefined,
-                    siteCategories: site.siteCategories, contentCategories: site.contentCategories,
+                    siteCategories: site.siteCategories,
                     originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
                 });
                 let oriSite = Sites.get(siteid);
@@ -123,23 +123,25 @@ export const util = {
         let videosites = res['videosites'];
         if (Array.isArray(videosites)) {
             for (let vs of videosites) {
-                let siteid = vs.id;
-                let site = Sites.get(siteid);
-                if (!site) {
-                    errors.push(new Error('Unable to find site: ' + siteid));
-                    continue;
-                }
-                let oriVideoSite = VideoSites.get(siteid);
-                let defaultPM;
-                if (vs.defaultPlayerMetadata) defaultPM = DefaultPlayerMetadatas.get(vs.defaultPlayerMetadata);
+                let playerMetadataTemplate;
+                if (vs.playerMetadataTemplate) playerMetadataTemplate = DefaultPlayerMetadatas.get(vs.playerMetadataTemplate);
                 let newPM = new PlayerMetadata({
                     containerSelector: vs.containerSelector, controlsSelector: vs.controlsSelector, topElementSelectors: vs.topElementSelectors,
                     playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
                     fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
                 });
-                if (defaultPM) newPM = cutil.assignNotEmpty(defaultPM.copy(), [newPM], true, true);
-                if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
-                else VideoSites[siteid] = new VideoSite(site, newPM);
+                if (playerMetadataTemplate) newPM = cutil.assignNotEmpty(playerMetadataTemplate.copy(), [newPM], true, true);
+                let siteid = vs.id;
+                let oriVideoSite = VideoSites.get(siteid);
+                if (oriVideoSite) {
+                    cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
+                    cutil.assignNotEmpty(oriVideoSite.videoCategories, vs.videoCategories, false, true);
+                }
+                else VideoSites[siteid] = new VideoSite({
+                    id: vs.id, baseSiteId: vs.baseSiteId, hrefRegEx: vs.hrefRegEx ? new RegExp(vs.hrefRegEx) : undefined,
+                    defaultPlayerMetadata: newPM, videoCategories: vs.videoCategories,
+                    originWhitelist: vs.originWhitelist
+                });
             }
         }
         else errors.push(new TypeError('Invalid format of videosites: ' + videosites));
@@ -147,15 +149,16 @@ export const util = {
         if (Array.isArray(portalsites)) {
             for (let ps of portalsites) {
                 let siteid = ps.id;
-                let site = Sites.get(siteid);
-                if (!site) {
-                    errors.push(new Error('Unable to find site: ' + siteid));
-                    continue;
-                }
-                VideoPortalSites[siteid] = new VideoPortalSite(site, ps.additionalInfo);
+                let oriVideoPortalSite = VideoPortalSites.get(siteid);
+                if (oriVideoPortalSite) cutil.assignNotEmpty(oriVideoPortalSite.videoCategories, ps.videoCategories, false, true);
+                else VideoPortalSites[siteid] = new VideoPortalSite({
+                    id: ps.id, baseSiteId: ps.baseSiteId, hrefRegEx: ps.hrefRegEx ? new RegExp(ps.hrefRegEx) : undefined,
+                    videoCategories: ps.siteCategories,
+                    originWhitelist: ps.originWhitelist, additionalInfo: ps.additionalInfo
+                });
             }
         }
-        else errors.push(new TypeError('Invalid format of portalsites: ' + portalsites));
+        else errors.push(new TypeError('Invalid format of video portal sites: ' + portalsites));
         if (errors.length > 0) Promise.reject(errors);
         else return Promise.resolve();
     }

@@ -53,7 +53,6 @@ export class Site {
     origin;
     hrefRegEx;
     siteCategories;
-    contentCategories;
     originWhitelist;
     additionalInfo;
     /**
@@ -65,18 +64,16 @@ export class Site {
      * @param {string} [options.origin] 
      * @param {RegExp} [options.hrefRegEx] 
      * @param {string[]} [options.siteCategories] 
-     * @param {string[]} [options.contentCategories] 
      * @param {string[]} [options.originWhitelist] 
      * @param {*} [options.additionalInfo]
      */
-    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], contentCategories: contentCategories = [], originWhitelist = [], additionalInfo = {} }) {
+    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
         this.baseSiteId = baseSiteId;
         this.#uuid = UUID.v4();
         this.origin = origin;
         this.hrefRegEx = hrefRegEx;
         this.siteCategories = siteCategories;
-        this.contentCategories = contentCategories;
         this.originWhitelist = originWhitelist;
         this.additionalInfo = additionalInfo;
     }
@@ -103,7 +100,7 @@ export class Site {
         let data = e.data;
         if (!data || !data.type || !data.src || !data.srcSiteTag) return false;
         let srcOrigin = e.origin;
-        return (srcOrigin === window.location.origin || !!this.originWhitelist?.includes(srcOrigin)) && MessageTypes.test(data.type)
+        return (srcOrigin === window.location.origin || !!this.originWhitelist?.includes(srcOrigin)) && MessageTypes.hasValue(data.type)
             && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
     }
     /**
@@ -143,19 +140,20 @@ export class Site {
 export class VideoSite extends Site {
     #defaultPlayerMetadata;
     get defaultPlayerMetadata() { return this.#defaultPlayerMetadata }
+    videoCategories;
     /**
-     * @hideconstructor
-     * @param {Site} site 
-     * @param {PlayerMetadata} defaultPlayerMetadata 
+     * @param {object} options
+     * @param {string} options.id 
+     * @param {string} options.baseSiteId 
+     * @param {RegExp} options.hrefRegEx 
+     * @param {PlayerMetadata} options.defaultPlayerMetadata 
+     * @param {string[]} [options.videoCategories] 
+     * @param {string[]} [options.originWhitelist] 
      */
-    constructor(site, defaultPlayerMetadata) {
-        super({
-            id: site.id, baseSiteId: site.baseSiteId,
-            origin: site.origin, hrefRegEx: site.hrefRegEx,
-            siteCategories: site.siteCategories, contentCategories: site.contentCategories,
-            originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
-        });
+    constructor({ id, baseSiteId, hrefRegEx, defaultPlayerMetadata, videoCategories = [], originWhitelist = [] }) {
+        super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx, originWhitelist: originWhitelist });
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
+        this.videoCategories = videoCategories;
     }
 }
 /**
@@ -164,19 +162,20 @@ export class VideoSite extends Site {
  * {@link Site} 
  */
 export class VideoPortalSite extends Site {
+    videoCategories;
     additionalInfo;
     /**
-     * @hideconstructor
-     * @param {Site} site 
-     * @param {*} [additionalInfo]
+     * @param {object} options
+     * @param {string} options.id 
+     * @param {string} options.baseSiteId 
+     * @param {RegExp} [options.hrefRegEx] 
+     * @param {string[]} [options.videoCategories] 
+     * @param {string[]} [options.originWhitelist] 
+     * @param {*} [options.additionalInfo] 
      */
-    constructor(site, additionalInfo = {}) {
-        super({
-            id: site.id, baseSiteId: site.baseSiteId,
-            origin: site.origin, hrefRegEx: site.hrefRegEx,
-            siteCategories: site.siteCategories, contentCategories: site.contentCategories,
-            originWhitelist: site.originWhitelist, additionalInfo: site.additionalInfo
-        });
+    constructor({ id, baseSiteId, hrefRegEx, videoCategories = [], originWhitelist = [], additionalInfo = {} }) {
+        super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx, originWhitelist: originWhitelist });
+        this.videoCategories = videoCategories;
         this.additionalInfo = additionalInfo;
     }
 }
