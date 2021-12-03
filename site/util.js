@@ -142,7 +142,7 @@ export const util = {
                 let oriVideoSite = VideoSites.get(siteid);
                 if (oriVideoSite) {
                     cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
-                    cutil.assignNotEmpty(oriVideoSite.videoCategories, [vs.videoCategories], false, true);
+                    if (vs.videoCategories) cutil.assignNotEmpty(oriVideoSite.videoCategories, [vs.videoCategories], false, true);
                 }
                 else VideoSites[siteid] = new VideoSite({
                     id: vs.id, baseSiteId: vs.baseSiteId, hrefRegEx: vs.hrefRegEx ? new RegExp(vs.hrefRegEx) : undefined,
@@ -157,7 +157,7 @@ export const util = {
             for (let ps of portalsites) {
                 let siteid = ps.id;
                 let oriVideoPortalSite = VideoPortalSites.get(siteid);
-                if (oriVideoPortalSite) cutil.assignNotEmpty(oriVideoPortalSite.videoCategories, [ps.videoCategories], false, true);
+                if (oriVideoPortalSite && ps.videoCategories) cutil.assignNotEmpty(oriVideoPortalSite.videoCategories, [ps.videoCategories], false, true);
                 else VideoPortalSites[siteid] = new VideoPortalSite({
                     id: ps.id, baseSiteId: ps.baseSiteId, hrefRegEx: ps.hrefRegEx ? new RegExp(ps.hrefRegEx) : undefined,
                     videoCategories: ps.siteCategories,
