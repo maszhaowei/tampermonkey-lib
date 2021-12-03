@@ -18,8 +18,8 @@ export const MessageTypes = {
      * @param {string} value 
      * @returns 
      */
-    test: function (value) {
-        if (value === MessageTypes.test) return false;
+    hasValue: function (value) {
+        if (value === MessageTypes.hasValue) return false;
         for (let i in MessageTypes) {
             if (this[i] === value) return true;
         }

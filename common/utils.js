@@ -11,7 +11,7 @@ export class EnumHelper {
      * @param {object} enumObject 
      * @param {*} value 
      */
-    static test(enumObject, value) {
+    static hasValue(enumObject, value) {
         this.#validateEnum(enumObject);
         for (let i in enumObject) {
             if (cutil.isEqual(enumObject[i], value)) return true;
