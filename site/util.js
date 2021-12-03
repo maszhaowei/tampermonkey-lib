@@ -160,7 +160,7 @@ export const util = {
                 if (oriVideoPortalSite && ps.videoCategories) cutil.assignNotEmpty(oriVideoPortalSite.videoCategories, [ps.videoCategories], false, true);
                 else VideoPortalSites[siteid] = new VideoPortalSite({
                     id: ps.id, baseSiteId: ps.baseSiteId, hrefRegEx: ps.hrefRegEx ? new RegExp(ps.hrefRegEx) : undefined,
-                    videoCategories: ps.siteCategories,
+                    videoCategories: ps.videoCategories,
                     originWhitelist: ps.originWhitelist, additionalInfo: ps.additionalInfo
                 });
             }
