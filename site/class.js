@@ -2,6 +2,15 @@ import { util as cutil } from "../common/util";
 import { UUID } from "../common/utils";
 import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
+
+/**
+ * @enum {string}
+ */
+export const _VideoCategories = {
+    JAV: "JAV",
+    TV_SERIES: "TV Series",
+    MOVIE: "Movie"
+};
 export class PlayerMetadata {
     /**
      * Selector for video container. Must be ancestor of video.
@@ -155,6 +164,17 @@ export class VideoSite extends Site {
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
         this.videoCategories = videoCategories;
     }
+    getCurrentPageCategory() {
+        let videoCategories = this.videoCategories;
+        if (videoCategories.length == 1) return videoCategories[0];
+        if (videoCategories.includes(_VideoCategories.TV_SERIES)
+            && /([\u4e00-\u9fa5\w]+)(第.+季)?.*第(.+)集/.test(document.title)) return _VideoCategories.TV_SERIES;
+        else if (videoCategories.includes(_VideoCategories.JAV) && /([a-zA-Z]+-\d+)(-(\w+))?/.test(document.title))
+            return _VideoCategories.JAV;
+        else if (videoCategories.length == 2 && videoCategories.includes(_VideoCategories.MOVIE))
+            return _VideoCategories.MOVIE;
+        else return videoCategories;
+    }
 }
 /**
  * 
@@ -177,5 +197,16 @@ export class VideoPortalSite extends Site {
         super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx, originWhitelist: originWhitelist });
         this.videoCategories = videoCategories;
         this.additionalInfo = additionalInfo;
+    }
+    getCurrentPageCategory() {
+        let videoCategories = this.videoCategories;
+        if (videoCategories.length == 1) return videoCategories[0];
+        if (videoCategories.includes(_VideoCategories.TV_SERIES)
+            && /([\u4e00-\u9fa5\w]+)(第.+季)?.*第(.+)集/.test(document.title)) return _VideoCategories.TV_SERIES;
+        else if (videoCategories.includes(_VideoCategories.JAV) && /([a-zA-Z]+-\d+)(-(\w+))?/.test(document.title))
+            return _VideoCategories.JAV;
+        else if (videoCategories.length == 2 && videoCategories.includes(_VideoCategories.MOVIE))
+            return _VideoCategories.MOVIE;
+        else return videoCategories;
     }
 }

@@ -1,4 +1,4 @@
-import { Site, VideoSite, VideoPortalSite, PlayerMetadata } from "./class";
+import { Site, VideoSite, VideoPortalSite, PlayerMetadata, _VideoCategories } from "./class";
 /**
  * @enum {string}
  */
@@ -16,11 +16,7 @@ export const SiteCategories = {
 /**
  * @enum {string}
  */
-export const VideoCategories = {
-    JAV: "JAV",
-    TV_SERIES: "TV Series",
-    MOVIE: "Movie"
-};
+export const VideoCategories = _VideoCategories;
 /**
  * @enum {string}
  */
