@@ -13,7 +13,7 @@ export const _VideoCategories = {
 };
 export class PlayerMetadata {
     /**
-     * Selector for video container. Must be ancestor of video.
+     * Selector for video container. Preferably the closest parent of video.
      */
     containerSelector;
     /**
