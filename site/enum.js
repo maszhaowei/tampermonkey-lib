@@ -195,7 +195,7 @@ export const Sites = {
 };
 
 export const DefaultPlayerMetadatas = {
-    AVLGE: new PlayerMetadata({
+    VJS: new PlayerMetadata({
         containerSelector: "div#video-player", controlsSelector: "div.vjs-control-bar",
         playButtonSelector: "button.vjs-play-control",
         fullscreenButtonSelector: "button.vjs-fullscreen-control", topElementSelectors: [".vjs-related-carousel-holder"]
@@ -231,12 +231,12 @@ export const DefaultPlayerMetadatas = {
 export const VideoSites = {
     AVGLE_VIDEO: new VideoSite({
         id: SiteIDs.AVGLE_VIDEO, baseSiteId: SiteIDs.AVGLE, hrefRegEx: /^https:\/\/avgle\.com\/video\/\w+/,
-        defaultPlayerMetadata: DefaultPlayerMetadatas.AVLGE.copy(), videoCategories: [VideoCategories.JAV],
+        defaultPlayerMetadata: DefaultPlayerMetadatas.VJS.copy(), videoCategories: [VideoCategories.JAV],
         originWhitelist: ["https://7mmtv.tv"]
     }),
     AVGLE_EMBED_VIDEO: new VideoSite({
         id: SiteIDs.AVGLE_EMBED_VIDEO, baseSiteId: SiteIDs.AVGLE, hrefRegEx: /^https:\/\/avgle\.com\/embed\/\w+$/,
-        defaultPlayerMetadata: DefaultPlayerMetadatas.AVLGE.copy(), videoCategories: [VideoCategories.JAV],
+        defaultPlayerMetadata: DefaultPlayerMetadatas.VJS.copy(), videoCategories: [VideoCategories.JAV],
         originWhitelist: ["https://7mmtv.tv"]
     }),
     BILIBILI_VIDEO: new VideoSite({
