@@ -196,7 +196,7 @@ export const Sites = {
 
 export const DefaultPlayerMetadatas = {
     VJS: new PlayerMetadata({
-        containerSelector: "div#video-player", controlsSelector: "div.vjs-control-bar",
+        containerSelector: "div.video-js", controlsSelector: "div.vjs-control-bar",
         playButtonSelector: "button.vjs-play-control",
         fullscreenButtonSelector: "button.vjs-fullscreen-control", topElementSelectors: [".vjs-related-carousel-holder"]
     }),
