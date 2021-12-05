@@ -173,7 +173,7 @@
         },
         {
             "id": "aoxtv",
-            "baseSiteId":"aoxtv",
+            "baseSiteId": "aoxtv",
             "hrefRegEx": "https://zy.aoxtv.com",
             "originWhitelist": [
                 "https://www.meijubs.com"
@@ -181,12 +181,15 @@
             "playerMetadataTemplate": "DPLAYER"
         },
         {
-            "id":"JAVTRAILERS_VIDEO",
-            "baseSiteId":"JavTrailers",
-            "hrefRegEx":"^https://javtrailers\\.com/video/[^/]+",
+            "id": "JAVTRAILERS_VIDEO",
+            "baseSiteId": "JavTrailers",
+            "hrefRegEx": "^https://javtrailers\\.com/video/[^/]+",
             "playerMetadataTemplate": "VJS",
             "containerSelector": "#videoPlayerContainer",
-            "volumeButtonSelector": ".vjs-volume-panel"
+            "volumeButtonSelector": ".vjs-volume-panel",
+            "videoCategories": [
+                "JAV"
+            ]
         }
     ],
     "videoportalsites": [
