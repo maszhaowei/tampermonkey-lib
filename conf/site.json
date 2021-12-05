@@ -185,7 +185,6 @@
             "baseSiteId": "JavTrailers",
             "hrefRegEx": "^https://javtrailers\\.com/video/[^/]+",
             "playerMetadataTemplate": "VJS",
-            "containerSelector": "#videoPlayerContainer",
             "volumeButtonSelector": ".vjs-volume-panel",
             "videoCategories": [
                 "JAV"
