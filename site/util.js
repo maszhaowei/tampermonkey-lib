@@ -130,6 +130,11 @@ export const util = {
         let videosites = res['videosites'];
         if (Array.isArray(videosites)) {
             for (let vs of videosites) {
+                let siteid = vs.id;
+                if (!SiteIDs.hasValue(siteid)) {
+                    errors.push(new Error(`Unable to find site id: ${siteid} in siteids`));
+                    continue;
+                }
                 let playerMetadataTemplate;
                 if (vs.playerMetadataTemplate) playerMetadataTemplate = DefaultPlayerMetadatas.get(vs.playerMetadataTemplate);
                 let newPM = new PlayerMetadata({
@@ -138,7 +143,6 @@ export const util = {
                     fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
                 });
                 if (playerMetadataTemplate) newPM = cutil.assignNotEmpty(playerMetadataTemplate.copy(), [newPM], true, true);
-                let siteid = vs.id;
                 let oriVideoSite = VideoSites.get(siteid);
                 let newVideoSite = new VideoSite({
                     id: vs.id, baseSiteId: vs.baseSiteId, hrefRegEx: vs.hrefRegEx ? new RegExp(vs.hrefRegEx) : undefined,
@@ -154,6 +158,10 @@ export const util = {
         if (Array.isArray(portalsites)) {
             for (let ps of portalsites) {
                 let siteid = ps.id;
+                if (!SiteIDs.hasValue(siteid)) {
+                    errors.push(new Error(`Unable to find site id: ${siteid} in siteids`));
+                    continue;
+                }
                 let oriVideoPortalSite = VideoPortalSites.get(siteid);
                 let newVideoPortalSite = new VideoPortalSite({
                     id: ps.id, baseSiteId: ps.baseSiteId, hrefRegEx: ps.hrefRegEx ? new RegExp(ps.hrefRegEx) : undefined,
