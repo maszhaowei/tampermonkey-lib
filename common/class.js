@@ -243,6 +243,7 @@ export class EventObserverWrapper {
         });
         this.#eventsObserverMap.clear();
         this.#aggregatedHandlerMap.clear();
+        this.#target = null;
     }
 }
 
