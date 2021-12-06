@@ -309,7 +309,7 @@ export class VideoInstance extends EventObserverWrapper {
         canvas.width = videoWidth;
         canvas.height = videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, videoWidth, videoHeight);
-        canvas.toBlob((blob) => cui.downloadBlob(blob, `${fileName}_${videoWidth}x${videoHeight}.png`));
+        canvas.toBlob((blob) => cui.downloadBlob(blob, `${fileName}_${videoWidth}x${videoHeight}_${Math.trunc(video.currentTime)}.png`));
     }
 
     /* #region Video Control */
