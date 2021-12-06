@@ -149,7 +149,10 @@ export const util = {
                     defaultPlayerMetadata: newPM, videoCategories: vs.videoCategories,
                     originWhitelist: vs.originWhitelist
                 });
-                if (oriVideoSite) cutil.assignNotEmpty(oriVideoSite, [newVideoSite], true, true);
+                if (oriVideoSite) {
+                    cutil.assignNotEmpty(oriVideoSite.defaultPlayerMetadata, [newPM], true, true);
+                    cutil.assignNotEmpty(oriVideoSite, [newVideoSite], true, true);
+                }
                 else VideoSites[siteid] = newVideoSite;
             }
         }
