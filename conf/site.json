@@ -143,7 +143,14 @@
             "topElementSelectors": [
                 ".bilibili-player-hotkey-panel-container.active",
                 ".bilibili-player-video-info-container.active",
-                ".bilibili-player-drag-mask-close"
+                ".bilibili-player-drag-mask-close",
+                ".bilibili-player-video-top"
+            ]
+        },
+        {
+            "id": "BILIBILI_BANGUMI_VIDEO",
+            "topElementSelectors": [
+                "bpx-player-top-wrap"
             ]
         },
         {
