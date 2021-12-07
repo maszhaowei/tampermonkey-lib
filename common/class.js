@@ -74,6 +74,57 @@ export class Tuple extends IEquatable {
     }
 }
 /**
+ * @extends Tuple
+ * @template T1,T2
+ */
+export class Couple extends Tuple {
+    /**
+     * @returns {T1}
+     */
+    get 0() { return this[0] }
+    /**
+     * @returns {T2}
+     */
+    get 1() { return this[1] }
+    /**
+     * 
+     * @param {T1} t1 
+     * @param {T2} t2 
+     * @returns {Couple<T1,T2>}
+     */
+    constructor(t1, t2) {
+        super(t1, t2);
+    }
+}
+/**
+ * @extends Tuple
+ * @template T1,T2,T3
+ */
+export class Triple extends Tuple {
+    /**
+     * @returns {T1}
+     */
+    get 0() { return this[0] }
+    /**
+     * @returns {T2}
+     */
+    get 1() { return this[1] }
+    /**
+     * @returns {T3}
+     */
+    get 2() { return this[2] }
+    /**
+     * 
+     * @param {T1} t1 
+     * @param {T2} t2 
+     * @param {T3} t3 
+     * @returns {Couple<T1,T2,T3>}
+     */
+    constructor(t1, t2, t3) {
+        super(t1, t2, t3);
+    }
+}
+/**
  * @classdesc Key equality: Based on the sameValueZero algorithm and NaN equals NaN. Will compare each element if key is an array and call equals method if key implements IEquatable.
  * @extends Map
  * @template K,V
