@@ -274,9 +274,9 @@ export class VideoInstance extends EventObserverWrapper {
     }
     /**
      * @param {VideoInstanceData} instanceData 
-     * @param {EventHandlerWrapper[]} [preInitVideoObservers]
-     * @param {EventHandlerWrapper[]} [postInitVideoObservers]
-     * @param {EventHandlerWrapper[]} [postInitDelegateObservers]
+     * @param {import('../common/class').EventHandlerWrapper[]} [preInitVideoObservers]
+     * @param {import('../common/class').EventHandlerWrapper[]} [postInitVideoObservers]
+     * @param {import('../common/class').EventHandlerWrapper[]} [postInitDelegateObservers]
      */
     static getInstance(instanceData, preInitVideoObservers = [], postInitVideoObservers = [], postInitDelegateObservers = []) {
         let video = instanceData.video;
