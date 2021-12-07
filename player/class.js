@@ -42,11 +42,11 @@ class VideoEventDelegate extends EventObserverWrapper {
      * @param {HTMLVideoElement} video 
      */
     static #bindVideo(delegateEle, video) {
-        let bindedVideos = VideoEventDelegate.#bindedVideosMap.get(delegateEle);
-        if (bindedVideos) {
+        if (this.#bindedVideosMap.has(delegateEle)) {
+            let bindedVideos = this.#bindedVideosMap.get(delegateEle);
             if (!bindedVideos.includes(video)) bindedVideos.push(video);
         }
-        else bindedVideos = [video];
+        else this.#bindedVideosMap.set(delegateEle, [video]);
     }
     /**
      * 
