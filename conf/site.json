@@ -145,7 +145,7 @@
                 ".bilibili-player-video-info-container.active",
                 ".bilibili-player-drag-mask-close",
                 ".bilibili-player-video-top",
-                ".bilibili-player-video-toast-wrp~div"
+                ".bilibili-player-dm-tip-wrap~div"
             ]
         },
         {
