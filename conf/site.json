@@ -151,7 +151,8 @@
         {
             "id": "BILIBILI_BANGUMI_VIDEO",
             "topElementSelectors": [
-                "bpx-player-top-wrap"
+                "bpx-player-top-wrap",
+                ".bpx-player-dialog-wrap~div"
             ]
         },
         {
