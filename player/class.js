@@ -217,10 +217,10 @@ export class VideoInstance extends EventObserverWrapper {
     async #onLoadedMetadata() {
         this.#initVideo();
         let video = this.#video;
-        this.registerEventHandler(MediaEvents.VOLUME_CHANGE, () => {
+        this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
-        }, false, this);
+        }, this);
         let ignoreList = this.#playerMetadata.topElementSelectors || [];
         if (this.#playerMetadata.controlsSelector) ignoreList.push(this.#playerMetadata.controlsSelector);
         return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.controlsSelector,
@@ -232,21 +232,21 @@ export class VideoInstance extends EventObserverWrapper {
     }
     async #bindEvent() {
         let video = this.#video;
-        this.registerEventHandler(MediaEvents.PLAY, () => {
+        this.registerVideoEventHandler(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
             this.#triggerCustomEvent(_VideoCustomEventTypes.PLAY);
-        }, true, this);
-        this.registerEventHandler(MediaEvents.PAUSE, () => {
+        }, this);
+        this.registerVideoEventHandler(MediaEvents.PAUSE, () => {
             this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
             this.#triggerCustomEvent(_VideoCustomEventTypes.PAUSE);
-        }, true, this);
+        }, this);
         return new Promise((resolve) => {
             if (video.readyState >= MediaReadyState.HAVE_METADATA) return this.#onLoadedMetadata().then(() => resolve());
             else {
                 // 使用箭头表达式将handler的上下文由e.target切换为Player
-                this.registerEventHandler(MediaEvents.LOADED_METADATA, () => {
+                this.registerVideoEventHandler(MediaEvents.LOADED_METADATA, () => {
                     this.#onLoadedMetadata().then(() => resolve());
-                }, true, this);
+                }, this);
             }
         });
     }
