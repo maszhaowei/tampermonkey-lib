@@ -1,3 +1,6 @@
+/**
+ * @interface
+ */
 export class IEquatable {
     /**
      * @abstract
