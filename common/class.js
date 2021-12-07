@@ -205,6 +205,7 @@ export class EventObserverWrapper {
      * @param {*} [context] 
      */
     registerEventHandler(eventType, handler, useCapture = false, context) {
+        if (!this.#supportedEventTypes.includes(eventType)) throw new Error('Not supported event type: ' + eventType);
         let sig = new ApplyMethodSignature(handler, context);
         let key = new Tuple(eventType, useCapture);
         if (this.#eventsObserverMap.has(key)) {
