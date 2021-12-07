@@ -42,9 +42,11 @@ class VideoEventDelegate extends EventObserverWrapper {
      * @param {HTMLVideoElement} video 
      */
     static #bindVideo(delegateEle, video) {
-        let bindedVideosMap = VideoEventDelegate.#bindedVideosMap;
-        if (bindedVideosMap.has(delegateEle)) bindedVideosMap.get(delegateEle).push(video);
-        else bindedVideosMap.set(delegateEle, [video]);
+        let bindedVideos = VideoEventDelegate.#bindedVideosMap.get(delegateEle);
+        if (bindedVideos) {
+            if (!bindedVideos.includes(video)) bindedVideos.push(video);
+        }
+        else bindedVideos = [video];
     }
     /**
      * 
@@ -62,26 +64,32 @@ class VideoEventDelegate extends EventObserverWrapper {
     }
     /**
      * 
-     * Create event delegate after controls of video if there isn't one.
+     * Create event delegate after {@link previousSiblingSelector} if there isn't one.
      * @param {HTMLVideoElement} video 
-     * @param {string} containerSelector 
-     * @param {string} [controlsSelector] 
+     * @param {string} [previousSiblingSelector] - {@link previousSiblingSelector} or {@link defaultDelegateSelector} is required.
+     * @param {string} [defaultDelegateSelector] 
+     * @param {string[]} [ignoreList] 
      */
-    static getInstance(video, containerSelector, controlsSelector) {
+    static getInstance(video, previousSiblingSelector, defaultDelegateSelector, ignoreList = []) {
         /** @type {Promise<Element>} */
-        let promiseCreate = controlsSelector ? new Promise((resolve) => {
-            document.arrive(controlsSelector, { existing: true, onceOnly: true }, (controls) => {
+        let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
+            document.arrive(previousSiblingSelector, { existing: true, onceOnly: true }, (previousSibling) => {
                 /** @type {HTMLDivElement} */
-                let delegateEle = controls.parentElement.querySelector(Const.eventDelegateSelector);
+                let delegateEle = previousSibling.parentElement.querySelector(Const.eventDelegateSelector);
                 if (!delegateEle) {
                     delegateEle = document.createElement('div');
                     delegateEle.classList.add(Const.eventDelegateClassName);
-                    controls.after(delegateEle);
-                    controls.classList.add(Const.topOverlayClassName);
+                    previousSibling.after(delegateEle);
+                    // Process selectors excluded from delegate.
+                    ignoreList.forEach((delegateIgnoreSelector) => {
+                        document.arrive(delegateIgnoreSelector, { existing: true }, function () {
+                            this.classList.add(Const.topOverlayClassName);
+                        });
+                    });
                 }
                 resolve(delegateEle);
             });
-        }) : Promise.resolve(video.closest(containerSelector));
+        }) : Promise.resolve(document.querySelector(defaultDelegateSelector));
         return promiseCreate.then((delegateEle) => {
             if (!delegateEle) throw new Error('No event delegate');
 
@@ -170,7 +178,10 @@ export class VideoInstance extends EventObserverWrapper {
     /** @type {VideoEventDelegate} */
     #videoDelegate;
     get #tooltipWrap() { return this.#container; }
+    /** @type {WeakMap<HTMLVideoElement,VideoInstance>} */
+    static #instanceMap = new WeakMap();
     /**
+     * @hideconstructor
      * @param {VideoInstanceData} initData 
      */
     constructor(initData) {
@@ -210,7 +221,10 @@ export class VideoInstance extends EventObserverWrapper {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
         }, false, this);
-        return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.containerSelector, this.#playerMetadata.controlsSelector)
+        let ignoreList = this.#playerMetadata.topElementSelectors || [];
+        if (this.#playerMetadata.controlsSelector) ignoreList.push(this.#playerMetadata.controlsSelector);
+        return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.controlsSelector,
+            this.#playerMetadata.containerSelector, ignoreList)
             .then((videoDelegate) => {
                 this.#videoDelegate = videoDelegate;
                 this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
@@ -237,21 +251,17 @@ export class VideoInstance extends EventObserverWrapper {
         });
     }
     /**
-     * 
-     * @param {VideoInstanceData} initData
-     * @param {import('../site/class').PlayerMetadata} [playerMetadata]
-     * @returns {Promise<void>}
+     * @param {VideoInstanceData} instanceData 
      */
-    async init() {
-        let topElementSelectors = this.#playerMetadata.topElementSelectors;
-        if (topElementSelectors.length > 0) {
-            topElementSelectors.forEach((topElementSelector) => {
-                document.arrive(topElementSelector, { existing: true }, function () {
-                    this.classList.add(Const.topOverlayClassName);
-                });
-            });
+    static getInstance(instanceData) {
+        let video = instanceData.video;
+        let videoInstance = this.#instanceMap.get(video);
+        if (videoInstance) return Promise.resolve(videoInstance);
+        else {
+            videoInstance = new VideoInstance(instanceData);
+            this.#instanceMap.set(video, videoInstance);
+            return videoInstance.#bindEvent().then(() => videoInstance);
         }
-        return this.#bindEvent();
     }
     /**
      * 
@@ -412,6 +422,7 @@ export class VideoInstance extends EventObserverWrapper {
     clean() {
         this.#videoDelegate.unbindVideo(this.#video);
         this.#video = this.#playerMetadata = this.#videoDelegate = null;
+        VideoInstance.#instanceMap.delete(this.#video);
         super.clean();
     }
 }
