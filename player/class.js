@@ -252,7 +252,7 @@ export class VideoInstance extends EventObserverWrapper {
     }
     /**
      * 
-     * @param {EventHandlerWrapper[]} [preInitVideoObservers]
+     * @param {import('../common/class').EventHandlerWrapper[]} [preInitVideoObservers]
      */
     #preInit(preInitVideoObservers = []) {
         preInitVideoObservers.forEach((handlerWrapper) => {
@@ -261,15 +261,15 @@ export class VideoInstance extends EventObserverWrapper {
     }
     /**
      * 
-     * @param {EventHandlerWrapper[]} [postInitVideoObservers]
-     * @param {EventHandlerWrapper[]} [postInitDelegateObservers]
+     * @param {import('../common/class').EventHandlerWrapper[]} [postInitVideoObservers]
+     * @param {import('../common/class').EventHandlerWrapper[]} [postInitDelegateObservers]
      */
     #postInit(postInitVideoObservers = [], postInitDelegateObservers = []) {
         postInitVideoObservers.forEach((handlerWrapper) => {
-            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.fn, handlerWrapper.context);
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context);
         });
         postInitDelegateObservers.forEach((handlerWrapper) => {
-            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.fn, handlerWrapper.context);
+            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context);
         });
     }
     /**
