@@ -96,6 +96,15 @@ export class Couple extends Tuple {
     constructor(t1, t2) {
         super(t1, t2);
     }
+    /**
+     * 
+     * @param {Couple} obj 
+     * @returns 
+     */
+    equals(obj) {
+        if (!(obj instanceof Couple)) return false;
+        return super.equals(obj);
+    }
 }
 /**
  * @extends Tuple
@@ -122,6 +131,15 @@ export class Triple extends Tuple {
      */
     constructor(t1, t2, t3) {
         super(t1, t2, t3);
+    }
+    /**
+     * 
+     * @param {Triple} obj 
+     * @returns 
+     */
+    equals(obj) {
+        if (!(obj instanceof Triple)) return false;
+        return super.equals(obj);
     }
 }
 /**
@@ -205,7 +223,6 @@ export class ApplyMethodSignature {
         this.args = args || [];
     }
 }
-
 export class EventObserverWrapper {
     #target;
     #supportedEventTypes;
