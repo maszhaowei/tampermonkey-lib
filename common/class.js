@@ -54,7 +54,12 @@ export class Tuple extends IEquatable {
         super();
         this.#items = items;
         for (let i = 0; i < items.length; i++) {
-            this[i] = items[i];
+            Object.defineProperty(this, i, {
+                configurable: false,
+                enumerable: true,
+                writable: false,
+                value: items[i]
+            });
         }
     }
     /**
@@ -65,10 +70,7 @@ export class Tuple extends IEquatable {
         if (!(obj instanceof Tuple)) return false;
         if (this.size != obj.size) return false;
         for (let i = 0; i < this.size; i++) {
-            let item = this[i];
-            let target = obj[i];
-            if (item instanceof IEquatable && !item.equals(target)) return false;
-            else if (item !== target) return false;
+            if (!_isEqual(this[i], obj[i])) return false;
         }
         return true;
     }
@@ -90,7 +92,6 @@ export class Couple extends Tuple {
      * 
      * @param {T1} t1 
      * @param {T2} t2 
-     * @returns {Couple<T1,T2>}
      */
     constructor(t1, t2) {
         super(t1, t2);
@@ -118,7 +119,6 @@ export class Triple extends Tuple {
      * @param {T1} t1 
      * @param {T2} t2 
      * @param {T3} t3 
-     * @returns {Couple<T1,T2,T3>}
      */
     constructor(t1, t2, t3) {
         super(t1, t2, t3);
