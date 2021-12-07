@@ -223,6 +223,22 @@ export class ApplyMethodSignature {
         this.args = args || [];
     }
 }
+export class EventHandlerWrapper {
+    eventType;
+    handler;
+    context;
+    /**
+     * 
+     * @param {string} eventType 
+     * @param {(e:Event)=>void} handler 
+     * @param {any} [context] 
+     */
+    constructor(eventType, handler, context) {
+        this.eventType = eventType;
+        this.handler = handler;
+        this.context = context;
+    }
+}
 export class EventObserverWrapper {
     #target;
     #supportedEventTypes;

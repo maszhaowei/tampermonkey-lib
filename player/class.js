@@ -251,16 +251,49 @@ export class VideoInstance extends EventObserverWrapper {
         });
     }
     /**
-     * @param {VideoInstanceData} instanceData 
+     * 
+     * @param {EventHandlerWrapper[]} [preInitVideoObservers]
      */
-    static getInstance(instanceData) {
+    #preInit(preInitVideoObservers = []) {
+        preInitVideoObservers.forEach((handlerWrapper) => {
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context);
+        });
+    }
+    /**
+     * 
+     * @param {EventHandlerWrapper[]} [postInitVideoObservers]
+     * @param {EventHandlerWrapper[]} [postInitDelegateObservers]
+     */
+    #postInit(postInitVideoObservers = [], postInitDelegateObservers = []) {
+        postInitVideoObservers.forEach((handlerWrapper) => {
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.fn, handlerWrapper.context);
+        });
+        postInitDelegateObservers.forEach((handlerWrapper) => {
+            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.fn, handlerWrapper.context);
+        });
+    }
+    /**
+     * @param {VideoInstanceData} instanceData 
+     * @param {EventHandlerWrapper[]} [preInitVideoObservers]
+     * @param {EventHandlerWrapper[]} [postInitVideoObservers]
+     * @param {EventHandlerWrapper[]} [postInitDelegateObservers]
+     */
+    static getInstance(instanceData, preInitVideoObservers = [], postInitVideoObservers = [], postInitDelegateObservers = []) {
         let video = instanceData.video;
         let videoInstance = this.#instanceMap.get(video);
-        if (videoInstance) return Promise.resolve(videoInstance);
+        if (videoInstance) {
+            videoInstance.#preInit(preInitVideoObservers);
+            videoInstance.#postInit(postInitVideoObservers, postInitDelegateObservers);
+            return Promise.resolve(videoInstance);
+        }
         else {
             videoInstance = new VideoInstance(instanceData);
             this.#instanceMap.set(video, videoInstance);
-            return videoInstance.#bindEvent().then(() => videoInstance);
+            videoInstance.#preInit(preInitVideoObservers);
+            return videoInstance.#bindEvent().then(() => {
+                videoInstance.#postInit(postInitVideoObservers, postInitDelegateObservers);
+                return videoInstance;
+            });
         }
     }
     /**
