@@ -79,6 +79,7 @@ export const MediaEvents = {
  */
 export const GlobalEvents = {
     CLICK: 'click',
+    CONTEXTMENU: 'contextmenu',
     DBLCLICK: 'dblclick',
     KEYDOWN: 'keydown',
     LOAD: 'load',

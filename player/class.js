@@ -108,15 +108,21 @@ class VideoEventDelegate extends EventObserverWrapper {
         delegateIgnoreMap.forEach((eventTypes, selector) => {
             document.arrive(selector, { existing: true }, (element) => {
                 eventTypes.forEach((eventType) => {
-                    this.#delegate.addEventListener(eventType, (e) => {
-                        // Prevent calling handlers registered by this.registerEventHandler.
-                        e.stopImmediatePropagation();
-                        element.dispatchEvent(e);
-                    }, false);
-                    this.#delegate.addEventListener(eventType, (e) => {
-                        e.stopImmediatePropagation();
-                        element.dispatchEvent(e);
-                    }, true);
+                    let handler;
+                    switch (eventType) {
+                        case GlobalEvents.CONTEXTMENU:
+                            handler = (/** @type {MouseEvent} */ e) => {
+                                e.preventDefault();
+                                // Prevent calling handlers registered by this.registerEventHandler.
+                                e.stopImmediatePropagation();
+                                element.dispatchEvent(new MouseEvent(eventType, { bubbles: e.bubbles, clientX: e.clientX, clientY: e.clientY }));
+                            };
+                            break;
+                    }
+                    if (handler) {
+                        this.#delegate.addEventListener(eventType, handler, false);
+                        this.#delegate.addEventListener(eventType, handler, true);
+                    }
                 });
             });
         });
