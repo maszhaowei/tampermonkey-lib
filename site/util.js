@@ -142,6 +142,13 @@ export const util = {
                     playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
                     fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
                 });
+                if (Array.isArray(vs.delegateIgnoreEvents)) {
+                    let ignoreMap = new Map();
+                    for (let ignoreEvent of vs.delegateIgnoreEvents) {
+                        ignoreMap.set(ignoreEvent.selector, ignoreEvent.eventTypes);
+                    }
+                    newPM.delegateIgnoreMap = ignoreMap;
+                }
                 if (playerMetadataTemplate) newPM = cutil.assignNotEmpty(playerMetadataTemplate.copy(), [newPM], true, true);
                 let oriVideoSite = VideoSites.get(siteid);
                 let newVideoSite = new VideoSite({

@@ -160,6 +160,14 @@
             "delegateIgnoreSelectors": [
                 ".bpx-player-top-wrap",
                 ".bpx-player-dialog-wrap~div"
+            ],
+            "delegateIgnoreEvents": [
+                {
+                    "selector": ".bpx-player-video-perch",
+                    "eventTypes": [
+                        "contextmenu"
+                    ]
+                }
             ]
         },
         {
