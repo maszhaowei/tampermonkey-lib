@@ -2,6 +2,17 @@ import { _isEqual } from "./class";
 import { DEFAULT_LOG_GROUP } from "./const";
 import { ConsoleOutputLevel } from "./enum";
 const _common_used_numerals = { '零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10, '百': 100, '千': 1000, '万': 10000, '亿': 100000000 };
+/**
+ * 
+ * @param {Map} targetValue 
+ * @param {Map[]} sourceValues 
+ */
+function mergeMap(targetValue, sourceValues) {
+    sourceValues.forEach((sourceValue) => {
+        if (!(sourceValue instanceof Map)) throw new TypeError(`Source is not a map`);
+        sourceValue.forEach((value, key) => targetValue.set(key, value));
+    });
+}
 export let util = {
     /**
      * Output message to web console in gourp {@link grouName}.
@@ -259,8 +270,8 @@ export let util = {
     },
     /**
      * Copies all values of enumerable own properties that are not null, undefined, NaN from one or more source objects to a target object.
-     * @param {*} target 
-     * @param  {any[]} sources 
+     * @param {object} target 
+     * @param  {object[]} sources 
      * @param {boolean} [deep] - Default to false.
      * @param {boolean} [mergeArray] - Default to false.
      * @returns The target object.
@@ -268,7 +279,10 @@ export let util = {
      */
     assignNotEmpty: function (target, sources, deep = false, mergeArray = false) {
         if (!Array.isArray(sources)) throw new TypeError("Invalid sources");
+        if (!util.isObject(target)) throw new TypeError("Invalid target");
+        if (target instanceof Map) mergeMap(target, sources);
         sources.forEach((source) => {
+            if (!util.isObject(source)) throw new TypeError("Invalid source");
             Object.keys(source).forEach((key) => {
                 let sourceValue = source[key];
                 let targetValue = target[key];
@@ -280,6 +294,10 @@ export let util = {
                             if (!targetValue.includes(v)) targetValue.push(v);
                         })
                     }
+                    else target[key] = sourceValue;
+                }
+                else if (targetValue instanceof Map) {
+                    if (deep) mergeMap(targetValue, [sourceValue]);
                     else target[key] = sourceValue;
                 }
                 else if (util.isObject(targetValue)) {
