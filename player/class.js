@@ -221,7 +221,7 @@ export class VideoInstance extends EventObserverWrapper {
             this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
             this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
         }, this);
-        let ignoreList = this.#playerMetadata.topElementSelectors || [];
+        let ignoreList = this.#playerMetadata.delegateIgnoreSelectors || [];
         if (this.#playerMetadata.controlsSelector) ignoreList.push(this.#playerMetadata.controlsSelector);
         return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.controlsSelector,
             this.#playerMetadata.containerSelector, ignoreList)

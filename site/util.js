@@ -138,7 +138,7 @@ export const util = {
                 let playerMetadataTemplate;
                 if (vs.playerMetadataTemplate) playerMetadataTemplate = DefaultPlayerMetadatas.get(vs.playerMetadataTemplate);
                 let newPM = new PlayerMetadata({
-                    containerSelector: vs.containerSelector, controlsSelector: vs.controlsSelector, topElementSelectors: vs.topElementSelectors,
+                    containerSelector: vs.containerSelector, controlsSelector: vs.controlsSelector, delegateIgnoreSelectors: vs.delegateIgnoreSelectors,
                     playButtonSelector: vs.playButtonSelector, volumeButtonSelector: vs.volumeButtonSelector,
                     fullscreenButtonSelector: vs.fullscreenButtonSelector, webFullscreenButtonSelector: vs.webFullscreenButtonSelector
                 });

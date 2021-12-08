@@ -122,8 +122,8 @@
             "playerMetadataTemplate": "test",
             "containerSelector": ".containerSelector",
             "controlsSelector": ".controlsSelector",
-            "topElementSelectors": [
-                ".topElementSelectors"
+            "delegateIgnoreSelectors": [
+                ".delegateIgnoreSelectors"
             ],
             "playButtonSelector": ".playButtonSelector",
             "volumeButtonSelector": ".volumeButtonSelector",
@@ -147,7 +147,7 @@
         },
         {
             "id": "BILIBILI_VIDEO",
-            "topElementSelectors": [
+            "delegateIgnoreSelectors": [
                 ".bilibili-player-hotkey-panel-container.active",
                 ".bilibili-player-video-info-container.active",
                 ".bilibili-player-drag-mask-close",
@@ -157,7 +157,7 @@
         },
         {
             "id": "BILIBILI_BANGUMI_VIDEO",
-            "topElementSelectors": [
+            "delegateIgnoreSelectors": [
                 ".bpx-player-top-wrap",
                 ".bpx-player-dialog-wrap~div"
             ]

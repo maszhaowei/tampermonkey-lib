@@ -199,7 +199,7 @@ export const DefaultPlayerMetadatas = {
     VJS: new PlayerMetadata({
         containerSelector: "div.video-js", controlsSelector: "div.vjs-control-bar",
         playButtonSelector: "button.vjs-play-control",
-        fullscreenButtonSelector: "button.vjs-fullscreen-control", topElementSelectors: [".vjs-related-carousel-holder"]
+        fullscreenButtonSelector: "button.vjs-fullscreen-control", delegateIgnoreSelectors: [".vjs-related-carousel-holder"]
     }),
     DPLAYER: new PlayerMetadata({
         containerSelector: "div#dplayer,div#mvideo,#dpplayer", controlsSelector: ".dplayer-controller",
@@ -293,7 +293,7 @@ export const VideoSites = {
     YOUTUBE_EMBED_VIDEO: new VideoSite({
         id: SiteIDs.YOUTUBE_EMBED_VIDEO, baseSiteId: SiteIDs.YOUTUBE, hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+$/,
         defaultPlayerMetadata: new PlayerMetadata({
-            containerSelector: "div#player", controlsSelector: ".ytp-chrome-bottom", topElementSelectors: [".ytp-pause-overlay"],
+            containerSelector: "div#player", controlsSelector: ".ytp-chrome-bottom", delegateIgnoreSelectors: [".ytp-pause-overlay"],
             playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
             fullscreenButtonSelector: "button.ytp-fullscreen-button"
         }),

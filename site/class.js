@@ -21,9 +21,9 @@ export class PlayerMetadata {
      */
     controlsSelector;
     /**
-     * Selectors that should be on the top of stacking context to avoid being blocked by other elements.
+     * Selectors whose events shouldn't be delegated.
      */
-    topElementSelectors;
+    delegateIgnoreSelectors;
     playButtonSelector;
     fullscreenButtonSelector;
     webFullscreenButtonSelector;
@@ -32,17 +32,17 @@ export class PlayerMetadata {
      * @param {object} options
      * @param {string} options.containerSelector 
      * @param {string} [options.controlsSelector] 
-     * @param {string[]} [options.topElementSelectors] 
+     * @param {string[]} [options.delegateIgnoreSelectors] 
      * @param {string} [options.playButtonSelector] 
      * @param {string} [options.volumeButtonSelector] 
      * @param {string} [options.fullscreenButtonSelector] 
      * @param {string} [options.webFullscreenButtonSelector] 
      */
-    constructor({ containerSelector, controlsSelector, topElementSelectors = [],
+    constructor({ containerSelector, controlsSelector, delegateIgnoreSelectors = [],
         playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector }) {
         this.containerSelector = containerSelector;
         this.controlsSelector = controlsSelector;
-        this.topElementSelectors = topElementSelectors;
+        this.delegateIgnoreSelectors = delegateIgnoreSelectors;
         this.playButtonSelector = playButtonSelector;
         this.volumeButtonSelector = volumeButtonSelector;
         this.fullscreenButtonSelector = fullscreenButtonSelector;
