@@ -14,7 +14,9 @@
         "bunediy_小度云": "bunediy",
         "huishij_天空云": "huishij",
         "aoxtv_八戒云": "aoxtv",
-        "JAVTRAILERS_VIDEO": "JAVTRAILERS_VIDEO"
+        "JAVTRAILERS_VIDEO": "JAVTRAILERS_VIDEO",
+        "MSI": "MSI",
+        "MSI_MOTHERBOARD_SUPPORT": "MSI Motherboard Support"
     },
     "sitecategories": {},
     "videocategories": {
@@ -107,6 +109,11 @@
             "id": "Fandom Wiki",
             "baseSiteId": "Fandom",
             "hrefRegEx": "^https://\\w+\\.fandom\\.com/wiki/.+"
+        },
+        {
+            "id": "MSI_MOTHERBOARD_SUPPORT",
+            "baseSiteId": "MSI",
+            "hrefRegEx": "^https://\\w+.msi.com/Motherboard/[^/]+/support"
         }
     ],
     "videosites": [

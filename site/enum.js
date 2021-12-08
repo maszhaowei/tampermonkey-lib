@@ -3,6 +3,7 @@ import { Site, VideoSite, VideoPortalSite, PlayerMetadata, _VideoCategories, Sea
  * @enum {string}
  */
 export const SiteCategories = {
+    COMPUTER_HARDWARE: "Computer Hardware",
     DATABASE: "Database",
     DICTIONARY: "Dictionary",
     GAMING: "Gaming",
