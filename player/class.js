@@ -69,8 +69,9 @@ class VideoEventDelegate extends EventObserverWrapper {
      * @param {string} [previousSiblingSelector] - {@link previousSiblingSelector} or {@link defaultDelegateSelector} is required.
      * @param {string} [defaultDelegateSelector] 
      * @param {string[]} [ignoreList] 
+     * @param {Map<string,string[]>} [delegateIgnoreMap] 
      */
-    static getInstance(video, previousSiblingSelector, defaultDelegateSelector, ignoreList = []) {
+    static getInstance(video, previousSiblingSelector, defaultDelegateSelector, ignoreList = [], delegateIgnoreMap) {
         /** @type {Promise<Element>} */
         let promiseCreate = previousSiblingSelector ? new Promise((resolve) => {
             document.arrive(previousSiblingSelector, { existing: true, onceOnly: true }, (previousSibling) => {
@@ -94,7 +95,30 @@ class VideoEventDelegate extends EventObserverWrapper {
             if (!delegateEle) throw new Error('No event delegate');
 
             VideoEventDelegate.#bindVideo(delegateEle, video);
-            return VideoEventDelegate.#createInstance(delegateEle);
+            let delegate = VideoEventDelegate.#createInstance(delegateEle);
+            if (delegateIgnoreMap) delegate.#ignoreDelegate(delegateIgnoreMap);
+            return delegate;
+        });
+    }
+    /**
+     * 
+     * @param {Map<string,string[]>} delegateIgnoreMap 
+     */
+    #ignoreDelegate(delegateIgnoreMap = new Map()) {
+        delegateIgnoreMap.forEach((eventTypes, selector) => {
+            document.arrive(selector, { existing: true }, (element) => {
+                eventTypes.forEach((eventType) => {
+                    this.#delegate.addEventListener(eventType, (e) => {
+                        // Prevent calling handlers registered by this.registerEventHandler.
+                        e.stopImmediatePropagation();
+                        element.dispatchEvent(e);
+                    }, false);
+                    this.#delegate.addEventListener(eventType, (e) => {
+                        e.stopImmediatePropagation();
+                        element.dispatchEvent(e);
+                    }, true);
+                });
+            });
         });
     }
     #clean() {
@@ -224,7 +248,7 @@ export class VideoInstance extends EventObserverWrapper {
         let ignoreList = this.#playerMetadata.delegateIgnoreSelectors || [];
         if (this.#playerMetadata.controlsSelector) ignoreList.push(this.#playerMetadata.controlsSelector);
         return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.controlsSelector,
-            this.#playerMetadata.containerSelector, ignoreList)
+            this.#playerMetadata.containerSelector, ignoreList, this.#playerMetadata.delegateIgnoreMap)
             .then((videoDelegate) => {
                 this.#videoDelegate = videoDelegate;
                 this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);

@@ -29,6 +29,10 @@ export class PlayerMetadata {
     webFullscreenButtonSelector;
     volumeButtonSelector;
     /**
+     * <selector, event types>. Use this if not all of the event types of selector should be delegated. 
+     */
+    delegateIgnoreMap;
+    /**
      * @param {object} options
      * @param {string} options.containerSelector 
      * @param {string} [options.controlsSelector] 
@@ -37,9 +41,10 @@ export class PlayerMetadata {
      * @param {string} [options.volumeButtonSelector] 
      * @param {string} [options.fullscreenButtonSelector] 
      * @param {string} [options.webFullscreenButtonSelector] 
+     * @param {Map<string,string[]>} [options.delegateIgnoreMap] 
      */
     constructor({ containerSelector, controlsSelector, delegateIgnoreSelectors = [],
-        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector }) {
+        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector, delegateIgnoreMap = new Map() }) {
         this.containerSelector = containerSelector;
         this.controlsSelector = controlsSelector;
         this.delegateIgnoreSelectors = delegateIgnoreSelectors;
@@ -47,6 +52,7 @@ export class PlayerMetadata {
         this.volumeButtonSelector = volumeButtonSelector;
         this.fullscreenButtonSelector = fullscreenButtonSelector;
         this.webFullscreenButtonSelector = webFullscreenButtonSelector;
+        this.delegateIgnoreMap = delegateIgnoreMap;
     }
     copy() {
         let metadata = new PlayerMetadata({});
