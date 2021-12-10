@@ -280,10 +280,6 @@ export class EventObserverWrapper {
             this.#handlerMap.delete(key);
         }
     }
-    /**
-     * 
-     * @param {*} [context] 
-     */
     clean() {
         this.#handlerMap.forEach((wrapHandler, key) => {
             this.#target.removeEventListener(key[0], wrapHandler, key[2]);
