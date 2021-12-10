@@ -152,28 +152,6 @@ class VideoEventDelegate extends EventObserverWrapper {
         else this.#clean();
     }
 }
-export class VideoInstanceData {
-    video;
-    playerMetadata;
-    title;
-    progress;
-    volume;
-    /**
-     * @param {object} options
-     * @param {HTMLVideoElement} options.video 
-     * @param {import('../site/class').PlayerMetadata} options.playerMetadata
-     * @param {string} [options.title] 
-     * @param {number} [options.progress] 
-     * @param {number} [options.volume] 
-     */
-    constructor({ video, playerMetadata, title, progress, volume }) {
-        this.video = video;
-        this.playerMetadata = playerMetadata;
-        this.title = title;
-        this.progress = progress;
-        this.volume = volume;
-    }
-}
 export class VideoInstance extends EventObserverWrapper {
     #video;
     #title;
