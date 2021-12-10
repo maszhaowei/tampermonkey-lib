@@ -79,8 +79,9 @@
             "hrefRegEx": "^https://(www\\.)?hacg\\.[a-z]+/wp/.+",
             "additionalInfo": {
                 "paginationInfo": {
-                    "prevBtnSelector": ".page_info+li:not(.active_page) a",
-                    "nextBtnSelector": "#wp_page_numbers ul li:last-child:not(.active_page) a"
+                    "prevBtnSelector": "a.previouspostslink",
+                    "nextBtnSelector": "a.nextpostslink",
+                    "lastBtnSelector": "a.last"
                 }
             }
         },
