@@ -17,7 +17,7 @@ export class PlayerMetadata {
      */
     containerSelector;
     /**
-     * Selector for video controls.Must be sibling of video's ancestor.
+     * Selector for video controls. Must be sibling of video's ancestor.
      */
     controlsSelector;
     /**
