@@ -501,8 +501,8 @@ export class VideoInstance extends EventObserverWrapper {
     /* #endregion */
     clean() {
         this.#videoDelegate.unbindVideo(this.#video);
-        this.#video = this.#playerMetadata = this.#videoDelegate = null;
         VideoInstance.#instanceMap.delete(this.#video);
+        this.#video = this.#playerMetadata = this.#videoDelegate = null;
         super.clean();
     }
 }
