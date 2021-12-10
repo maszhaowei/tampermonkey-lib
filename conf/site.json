@@ -76,7 +76,7 @@
         {
             "id": "Hacg Blog",
             "baseSiteId": "hacg",
-            "hrefRegEx": "^https://www\\.hacg\\.[a-z]+/wp/.+",
+            "hrefRegEx": "^https://(www\\.)?hacg\\.[a-z]+/wp/.+",
             "additionalInfo": {
                 "paginationInfo": {
                     "prevBtnSelector": ".page_info+li:not(.active_page) a",
