@@ -208,18 +208,18 @@ export class LooseMap extends Map {
     }
 }
 export class ApplyMethodSignature {
-    context;
+    thisArg;
     fn;
     args;
     /**
      * 
      * @param {function} fn 
-     * @param {*} [context]
+     * @param {*} [thisArg]
      * @param {any[]} [args] 
      */
-    constructor(fn, context, args) {
+    constructor(fn, thisArg, args) {
         this.fn = fn;
-        this.context = context;
+        this.thisArg = thisArg;
         this.args = args || [];
     }
 }

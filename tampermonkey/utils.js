@@ -29,7 +29,7 @@ export class CssCacheHelper {
         /** @type ApplyMethodSignature */
         let sig = this.#cacheMap.get(t);
         if (sig) {
-            sig.fn.apply(sig.context, sig.args);
+            sig.fn.apply(sig.thisArg, sig.args);
             if (clearAfterRestore) this.#cacheMap.delete(t);
             return true;
         }

@@ -35,7 +35,7 @@ function restoreElementDisplay(element) {
  * @returns {Promise<Element[]|Error>}
  */
 function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
-    let context = applySig.context;
+    let context = applySig.thisArg;
     return new Promise((resolve, reject) => {
         if (cutil.isString(context)) {
             document.arrive(context, { existing: true, onceOnly: true }, function () {
