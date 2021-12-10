@@ -227,19 +227,19 @@ export class EventHandlerWrapper {
     eventType;
     handler;
     useCapture;
-    context;
+    thisArg;
     /**
      * 
      * @param {string} eventType 
      * @param {(e:Event)=>void} handler 
-     * @param {any} [context] 
+     * @param {any} [thisArg] 
      * @param {boolean} [useCapture] 
      */
-    constructor(eventType, handler, context, useCapture = false) {
+    constructor(eventType, handler, thisArg, useCapture = false) {
         this.eventType = eventType;
         this.handler = handler;
         this.useCapture = useCapture;
-        this.context = context;
+        this.thisArg = thisArg;
     }
 }
 export class EventObserverWrapper {

@@ -299,7 +299,7 @@ export class VideoInstance extends EventObserverWrapper {
      */
     #preInit(preInitVideoObservers = []) {
         preInitVideoObservers.forEach((handlerWrapper) => {
-            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context, handlerWrapper.useCapture);
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.thisArg, handlerWrapper.useCapture);
         });
     }
     /**
@@ -309,10 +309,10 @@ export class VideoInstance extends EventObserverWrapper {
      */
     #postInit(postInitVideoObservers = [], postInitDelegateObservers = []) {
         postInitVideoObservers.forEach((handlerWrapper) => {
-            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context, handlerWrapper.useCapture);
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.thisArg, handlerWrapper.useCapture);
         });
         postInitDelegateObservers.forEach((handlerWrapper) => {
-            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context, handlerWrapper.useCapture);
+            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.thisArg, handlerWrapper.useCapture);
         });
     }
     /**
