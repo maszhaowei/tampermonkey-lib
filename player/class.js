@@ -64,7 +64,7 @@ class VideoEventDelegate extends EventObserverWrapper {
     }
     /**
      * 
-     * Create event delegate after {@link previousSiblingSelector} if there isn't one.
+     * Create event delegate after {@link previousSiblingSelector} if there isn't one or {@link defaultDelegateSelector} if {@link previousSiblingSelector} isn't set.
      * @param {HTMLVideoElement} video 
      * @param {string} [previousSiblingSelector] - {@link previousSiblingSelector} or {@link defaultDelegateSelector} is required.
      * @param {string} [defaultDelegateSelector] 
@@ -90,7 +90,9 @@ class VideoEventDelegate extends EventObserverWrapper {
                 }
                 resolve(delegateEle);
             });
-        }) : Promise.resolve(document.querySelector(defaultDelegateSelector));
+        }) : new Promise((resolve) => {
+            document.arrive(defaultDelegateSelector, { existing: true }, function () { resolve(this) });
+        });
         return promiseCreate.then((delegateEle) => {
             if (!delegateEle) throw new Error('No event delegate');
 
