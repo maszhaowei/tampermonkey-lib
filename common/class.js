@@ -144,7 +144,7 @@ export class Triple extends Tuple {
 }
 /**
  * @classdesc Key equality: Based on the sameValueZero algorithm and NaN equals NaN. Will compare each element if key is an array and call equals method if key implements IEquatable.
- * @extends Map
+ * @extends {Map<K,V>}
  * @template K,V
  */
 export class LooseMap extends Map {
@@ -226,78 +226,45 @@ export class ApplyMethodSignature {
 export class EventHandlerWrapper {
     eventType;
     handler;
+    useCapture;
     context;
     /**
      * 
      * @param {string} eventType 
      * @param {(e:Event)=>void} handler 
      * @param {any} [context] 
+     * @param {boolean} [useCapture] 
      */
-    constructor(eventType, handler, context) {
+    constructor(eventType, handler, context, useCapture = false) {
         this.eventType = eventType;
         this.handler = handler;
+        this.useCapture = useCapture;
         this.context = context;
     }
 }
 export class EventObserverWrapper {
     #target;
-    #supportedEventTypes;
-    /** @type {LooseMap<Tuple,ApplyMethodSignature[]>} */
-    #eventsObserverMap = new LooseMap();
-    /** @type {Map<boolean,(e:Event)=>void>} - Store aggregated handlers for unregistration. */
-    #aggregatedHandlerMap = new Map();
-    #captureOptions = [true, false];
+    /** @type {LooseMap<Triple<string,(e:Event)=>void,boolean>,(e:Event)=>void>} - Handler to wrapped handler map. */
+    #handlerMap = new LooseMap();
     /**
      * 
      * @param {EventTarget} target 
-     * @param {string[]} eventTypes
      */
-    constructor(target, eventTypes) {
+    constructor(target) {
         this.#target = target;
-        this.#supportedEventTypes = eventTypes;
-        this.#captureOptions.forEach((captureOption) => {
-            this.#aggregatedHandlerMap.set(captureOption, this.#buildAggregatedHandler(captureOption));
-        });
-        eventTypes.forEach((eventType) => {
-            this.#captureOptions.forEach((captureOption) => {
-                // All operations which depend on mutable property should be put in aggregatedHandler.(e.g. get #eventsObserverMap value)
-                // Event -> aggregatedHandler -> ApplyMethodSignature.fn.call(in #buildAggregatedHandler).
-                this.#target.addEventListener(eventType, this.#aggregatedHandlerMap.get(captureOption), captureOption);
-            });
-        });
     }
     /**
      * 
-     * @param {boolean} useCapture 
-     * @returns {(e:Event)=>void}
-     */
-    #buildAggregatedHandler(useCapture) {
-        return (e) => {
-            let sigs = this.#eventsObserverMap.get(new Tuple(e.type, useCapture));
-            if (sigs) {
-                sigs.forEach((sig) => {
-                    sig.fn.call(sig.context, e);
-                });
-            }
-        };
-    }
-    /**
-     * Handlers will be called in the order of registration. stopImmediatePropagation in handler doesn't work on other handlers of same <eventType, useCapture> that are registered by this function.
      * @param {string} eventType 
      * @param {(e:Event)=>void} handler 
-     * @param {boolean} [useCapture] - Default to false.
      * @param {*} [context] 
+     * @param {boolean} [useCapture] - Default to false.
      */
-    registerEventHandler(eventType, handler, useCapture = false, context) {
-        if (!this.#supportedEventTypes.includes(eventType)) throw new Error('Not supported event type: ' + eventType);
-        let sig = new ApplyMethodSignature(handler, context);
-        let key = new Tuple(eventType, useCapture);
-        if (this.#eventsObserverMap.has(key)) {
-            this.#eventsObserverMap.get(key).push(sig);
-        }
-        else {
-            this.#eventsObserverMap.set(key, [sig]);
-        }
+    registerEventHandler(eventType, handler, context, useCapture = false) {
+        let key = new Triple(eventType, handler, useCapture);
+        let wrapHandler = (e) => handler.call(context, e);
+        this.#handlerMap.set(key, wrapHandler);
+        this.#target.addEventListener(eventType, wrapHandler, useCapture);
     }
     /**
      * 
@@ -306,14 +273,11 @@ export class EventObserverWrapper {
      * @param {boolean} [useCapture] - Default to false.
      */
     unregisterEventHandler(eventType, handler, useCapture = false) {
-        let key = new Tuple(eventType, useCapture);
-        let sigs = this.#eventsObserverMap.get(key);
-        if (!sigs) return;
-        for (let i = 0; i < sigs.length; i++) {
-            if (handler == sigs[i].fn) {
-                sigs.splice(i, 1);
-                i--;
-            }
+        let key = new Triple(eventType, handler, useCapture);
+        let wrapHandler = this.#handlerMap.get(key);
+        if (wrapHandler) {
+            this.#target.removeEventListener(eventType, wrapHandler, useCapture);
+            this.#handlerMap.delete(key);
         }
     }
     /**
@@ -321,14 +285,11 @@ export class EventObserverWrapper {
      * @param {*} [context] 
      */
     clean() {
-        this.#supportedEventTypes.forEach((eventType) => {
-            this.#aggregatedHandlerMap.forEach((handler, useCapture) => {
-                this.#target.removeEventListener(eventType, handler, useCapture);
-            })
+        this.#handlerMap.forEach((wrapHandler, key) => {
+            this.#target.removeEventListener(key[0], wrapHandler, key[2]);
         });
-        this.#eventsObserverMap.clear();
-        this.#aggregatedHandlerMap.clear();
         this.#target = null;
+        this.#handlerMap.clear();
     }
 }
 
