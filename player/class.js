@@ -212,15 +212,19 @@ export class VideoInstance extends EventObserverWrapper {
     static #instanceMap = new WeakMap();
     /**
      * @hideconstructor
-     * @param {VideoInstanceData} initData 
+     * @param {HTMLVideoElement} video 
+     * @param {import('../site/class').PlayerMetadata} playerMetadata 
+     * @param {string} [title] 
+     * @param {number} [progress] 
+     * @param {number} [volume] 
      */
-    constructor(initData) {
-        super(initData.video, EnumHelper.toValueArray(MediaEvents).concat(EnumHelper.toValueArray(_VideoCustomEventTypes)));
-        this.#video = initData.video;
-        this.#playerMetadata = initData.playerMetadata;
-        this.#title = initData.title;
-        this.#initProgress = initData.progress;
-        this.#initVolume = initData.volume;
+    constructor(video, playerMetadata, title, progress, volume) {
+        super(video, EnumHelper.toValueArray(MediaEvents).concat(EnumHelper.toValueArray(_VideoCustomEventTypes)));
+        this.#video = video;
+        this.#playerMetadata = playerMetadata;
+        this.#title = title;
+        this.#initProgress = progress;
+        this.#initVolume = volume;
     }
     #triggerCustomEvent(eventType, data) {
         tutil.debug('CustomEvent:', eventType, data);
@@ -244,21 +248,8 @@ export class VideoInstance extends EventObserverWrapper {
         }
         this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_ATTR_INITIALIZED, { volume: volume, progress: progress });
     }
-    async #onLoadedMetadata() {
+    #onLoadedMetadata() {
         this.#initVideo();
-        let video = this.#video;
-        this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
-            this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
-            this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
-        }, this);
-        let ignoreList = this.#playerMetadata.delegateIgnoreSelectors || [];
-        if (this.#playerMetadata.controlsSelector) ignoreList.push(this.#playerMetadata.controlsSelector);
-        return VideoEventDelegate.getInstance(this.#video, this.#playerMetadata.controlsSelector,
-            this.#playerMetadata.containerSelector, ignoreList, this.#playerMetadata.delegateIgnoreMap)
-            .then((videoDelegate) => {
-                this.#videoDelegate = videoDelegate;
-                this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
-            });
     }
     async #bindEvent() {
         let video = this.#video;
@@ -270,14 +261,34 @@ export class VideoInstance extends EventObserverWrapper {
             this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
             this.#triggerCustomEvent(_VideoCustomEventTypes.PAUSE);
         }, this);
+        this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
+            this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
+            this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
+        }, this);
         return new Promise((resolve) => {
-            if (video.readyState >= MediaReadyState.HAVE_METADATA) return this.#onLoadedMetadata().then(() => resolve());
+            if (video.readyState >= MediaReadyState.HAVE_METADATA) {
+                this.#onLoadedMetadata();
+                resolve();
+            }
             else {
-                // 使用箭头表达式将handler的上下文由e.target切换为Player
                 this.registerVideoEventHandler(MediaEvents.LOADED_METADATA, () => {
-                    this.#onLoadedMetadata().then(() => resolve());
+                    this.#onLoadedMetadata();
+                    resolve();
                 }, this);
             }
+        });
+    }
+    #init() {
+        return this.#bindEvent().then(() => {
+            let playerMetadata = this.#playerMetadata;
+            let ignoreList = playerMetadata.delegateIgnoreSelectors || [];
+            if (this.#playerMetadata.controlsSelector) ignoreList.push(playerMetadata.controlsSelector);
+            return VideoEventDelegate.getInstance(this.#video, playerMetadata.controlsSelector,
+                this.#playerMetadata.containerSelector, ignoreList, playerMetadata.delegateIgnoreMap)
+                .then((videoDelegate) => {
+                    this.#videoDelegate = videoDelegate;
+                    this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
+                });
         });
     }
     /**
@@ -286,7 +297,7 @@ export class VideoInstance extends EventObserverWrapper {
      */
     #preInit(preInitVideoObservers = []) {
         preInitVideoObservers.forEach((handlerWrapper) => {
-            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context);
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context, handlerWrapper.useCapture);
         });
     }
     /**
@@ -296,20 +307,24 @@ export class VideoInstance extends EventObserverWrapper {
      */
     #postInit(postInitVideoObservers = [], postInitDelegateObservers = []) {
         postInitVideoObservers.forEach((handlerWrapper) => {
-            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context);
+            this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context, handlerWrapper.useCapture);
         });
         postInitDelegateObservers.forEach((handlerWrapper) => {
-            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context);
+            this.registerDelegateEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.context, handlerWrapper.useCapture);
         });
     }
     /**
-     * @param {VideoInstanceData} instanceData 
+     * @param {HTMLVideoElement} video
+     * @param {object} [VideoInitOptions]
+     * @param {string} [VideoInitOptions.title]
+     * @param {number} [VideoInitOptions.progress]
+     * @param {number} [VideoInitOptions.volume]
+     * @param {import('../site/class').PlayerMetadata} VideoInitOptions.playerMetadata 
      * @param {import('../common/class').EventHandlerWrapper[]} [preInitVideoObservers]
      * @param {import('../common/class').EventHandlerWrapper[]} [postInitVideoObservers]
      * @param {import('../common/class').EventHandlerWrapper[]} [postInitDelegateObservers]
      */
-    static getInstance(instanceData, preInitVideoObservers = [], postInitVideoObservers = [], postInitDelegateObservers = []) {
-        let video = instanceData.video;
+    static getInstance(video, { title, progress, volume, playerMetadata } = {}, preInitVideoObservers = [], postInitVideoObservers = [], postInitDelegateObservers = []) {
         let videoInstance = this.#instanceMap.get(video);
         if (videoInstance) {
             videoInstance.#preInit(preInitVideoObservers);
@@ -317,10 +332,10 @@ export class VideoInstance extends EventObserverWrapper {
             return Promise.resolve(videoInstance);
         }
         else {
-            videoInstance = new VideoInstance(instanceData);
+            videoInstance = new VideoInstance(video, playerMetadata, title, progress, volume);
             this.#instanceMap.set(video, videoInstance);
             videoInstance.#preInit(preInitVideoObservers);
-            return videoInstance.#bindEvent().then(() => {
+            return videoInstance.#init().then(() => {
                 videoInstance.#postInit(postInitVideoObservers, postInitDelegateObservers);
                 return videoInstance;
             });
@@ -345,8 +360,8 @@ export class VideoInstance extends EventObserverWrapper {
      * @param {(e:Event)=>void} handler 
      * @param {*} [context] 
      */
-    registerVideoEventHandler(eventType, handler, context) {
-        this.registerEventHandler(eventType, handler, false, context);
+    registerVideoEventHandler(eventType, handler, context, useCapture = false) {
+        this.registerEventHandler(eventType, handler, context, useCapture);
     }
     /**
      * Register event handler on video event delegate.
@@ -354,8 +369,8 @@ export class VideoInstance extends EventObserverWrapper {
      * @param {(e:Event)=>void} handler 
      * @param {*} [context] 
      */
-    registerDelegateEventHandler(eventType, handler, context) {
-        this.#videoDelegate.registerEventHandler(eventType, handler, false, context);
+    registerDelegateEventHandler(eventType, handler, context, useCapture = false) {
+        this.#videoDelegate.registerEventHandler(eventType, handler, context, useCapture);
     }
     /**
      * 
