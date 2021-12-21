@@ -16,7 +16,8 @@
         "aoxtv_八戒云": "aoxtv",
         "JAVTRAILERS_VIDEO": "JAVTRAILERS_VIDEO",
         "MSI": "MSI",
-        "MSI_MOTHERBOARD_SUPPORT": "MSI Motherboard Support"
+        "MSI_MOTHERBOARD_SUPPORT": "MSI Motherboard Support",
+        "BILIBILI_SPACE": "Bilibili Space"
     },
     "sitecategories": {},
     "videocategories": {
@@ -115,6 +116,11 @@
             "id": "MSI Motherboard Support",
             "baseSiteId": "MSI",
             "hrefRegEx": "^https://\\w+.msi.com/Motherboard/[^/]+/support"
+        },
+        {
+            "id": "Bilibili Space",
+            "baseSiteId": "BILIBILI",
+            "hrefRegEx": "^https://space\\.bilibili\\.com/\\d+"
         }
     ],
     "videosites": [
