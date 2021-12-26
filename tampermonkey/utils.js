@@ -89,18 +89,19 @@ export class GMStorageHelper {
     static clearExpiredValues() {
         let names = GM_listValues();
         let count = 0;
+        let now = Date.now();
         names.forEach((name) => {
             /** @type {StorageObj} */
             let storageObj = GM_getValue(name);
             if (!this.#isSupported(storageObj)) return;
             let expireTime = storageObj.expireTime;
             if (expireTime == 0) return;
-            if (Date.now() > expireTime) {
+            if (now > expireTime) {
                 GM_deleteValue(name);
                 count++;
             }
         });
-        util.debug(`Deleted ${count} expired records from storage.`)
+        util.debug(`Deleted ${count} expired records of total ${names.length} records from storage.`)
     }
     /**
      * Dependency: GM_listValues, GM_deleteValue.
