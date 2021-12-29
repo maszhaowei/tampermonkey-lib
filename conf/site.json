@@ -219,7 +219,8 @@
             "playerMetadataTemplate": "VJS",
             "volumeButtonSelector": ".vjs-volume-panel",
             "videoCategories": [
-                "JAV"
+                "JAV",
+                "Trailers"
             ]
         }
     ],

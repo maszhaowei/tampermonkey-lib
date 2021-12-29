@@ -9,7 +9,8 @@ import { util as tutil } from "../tampermonkey/util";
 export const _VideoCategories = {
     JAV: "JAV",
     TV_SERIES: "TV Series",
-    MOVIE: "Movie"
+    MOVIE: "Movie",
+    TRAILERS: "Trailers"
 };
 export class PlayerMetadata {
     /**
@@ -170,16 +171,12 @@ export class VideoSite extends Site {
         this.#defaultPlayerMetadata = defaultPlayerMetadata;
         this.videoCategories = videoCategories;
     }
-    getCurrentPageCategory() {
-        let videoCategories = this.videoCategories;
-        if (videoCategories.length == 1) return videoCategories[0];
-        if (videoCategories.includes(_VideoCategories.TV_SERIES)
-            && /([\u4e00-\u9fa5\w]+)(第.+季)?.*第(.+)集/.test(document.title)) return _VideoCategories.TV_SERIES;
-        else if (videoCategories.includes(_VideoCategories.JAV) && /([a-zA-Z]+-\d+)(-(\w+))?/.test(document.title))
-            return _VideoCategories.JAV;
-        else if (videoCategories.length == 2 && videoCategories.includes(_VideoCategories.MOVIE))
-            return _VideoCategories.MOVIE;
-        else return videoCategories;
+    /**
+     * @abstract
+     * @returns 
+     */
+    getCurrentPageCategories() {
+        return this.videoCategories;
     }
 }
 /**
@@ -204,16 +201,12 @@ export class VideoPortalSite extends Site {
         this.videoCategories = videoCategories;
         this.additionalInfo = additionalInfo;
     }
-    getCurrentPageCategory() {
-        let videoCategories = this.videoCategories;
-        if (videoCategories.length == 1) return videoCategories[0];
-        if (videoCategories.includes(_VideoCategories.TV_SERIES)
-            && /([\u4e00-\u9fa5\w]+)(第.+季)?.*第(.+)集/.test(document.title)) return _VideoCategories.TV_SERIES;
-        else if (videoCategories.includes(_VideoCategories.JAV) && /([a-zA-Z]+-\d+)(-(\w+))?/.test(document.title))
-            return _VideoCategories.JAV;
-        else if (videoCategories.length == 2 && videoCategories.includes(_VideoCategories.MOVIE))
-            return _VideoCategories.MOVIE;
-        else return videoCategories;
+    /**
+     * @abstract
+     * @returns 
+     */
+    getCurrentPageCategories() {
+        return this.videoCategories;
     }
 }
 
