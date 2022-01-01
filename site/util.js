@@ -42,7 +42,7 @@ function findCurrentSite(sites) {
         bindMessageHandler(baseSiteCandidate);
         return baseSiteCandidate;
     }
-    tutil.error('Can\'t find current site.');
+    tutil.debug('Can\'t find current site.');
 }
 export const util = {
     /**
@@ -74,7 +74,7 @@ export const util = {
             const site = SearchSites[s];
             if (site instanceof Site && site.test()) return site;
         }
-        tutil.error('Can\'t find current site.');
+        tutil.debug('Can\'t find current site.');
     },
     /**
      * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.
