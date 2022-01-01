@@ -42,7 +42,7 @@ function findCurrentSite(sites) {
         bindMessageHandler(baseSiteCandidate);
         return baseSiteCandidate;
     }
-    tutil.error('Can\'t find current site.');
+    tutil.debug('Can\'t find current site.');
 }
 export const util = {
     /**
