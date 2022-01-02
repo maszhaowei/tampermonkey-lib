@@ -10,9 +10,6 @@ import { EnumHelper } from '../common/utils';
 export const _VideoCustomEventTypes = {
     VIDEO_ATTR_INITIALIZED: 'video_attr_initialized',
     VIDEO_READY: 'video_ready',
-    PLAY: 'video_play',
-    PAUSE: 'video_pause',
-    VOLUME_CHANGE: 'video_volume_change',
     REQUEST_WEBFULLSCREEN: 'video_request_webfullscreen',
     EXIT_WEBFULLSCREEN: 'video_exit_webfullscreen'
 }
@@ -235,16 +232,19 @@ export class VideoInstance extends EventObserverWrapper {
         let video = this.#video;
         this.registerVideoEventHandler(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
-            this.#triggerCustomEvent(_VideoCustomEventTypes.PLAY);
         }, this);
         this.registerVideoEventHandler(MediaEvents.PAUSE, () => {
             this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
-            this.#triggerCustomEvent(_VideoCustomEventTypes.PAUSE);
         }, this);
         this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
             this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
-            this.#triggerCustomEvent(_VideoCustomEventTypes.VOLUME_CHANGE, { volume: video.volume });
+            // Video reload.
+            this.#initVolume = video.volume;
         }, this);
+        this.registerVideoEventHandler(MediaEvents.TIME_UPDATE, () => {
+            // Video reload.
+            this.#initProgress = video.currentTime;
+        });
         return new Promise((resolve) => {
             if (video.readyState >= MediaReadyState.HAVE_METADATA) {
                 this.#onLoadedMetadata();
