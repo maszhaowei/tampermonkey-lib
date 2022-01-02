@@ -238,13 +238,7 @@ export class VideoInstance extends EventObserverWrapper {
         }, this);
         this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
             this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
-            // Video reload.
-            this.#initVolume = video.volume;
         }, this);
-        this.registerVideoEventHandler(MediaEvents.TIME_UPDATE, () => {
-            // Video reload.
-            this.#initProgress = video.currentTime;
-        });
         return new Promise((resolve) => {
             if (video.readyState >= MediaReadyState.HAVE_METADATA) {
                 this.#onLoadedMetadata();
@@ -286,6 +280,14 @@ export class VideoInstance extends EventObserverWrapper {
      * @param {import('../common/class').EventHandlerWrapper[]} [postInitDelegateObservers]
      */
     #postInit(postInitVideoObservers = [], postInitDelegateObservers = []) {
+        this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
+            // Video reload.
+            this.#initVolume = this.#video.volume;
+        }, this);
+        this.registerVideoEventHandler(MediaEvents.TIME_UPDATE, () => {
+            // Video reload.
+            this.#initProgress = this.#video.currentTime;
+        });
         postInitVideoObservers.forEach((handlerWrapper) => {
             this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.thisArg, handlerWrapper.useCapture);
         });
