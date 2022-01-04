@@ -291,7 +291,7 @@ export const VideoSites = {
         originWhitelist: ["https://m.wukongmeiju.com"]
     }),
     YOUTUBE_EMBED_VIDEO: new VideoSite({
-        id: SiteIDs.YOUTUBE_EMBED_VIDEO, baseSiteId: SiteIDs.YOUTUBE, hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+$/,
+        id: SiteIDs.YOUTUBE_EMBED_VIDEO, baseSiteId: SiteIDs.YOUTUBE, hrefRegEx: /^https:\/\/www.youtube.com\/embed\/[\w-]+/,
         defaultPlayerMetadata: new PlayerMetadata({
             containerSelector: "div#player", controlsSelector: ".ytp-chrome-bottom", delegateIgnoreSelectors: [".ytp-pause-overlay"],
             playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
