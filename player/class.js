@@ -209,10 +209,7 @@ export class VideoInstance extends EventObserverWrapper {
     }
     #initVideo() {
         let video = this.#video;
-        video.removeAttribute('autoplay');
-        video.crossOrigin = 'anonymous';
 
-        if (this.#title) this.showTooltip(this.#title);
         let progress = this.#initProgress;
         if (progress != undefined) {
             tutil.debug(`Set init progress(s): ${progress}`);
@@ -270,6 +267,10 @@ export class VideoInstance extends EventObserverWrapper {
      * @param {import('../common/class').EventHandlerWrapper[]} [preInitVideoObservers]
      */
     #preInit(preInitVideoObservers = []) {
+        let video = this.#video;
+        video.removeAttribute('autoplay');
+        video.crossOrigin = 'anonymous';
+        if (this.#title) this.showTooltip(this.#title);
         preInitVideoObservers.forEach((handlerWrapper) => {
             this.registerVideoEventHandler(handlerWrapper.eventType, handlerWrapper.handler, handlerWrapper.thisArg, handlerWrapper.useCapture);
         });
