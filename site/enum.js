@@ -314,7 +314,7 @@ export const VideoSites = {
 export const VideoPortalSites = {
     "7MM_VIDEO_PORTAL": new VideoPortalSite({
         id: SiteIDs["7MM_VIDEO_PORTAL"], baseSiteId: SiteIDs["7MM"], hrefRegEx: /^https:\/\/7mmtv\.tv\/.+/,
-        videoCategories: [VideoCategories.JAV],
+        videoCategories: [VideoCategories.PORNOGRAPHIC_FILM],
         originWhitelist: ["https://mm9842.com", "https://avgle.com"]
     }),
     MEIJUBS_VIDEO_PORTAL: new VideoPortalSite({

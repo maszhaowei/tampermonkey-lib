@@ -10,7 +10,8 @@ export const _VideoCategories = {
     JAV: "JAV",
     TV_SERIES: "TV Series",
     MOVIE: "Movie",
-    TRAILERS: "Trailers"
+    TRAILERS: "Trailers",
+    PORNOGRAPHIC_FILM: "Pornographic Film"
 };
 export class PlayerMetadata {
     /**
