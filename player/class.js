@@ -373,14 +373,7 @@ export class VideoInstance extends EventObserverWrapper {
         video.volume = volume.toFixed(2);
     }
     saveVideoFrame(fileName = document.title) {
-        let video = this.#video;
-        let videoWidth = video.videoWidth;
-        let videoHeight = video.videoHeight;
-        let canvas = document.createElement('canvas');
-        canvas.width = videoWidth;
-        canvas.height = videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, videoWidth, videoHeight);
-        canvas.toBlob((blob) => cui.downloadBlob(blob, `${fileName}_${videoWidth}x${videoHeight}_${Math.trunc(video.currentTime)}.png`));
+        cui.saveVideoFrame(this.#video, fileName);
     }
 
     /* #region Video Control */

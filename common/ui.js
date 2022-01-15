@@ -404,6 +404,20 @@ export const ui = {
         a.click();
         URL.revokeObjectURL(a.href);
     },
+    /**
+     * 
+     * @param {HTMLVideoElement} video 
+     * @param {string} [fileName] - Default to document.title.
+     */
+    saveVideoFrame(video, fileName = document.title) {
+        let videoWidth = video.videoWidth;
+        let videoHeight = video.videoHeight;
+        let canvas = document.createElement('canvas');
+        canvas.width = videoWidth;
+        canvas.height = videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, videoWidth, videoHeight);
+        canvas.toBlob((blob) => ui.downloadBlob(blob, `${fileName}_${videoWidth}x${videoHeight}_${Math.trunc(video.currentTime)}.png`));
+    },
     /* #endregion */
     /* #region Fullscreen/Webfullscreen */
     isFullscreen() {
