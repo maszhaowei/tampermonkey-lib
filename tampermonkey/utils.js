@@ -68,6 +68,7 @@ export class GMStorageHelper {
         /** @type {StorageObj} */
         let storageObj = GM_getValue(name, defaultValue);
         if (this.#isSupported(storageObj)) {
+            // Use expireDays to refresh expireTime.
             this.setValue(name, storageObj.value, storageObj.expireDays);
             return storageObj.value;
         }
@@ -114,5 +115,20 @@ export class GMStorageHelper {
             count++;
         });
         util.debug(`Deleted ${count} records from storage.`)
+    }
+}
+
+export class FutureHelper {
+    /**
+     * 
+     * @param {string} selector 
+     * @returns {Promise<Element>}
+     */
+    static arrive(selector) {
+        return new Promise((resolve) => {
+            document.arrive(selector, { existing: true }, function () {
+                resolve(this);
+            });
+        })
     }
 }
