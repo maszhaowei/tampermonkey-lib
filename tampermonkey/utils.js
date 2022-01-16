@@ -68,7 +68,7 @@ export class GMStorageHelper {
         /** @type {StorageObj} */
         let storageObj = GM_getValue(name, defaultValue);
         if (this.#isSupported(storageObj)) {
-            // Use expireDays to refresh expireTime.
+            // Use expireDays for renewal.
             this.setValue(name, storageObj.value, storageObj.expireDays);
             return storageObj.value;
         }
@@ -84,6 +84,7 @@ export class GMStorageHelper {
         /** @type {StorageObj} */
         let storageObj = GM_getValue(name);
         expireDays = expireDays ?? storageObj?.expireDays ?? 30;
+        // Use expireDays for renewal.
         let expireTime = this.#calExpireTime(expireDays);
         GM_setValue(name, { value: value, expireDays: expireDays, expireTime: expireTime });
     }
