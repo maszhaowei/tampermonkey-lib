@@ -1,6 +1,7 @@
-import { ApplyMethodSignature, Tuple, LooseMap } from "../common/class";
+import { ApplyMethodSignature, LooseMap, Couple } from "../common/class";
 import { util } from "./util";
 export class CssCacheHelper {
+    /** @type {LooseMap<Couple<Element,string>,ApplyMethodSignature>} */
     static #cacheMap = new LooseMap();
     /** 
      * @private
@@ -15,7 +16,7 @@ export class CssCacheHelper {
      * @param {any[]} [args] 
      */
     static save(element, cssKey, callback, args) {
-        this.#cacheMap.set(new Tuple(element, cssKey), new ApplyMethodSignature(callback, element, args));
+        this.#cacheMap.set(new Couple(element, cssKey), new ApplyMethodSignature(callback, element, args));
     }
     /**
      * 
@@ -25,8 +26,7 @@ export class CssCacheHelper {
      * @returns {boolean} Whether the specified obj and key exists in cache.
      */
     static restore(element, cssKey, clearAfterRestore = false) {
-        let t = new Tuple(element, cssKey);
-        /** @type ApplyMethodSignature */
+        let t = new Couple(element, cssKey);
         let sig = this.#cacheMap.get(t);
         if (sig) {
             sig.fn.apply(sig.thisArg, sig.args);
