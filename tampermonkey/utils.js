@@ -29,28 +29,45 @@ export class ObjectCacheHelper {
         return true;
     }
 }
+/**
+ * 
+ * @param {string} cssProperty 
+ */
+function cssPropertyToJSNotation(cssProperty) {
+    let jsCss = '';
+    for (let i = 0; i < cssProperty.length; i++) {
+        if (cssProperty.charAt(i) === '-') {
+            if (i + 1 < cssProperty.length) {
+                jsCss += cssProperty.charAt(i + 1).toUpperCase();
+                i++;
+            }
+        }
+        else jsCss += cssProperty.charAt(i);
+    }
+    return jsCss;
+}
 export class CssCacheHelper {
     /** @type {LooseMap<Couple<HTMLElement,string>,string>} */
     static #cssCacheMap = new LooseMap();
     /**
      * 
      * @param {HTMLElement} element 
-     * @param {string} cssKey - Equivalent DOM notation of a css property. @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Properties_Reference
+     * @param {string} cssProperty - https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Properties_Reference
      */
-    static save(element, cssKey) {
-        this.#cssCacheMap.set(new Couple(element, cssKey), window.getComputedStyle(element).getPropertyValue(cssKey));
+    static save(element, cssProperty) {
+        this.#cssCacheMap.set(new Couple(element, cssProperty), window.getComputedStyle(element).getPropertyValue(cssProperty));
     }
     /**
      * 
      * @param {HTMLElement} element 
-     * @param {string} cssKey 
+     * @param {string} cssProperty 
      * @param {boolean} [clearAfterRestore] - Default to false.
      * @returns 
      */
-    static restore(element, cssKey, clearAfterRestore = false) {
-        let mapKey = new Couple(element, cssKey);
+    static restore(element, cssProperty, clearAfterRestore = false) {
+        let mapKey = new Couple(element, cssProperty);
         if (!this.#cssCacheMap.has(mapKey)) return false;
-        element.style[cssKey] = this.#cssCacheMap.get(mapKey);
+        element.style[cssPropertyToJSNotation(cssProperty)] = this.#cssCacheMap.get(mapKey);
         if (clearAfterRestore) this.#cssCacheMap.delete(mapKey);
         return true;
     }
