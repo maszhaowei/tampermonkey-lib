@@ -124,9 +124,11 @@ export const ui = {
      * @param {()=>void} [expandCallback]
      */
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
+        CssCacheHelper.save(element, 'minHeight');
+        CssCacheHelper.save(element, 'height');
         let h = collapseHeight + 'px';
-        CssCacheHelper.save(element, 'minHeight', h);
-        CssCacheHelper.save(element, 'height', h);
+        element.style.minHeight = h;
+        element.style.height = h;
         let children = element.children;
         for (let i = 0; i < children.length; i++) {
             hideElement(children[i], true);
