@@ -17,10 +17,10 @@ export class ObjectCacheHelper {
      * 
      * @param {object} obj 
      * @param {string} key 
-     * @param {boolean} [clearAfterRestore] - Default to true.
+     * @param {boolean} [clearAfterRestore] - Default to false.
      * @returns {boolean} Whether the specified obj and key exists in cache.
      */
-    static restoreCallback(obj, key, clearAfterRestore = true) {
+    static restoreCallback(obj, key, clearAfterRestore = false) {
         let t = new Couple(obj, key);
         let sig = this.#callbackCacheMap.get(t);
         if (!sig) return false;
@@ -44,10 +44,10 @@ export class CssCacheHelper {
      * 
      * @param {HTMLElement} element 
      * @param {string} cssKey 
-     * @param {boolean} [clearAfterRestore] - Default to true.
+     * @param {boolean} [clearAfterRestore] - Default to false.
      * @returns 
      */
-    static restore(element, cssKey, clearAfterRestore = true) {
+    static restore(element, cssKey, clearAfterRestore = false) {
         let mapKey = new Couple(element, cssKey);
         if (!this.#cssCacheMap.has(mapKey)) return false;
         element.style[cssKey] = this.#cssCacheMap.get(mapKey);
