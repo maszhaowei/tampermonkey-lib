@@ -2,7 +2,7 @@ import { util as cutil } from '../common/util';
 import { ApplyMethodSignature } from '../common/class';
 import { FORCE_HIDDEN_CLASSNAME } from './const';
 import '../css/common.css';
-import { ObjectCacheHelper } from './utils';
+import { CssCacheHelper, ObjectCacheHelper } from './utils';
 
 /**
  * 
@@ -124,10 +124,8 @@ export const ui = {
      * @param {()=>void} [expandCallback]
      */
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
-        let minHeight = window.getComputedStyle(element).minHeight;
-        let height = window.getComputedStyle(element).height;
-        ObjectCacheHelper.saveCallback(element, 'minHeight', () => element.style.minHeight = minHeight);
-        ObjectCacheHelper.saveCallback(element, 'height', () => element.style.height = height);
+        CssCacheHelper.save(element, 'minHeight');
+        CssCacheHelper.save(element, 'height');
         let h = collapseHeight + 'px';
         element.style.minHeight = h;
         element.style.height = h;
@@ -137,8 +135,8 @@ export const ui = {
         }
         collapseCallback && collapseCallback();
         element.addEventListener('mouseenter', () => {
-            ObjectCacheHelper.restoreCallback(element, 'minHeight');
-            ObjectCacheHelper.restoreCallback(element, 'height');
+            CssCacheHelper.restore(element, 'minHeight');
+            CssCacheHelper.restore(element, 'height');
             let children = element.children;
             for (let i = 0; i < children.length; i++) {
                 restoreElementDisplay(children[i]);
