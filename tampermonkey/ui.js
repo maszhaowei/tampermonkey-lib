@@ -124,7 +124,7 @@ export const ui = {
      * @param {()=>void} [expandCallback]
      */
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
-        CssCacheHelper.save(element, 'minHeight');
+        CssCacheHelper.save(element, 'min-height');
         CssCacheHelper.save(element, 'height');
         let h = collapseHeight + 'px';
         element.style.minHeight = h;
@@ -135,7 +135,7 @@ export const ui = {
         }
         collapseCallback && collapseCallback();
         element.addEventListener('mouseenter', () => {
-            CssCacheHelper.restore(element, 'minHeight');
+            CssCacheHelper.restore(element, 'min-height');
             CssCacheHelper.restore(element, 'height');
             let children = element.children;
             for (let i = 0; i < children.length; i++) {
