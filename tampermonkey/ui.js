@@ -2,7 +2,7 @@ import { util as cutil } from '../common/util';
 import { ApplyMethodSignature } from '../common/class';
 import { FORCE_HIDDEN_CLASSNAME } from './const';
 import '../css/common.css';
-import { CssCacheHelper } from './utils';
+import { ObjectCacheHelper } from './utils';
 
 /**
  * 
@@ -12,7 +12,7 @@ import { CssCacheHelper } from './utils';
 function hideElement(element, force = false) {
     if (!element) return;
     let display = window.getComputedStyle(element).display;
-    CssCacheHelper.save(element, 'display', () => {
+    ObjectCacheHelper.saveCallback(element, 'display', () => {
         element.classList.remove(FORCE_HIDDEN_CLASSNAME);
         element.style.display = display;
     });
@@ -24,7 +24,7 @@ function hideElement(element, force = false) {
  * @param {HTMLElement} element 
  */
 function restoreElementDisplay(element) {
-    CssCacheHelper.restore(element, 'display');
+    ObjectCacheHelper.restoreCallback(element, 'display');
 }
 /**
  * 
@@ -126,8 +126,8 @@ export const ui = {
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
         let minHeight = window.getComputedStyle(element).minHeight;
         let height = window.getComputedStyle(element).height;
-        CssCacheHelper.save(element, 'minHeight', () => element.style.minHeight = minHeight);
-        CssCacheHelper.save(element, 'height', () => element.style.height = height);
+        ObjectCacheHelper.saveCallback(element, 'minHeight', () => element.style.minHeight = minHeight);
+        ObjectCacheHelper.saveCallback(element, 'height', () => element.style.height = height);
         let h = collapseHeight + 'px';
         element.style.minHeight = h;
         element.style.height = h;
@@ -137,8 +137,8 @@ export const ui = {
         }
         collapseCallback && collapseCallback();
         element.addEventListener('mouseenter', () => {
-            CssCacheHelper.restore(element, 'minHeight');
-            CssCacheHelper.restore(element, 'height');
+            ObjectCacheHelper.restoreCallback(element, 'minHeight');
+            ObjectCacheHelper.restoreCallback(element, 'height');
             let children = element.children;
             for (let i = 0; i < children.length; i++) {
                 restoreElementDisplay(children[i]);

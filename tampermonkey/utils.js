@@ -1,39 +1,58 @@
 import { ApplyMethodSignature, LooseMap, Couple } from "../common/class";
 import { util } from "./util";
-export class CssCacheHelper {
-    /** @type {LooseMap<Couple<Element,string>,ApplyMethodSignature>} */
-    static #cacheMap = new LooseMap();
-    /** 
-     * @private
-     * @hideconstructor
-     */
-    constructor() { }
+export class ObjectCacheHelper {
+    /** @type {LooseMap<Couple<object,string>,ApplyMethodSignature>} */
+    static #callbackCacheMap = new LooseMap();
     /**
      * 
-     * @param {Element} element 
-     * @param {string} cssKey 
+     * @param {Element} obj 
+     * @param {string} key 
      * @param {function} callback 
      * @param {any[]} [args] 
      */
-    static save(element, cssKey, callback, args) {
-        this.#cacheMap.set(new Couple(element, cssKey), new ApplyMethodSignature(callback, element, args));
+    static saveCallback(obj, key, callback, args) {
+        this.#callbackCacheMap.set(new Couple(obj, key), new ApplyMethodSignature(callback, obj, args));
     }
     /**
      * 
-     * @param {Element} element 
-     * @param {string} cssKey 
-     * @param {boolean} clearAfterRestore
+     * @param {object} obj 
+     * @param {string} key 
+     * @param {boolean} [clearAfterRestore] - Default to true.
      * @returns {boolean} Whether the specified obj and key exists in cache.
      */
-    static restore(element, cssKey, clearAfterRestore = false) {
-        let t = new Couple(element, cssKey);
-        let sig = this.#cacheMap.get(t);
-        if (sig) {
-            sig.fn.apply(sig.thisArg, sig.args);
-            if (clearAfterRestore) this.#cacheMap.delete(t);
-            return true;
-        }
-        return false;
+    static restoreCallback(obj, key, clearAfterRestore = true) {
+        let t = new Couple(obj, key);
+        let sig = this.#callbackCacheMap.get(t);
+        if (!sig) return false;
+        sig.fn.apply(sig.thisArg, sig.args);
+        if (clearAfterRestore) this.#callbackCacheMap.delete(t);
+        return true;
+    }
+}
+export class CssCacheHelper {
+    /** @type {LooseMap<Couple<HTMLElement,string>,string>} */
+    static #cssCacheMap = new LooseMap();
+    /**
+     * 
+     * @param {HTMLElement} element 
+     * @param {string} cssKey - Equivalent DOM notation of a css property. @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Properties_Reference
+     */
+    static save(element, cssKey) {
+        this.#cssCacheMap.set(new Couple(element, cssKey), window.getComputedStyle(element).getPropertyValue(cssKey));
+    }
+    /**
+     * 
+     * @param {HTMLElement} element 
+     * @param {string} cssKey 
+     * @param {boolean} [clearAfterRestore] - Default to true.
+     * @returns 
+     */
+    static restore(element, cssKey, clearAfterRestore = true) {
+        let mapKey = new Couple(element, cssKey);
+        if (!this.#cssCacheMap.has(mapKey)) return false;
+        element.style[cssKey] = this.#cssCacheMap.get(mapKey);
+        if (clearAfterRestore) this.#cssCacheMap.delete(mapKey);
+        return true;
     }
 }
 /**
