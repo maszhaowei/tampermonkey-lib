@@ -36,9 +36,11 @@ export class CssCacheHelper {
      * 
      * @param {HTMLElement} element 
      * @param {string} cssKey - Equivalent DOM notation of a css property. @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Properties_Reference
+     * @param {string} [replaceCssValue]
      */
-    static save(element, cssKey) {
+    static save(element, cssKey, replaceCssValue) {
         this.#cssCacheMap.set(new Couple(element, cssKey), window.getComputedStyle(element).getPropertyValue(cssKey));
+        if (replaceCssValue !== undefined) element.style[cssKey] = replaceCssValue;
     }
     /**
      * 
