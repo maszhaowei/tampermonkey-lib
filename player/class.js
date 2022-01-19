@@ -4,7 +4,7 @@ import { EventObserverWrapper, PositionOption } from '../common/class';
 import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
-import { ObjectCacheHelper } from '../tampermonkey/utils';
+import { CssCacheHelper, ObjectCacheHelper } from '../tampermonkey/utils';
 import { EnumHelper } from '../common/utils';
 
 export const _VideoCustomEventTypes = {
@@ -395,13 +395,12 @@ export class VideoInstance extends EventObserverWrapper {
     }
     #saveAndSetCss() {
         let html = document.documentElement;
-        let overflow = window.getComputedStyle(html).getPropertyValue('overflow');
-        ObjectCacheHelper.saveCallback(html, 'overflow', () => html.style.overflow = overflow);
+        CssCacheHelper.save(html, 'overflow');
         ObjectCacheHelper.saveCallback(html, 'scroll', HTMLElement.prototype.scrollTo, [html.scrollLeft, html.scrollTop]);
         document.documentElement.style.overflow = 'hidden';
     }
     #restoreCss() {
-        ObjectCacheHelper.restoreCallback(document.documentElement, 'overflow');
+        CssCacheHelper.restore(document.documentElement, 'overflow');
         ObjectCacheHelper.restoreCallback(document.documentElement, 'scroll');
     }
     requestWebFullscreen() {
