@@ -337,7 +337,8 @@ export const ui = {
     isInputEvent(e) {
         if (!(e instanceof KeyboardEvent)) return false;
         let target = e.target;
-        if (target instanceof Element) return target.tagName.toUpperCase() == "TEXTAREA" || (target.tagName.toUpperCase() == "INPUT" && target.type == "text");
+        if (target instanceof Element) return target.tagName.toUpperCase() == "TEXTAREA" || (target.tagName.toUpperCase() == "INPUT" && target.type == "text")
+            || target.getAttribute('contenteditable') === 'true' || target.getAttribute('contenteditable') === '';
         else return e.isComposing || e.keyCode === 229;
     },
     /**
