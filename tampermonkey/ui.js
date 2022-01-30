@@ -23,7 +23,7 @@ function hideElement(element, force = false) {
  * 
  * @param {HTMLElement} element 
  */
-function restoreElementDisplay(element) {
+function unhideElement(element) {
     ObjectCacheHelper.restoreCallback(element, 'display');
 }
 /**
@@ -143,7 +143,7 @@ export const ui = {
             CssCacheHelper.restore(element, 'height');
             let children = element.children;
             for (let i = 0; i < children.length; i++) {
-                restoreElementDisplay(children[i]);
+                unhideElement(children[i]);
             }
             expandCallback && expandCallback();
         });
