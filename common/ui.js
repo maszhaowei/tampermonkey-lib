@@ -353,6 +353,14 @@ export const ui = {
     },
     /**
      * 
+     * @param {KeyboardEvent} e 
+     * @returns {boolean} If a modifier key is pressed or locked.
+     */
+    getModifierState(e) {
+        return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
+    },
+    /**
+     * 
      * @param {string} tooltip
      * @param {import('./class').PositionOption} options
      * @param {number} [timeout] - Timeout(ms) before tooltip begins to fade out. Default to 1000.
