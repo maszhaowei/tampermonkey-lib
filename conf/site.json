@@ -108,6 +108,15 @@
             }
         },
         {
+            "id": "BWIKI",
+            "hrefRegEx": "^https://wiki\\.biligame\\.com/.+",
+            "additionalInfo": {
+                "paginationInfo": {
+                    "currentBtnSelector": "span[current]"
+                }
+            }
+        },
+        {
             "id": "Fandom Wiki",
             "baseSiteId": "Fandom",
             "hrefRegEx": "^https://\\w+\\.fandom\\.com/wiki/.+"
