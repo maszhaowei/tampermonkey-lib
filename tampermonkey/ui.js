@@ -125,9 +125,6 @@ export const ui = {
      * @returns {boolean} Whether the element needs to be collapsed.
      */
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
-        if (window.getComputedStyle(element).getPropertyValue('height').match(/\d+/)[0] <= collapseHeight) {
-            return false;
-        }
         CssCacheHelper.save(element, 'min-height');
         CssCacheHelper.save(element, 'height');
         let h = collapseHeight + 'px';
