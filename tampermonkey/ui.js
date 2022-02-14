@@ -125,7 +125,7 @@ export const ui = {
             }
             collapseCallback && collapseCallback();
             element.addEventListener('mouseenter', () => {
-                element.remove(collapseClass);
+                element.classList.remove(collapseClass);
                 let children = element.children;
                 for (let i = 0; i < children.length; i++) {
                     unhideElement(children[i]);
@@ -155,7 +155,7 @@ export const ui = {
                     ui.collapse(entry.target, entry.contentBoxSize[0].blockSize, collapseCallback, expandCallback)
                     : ui.collapse(entry.target, entry.contentRect.height, collapseCallback, expandCallback);
             }
-        })
+        });
         resizeObserver.observe(element);
     }
 }
