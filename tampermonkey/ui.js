@@ -2,29 +2,25 @@ import { util as cutil } from '../common/util';
 import { ApplyMethodSignature } from '../common/class';
 import { FORCE_HIDDEN_CLASSNAME } from './const';
 import '../css/common.css';
-import { CssCacheHelper, ObjectCacheHelper } from './utils';
 
+/** @type {WeakMap<HTMLElement,string>} */
+let collapseClassMap = new WeakMap();
+function randomId() {
+    return Math.random().toString().slice(2, 10);
+}
 /**
  * 
  * @param {HTMLElement} element 
- * @param {boolean} [force]
  */
-function hideElement(element, force = false) {
-    if (!element) return;
-    let display = window.getComputedStyle(element).display;
-    ObjectCacheHelper.saveCallback(element, 'display', () => {
-        element.classList.remove(FORCE_HIDDEN_CLASSNAME);
-        element.style.display = display;
-    });
-    element.style.display = 'none';
-    if (force) element.classList.add(FORCE_HIDDEN_CLASSNAME);
+function hideElement(element) {
+    element?.classList.add(FORCE_HIDDEN_CLASSNAME);
 }
 /**
  * 
  * @param {HTMLElement} element 
  */
 function unhideElement(element) {
-    ObjectCacheHelper.restoreCallback(element, 'display');
+    element?.classList.remove(FORCE_HIDDEN_CLASSNAME);
 }
 /**
  * 
@@ -90,31 +86,15 @@ export const ui = {
     /**
      * Hide {@link hideTarget} in {@link context}. Dependency: context.arrive.
      * @param {string|HTMLElement} hideTarget 
-     * @param {boolean} [force] - Use css !important. Default to false.
      * @param {Element|Document} [context] - Context to watch for creation of {@link hideTarget} if it's a selector. Default to document.
      */
-    hide: function (hideTarget, force = false, context = document) {
+    hide: function (hideTarget, context = document) {
         if (cutil.isString(hideTarget)) {
             context.arrive(hideTarget, { existing: true }, function () {
-                hideElement(this, force);
+                hideElement(this);
             })
         }
-        else if (hideTarget instanceof HTMLElement) hideElement(hideTarget, force);
-    },
-    /**
-     * Hide parent({@link parentSelector}) of {@link descendent} in {@link context}. Dependency: context.prototype.arrive.
-     * @param {string|HTMLElement} descendent 
-     * @param {string} parentSelector 
-     * @param {boolean} [force] - Use css !important. Default to false.
-     * @param {Element|Document} [context] - Context to watch for {@link descendent}. Default to document.
-     */
-    hideParent(descendent, parentSelector, force = false, context = document) {
-        if (cutil.isString(descendent)) {
-            context.arrive(descendent, { existing: true }, function () {
-                ui.hide(this.closest(parentSelector), force);
-            });
-        }
-        else if (descendent instanceof HTMLElement) ui.hide(descendent.closest(parentSelector), force);
+        else if (hideTarget instanceof HTMLElement) hideElement(hideTarget);
     },
     /**
      * Collapse {@link element} to height of {@link collapseHeight}(px). Mouse over to restore height and mouse leave to collapse again.
@@ -122,37 +102,60 @@ export const ui = {
      * @param {number} [collapseHeight] - Default to 20.
      * @param {()=>void} [collapseCallback]
      * @param {()=>void} [expandCallback]
-     * @returns {boolean} Whether the element needs to be collapsed.
      */
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
-        CssCacheHelper.save(element, 'min-height');
-        CssCacheHelper.save(element, 'height');
-        let h = collapseHeight + 'px';
-        element.style.minHeight = h;
-        element.style.height = h;
-        let children = element.children;
-        for (let i = 0; i < children.length; i++) {
-            hideElement(children[i], true);
+        let collapseClass = collapseClassMap.get(element);
+        if (!collapseClass) {
+            collapseClass = `collapse-${randomId()}`;
+            collapseClassMap.set(element, collapseClass);
         }
-        collapseCallback && collapseCallback();
-        element.addEventListener('mouseenter', () => {
-            CssCacheHelper.restore(element, 'min-height');
-            CssCacheHelper.restore(element, 'height');
+        let styleInnerHtml = `.${collapseClass} {
+            min-height:${collapseHeight}px !important;
+            height:${collapseHeight}px !important;
+        }`;
+        let collapseStyle = element.ownerDocument.querySelector(`.${collapseClass}`);
+        if (collapseStyle) collapseStyle.innerHTML = styleInnerHtml;
+        // Collapse for the first time.
+        else {
+            element.ownerDocument.head.insertAdjacentHTML('beforeend', `<style class="${collapseClass}">${styleInnerHtml}</style>`);
+            element.classList.add(collapseClass);
             let children = element.children;
             for (let i = 0; i < children.length; i++) {
-                unhideElement(children[i]);
-            }
-            expandCallback && expandCallback();
-        });
-        element.addEventListener('mouseleave', () => {
-            element.style.minHeight = h;
-            element.style.height = h;
-            let children = element.children;
-            for (let i = 0; i < children.length; i++) {
-                hideElement(children[i], true);
+                hideElement(children[i]);
             }
             collapseCallback && collapseCallback();
-        });
-        return true;
+            element.addEventListener('mouseenter', () => {
+                element.remove(collapseClass);
+                let children = element.children;
+                for (let i = 0; i < children.length; i++) {
+                    unhideElement(children[i]);
+                }
+                expandCallback && expandCallback();
+            });
+            element.addEventListener('mouseleave', () => {
+                element.classList.add(collapseClass);
+                let children = element.children;
+                for (let i = 0; i < children.length; i++) {
+                    hideElement(children[i]);
+                }
+                collapseCallback && collapseCallback();
+            });
+        }
+    },
+    /**
+     * Collapse {@link element} and retain its height. Mouse over to restore height and mouse leave to collapse again.
+     * @param {HTMLElement} element 
+     * @param {()=>void} [collapseCallback]
+     * @param {()=>void} [expandCallback]
+     */
+    collapseRetainHeight(element, collapseCallback, expandCallback) {
+        let resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                entry?.contentBoxSize.length > 0 ?
+                    ui.collapse(entry.target, entry.contentBoxSize[0].blockSize, collapseCallback, expandCallback)
+                    : ui.collapse(entry.target, entry.contentRect.height, collapseCallback, expandCallback);
+            }
+        })
+        resizeObserver.observe(element);
     }
 }
