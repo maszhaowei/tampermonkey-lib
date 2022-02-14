@@ -3,8 +3,6 @@ import { ApplyMethodSignature } from '../common/class';
 import { FORCE_HIDDEN_CLASSNAME } from './const';
 import '../css/common.css';
 
-/** @type {WeakMap<HTMLElement,string>} */
-let collapseClassMap = new WeakMap();
 function randomId() {
     return Math.random().toString().slice(2, 10);
 }
@@ -104,58 +102,53 @@ export const ui = {
      * @param {()=>void} [expandCallback]
      */
     collapse(element, collapseHeight = 20, collapseCallback, expandCallback) {
-        let collapseClass = collapseClassMap.get(element);
-        if (!collapseClass) {
-            collapseClass = `collapse-${randomId()}`;
-            collapseClassMap.set(element, collapseClass);
+        let collapseClass = `collapse-${randomId()}`;
+        element.ownerDocument.head.insertAdjacentHTML('beforeend', `<style class="${collapseClass}">.${collapseClass} {
+                min-height:${collapseHeight}px !important;
+                height:${collapseHeight}px !important;
+            }</style>`);
+        element.classList.add(collapseClass);
+        let children = element.children;
+        for (let i = 0; i < children.length; i++) {
+            hideElement(children[i]);
         }
-        let styleInnerHtml = `.${collapseClass} {
-            min-height:${collapseHeight}px !important;
-            height:${collapseHeight}px !important;
-        }`;
-        let collapseStyle = element.ownerDocument.querySelector(`.${collapseClass}`);
-        if (collapseStyle) collapseStyle.innerHTML = styleInnerHtml;
-        // Collapse for the first time.
-        else {
-            element.ownerDocument.head.insertAdjacentHTML('beforeend', `<style class="${collapseClass}">${styleInnerHtml}</style>`);
+        collapseCallback && collapseCallback();
+        element.addEventListener('mouseenter', () => {
+            element.classList.remove(collapseClass);
+            let children = element.children;
+            for (let i = 0; i < children.length; i++) {
+                unhideElement(children[i]);
+            }
+            expandCallback && expandCallback();
+        });
+        element.addEventListener('mouseleave', () => {
             element.classList.add(collapseClass);
             let children = element.children;
             for (let i = 0; i < children.length; i++) {
                 hideElement(children[i]);
             }
             collapseCallback && collapseCallback();
-            element.addEventListener('mouseenter', () => {
-                element.classList.remove(collapseClass);
-                let children = element.children;
-                for (let i = 0; i < children.length; i++) {
-                    unhideElement(children[i]);
-                }
-                expandCallback && expandCallback();
-            });
-            element.addEventListener('mouseleave', () => {
-                element.classList.add(collapseClass);
-                let children = element.children;
-                for (let i = 0; i < children.length; i++) {
-                    hideElement(children[i]);
-                }
-                collapseCallback && collapseCallback();
-            });
-        }
+        });
     },
     /**
-     * Collapse {@link element} and retain its height. Mouse over to restore height and mouse leave to collapse again.
      * @param {HTMLElement} element 
-     * @param {()=>void} [collapseCallback]
-     * @param {()=>void} [expandCallback]
      */
-    collapseRetainHeight(element, collapseCallback, expandCallback) {
-        let resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                entry?.contentBoxSize.length > 0 ?
-                    ui.collapse(entry.target, entry.contentBoxSize[0].blockSize, collapseCallback, expandCallback)
-                    : ui.collapse(entry.target, entry.contentRect.height, collapseCallback, expandCallback);
+    mouseToggle(element) {
+        let children = element.children;
+        for (let i = 0; i < children.length; i++) {
+            hideElement(children[i]);
+        }
+        element.addEventListener('mouseenter', () => {
+            let children = element.children;
+            for (let i = 0; i < children.length; i++) {
+                unhideElement(children[i]);
             }
         });
-        resizeObserver.observe(element);
+        element.addEventListener('mouseleave', () => {
+            let children = element.children;
+            for (let i = 0; i < children.length; i++) {
+                hideElement(children[i]);
+            }
+        });
     }
 }
