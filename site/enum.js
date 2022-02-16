@@ -13,6 +13,7 @@ export const SiteCategories = {
     VIDEO_HOSTING: "Video Hosting",
     VIDEO_SHARING: "Video Sharing",
     VIDEO_STREAMING: "Video Streaming",
+    WIKI: "Wiki"
 };
 /**
  * @enum {string}
@@ -37,6 +38,8 @@ export const SiteIDs = {
     BWIKI: "BWIKI",
     DIOUS: 'DIOUS',
     DIOUS_VIDEO: 'DIOUS_VIDEO',
+    FANDOM: 'FANDOM',
+    FANDOM_VIDEO_PORTAL: 'FANDOM_VIDEO_PORTAL',
     JABLE: 'JABLE',
     JABLE_SEARCH: 'JABLE_SEARCH',
     JABLE_VIDEO: 'JABLE_VIDEO',
@@ -298,7 +301,7 @@ export const VideoSites = {
             playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
             fullscreenButtonSelector: "button.ytp-fullscreen-button"
         }),
-        originWhitelist: ['https://www.nexusmods.com']
+        originWhitelist: ['https://www.nexusmods.com', 'https://genshin-impact.fandom.com']
     }),
     /**
      * Get enum by site id.
@@ -317,6 +320,11 @@ export const VideoPortalSites = {
         id: SiteIDs["7MM_VIDEO_PORTAL"], baseSiteId: SiteIDs["7MM"], hrefRegEx: /^https:\/\/7mmtv\.tv\/.+/,
         videoCategories: [VideoCategories.PORNOGRAPHIC_FILM],
         originWhitelist: ["https://mm9842.com", "https://avgle.com"]
+    }),
+    FANDOM_VIDEO_PORTAL: new VideoPortalSite({
+        id: SiteIDs.FANDOM_VIDEO_PORTAL, baseSiteId: SiteIDs.FANDOM, hrefRegEx: /^https:\/\/.+\.fandom\.com\/wiki\/.+/,
+        videoCategories: [SiteCategories.WIKI],
+        originWhitelist: ["https://www.youtube.com"]
     }),
     MEIJUBS_VIDEO_PORTAL: new VideoPortalSite({
         id: SiteIDs.MEIJUBS_VIDEO_PORTAL, baseSiteId: SiteIDs.MEIJUBS, hrefRegEx: /^https:\/\/www\.meijubs\.com\/play\/.+/,
