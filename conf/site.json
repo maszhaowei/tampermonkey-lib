@@ -233,7 +233,7 @@
             ]
         },
         {
-            "id": "YOUTUBE_EMBED_VIDEO",
+            "id": "YOUTUBE_EMBED",
             "originWhitelist": [
                 "https://genshin-impact.fandom.com"
             ]
