@@ -301,7 +301,7 @@ export const VideoSites = {
             playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
             fullscreenButtonSelector: "button.ytp-fullscreen-button"
         }),
-        originWhitelist: ['https://www.nexusmods.com', 'https://genshin-impact.fandom.com']
+        originWhitelist: ['https://www.nexusmods.com']
     }),
     /**
      * Get enum by site id.

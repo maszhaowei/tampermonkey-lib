@@ -231,6 +231,12 @@
                 "JAV",
                 "Trailers"
             ]
+        },
+        {
+            "id": "YOUTUBE_EMBED_VIDEO",
+            "originWhitelist": [
+                "https://genshin-impact.fandom.com"
+            ]
         }
     ],
     "videoportalsites": [
