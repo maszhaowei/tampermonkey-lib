@@ -347,5 +347,13 @@ export let util = {
                 RegExp.$1.length == 1 ? o[k] :
                     ("00" + o[k]).substr(("" + o[k]).length));
         return format;
+    },
+    /**
+     * 
+     * @param {number} ms 
+     * @returns 
+     */
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 };
