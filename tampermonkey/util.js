@@ -59,7 +59,6 @@ export const util = {
      */
     gmPost: function (url, headers, data, responseType) {
         headers = headers || { "Content-Type": "application/x-www-form-urlencoded" };
-        if (cutil.isObject(data)) data = JSON.stringify(data);
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "POST", url, headers, data,
