@@ -8,4 +8,4 @@ jsconfig.json
 dist
 *.LICENSE.txt
 index.html
-types/bilibili.d.ts
+types/*
