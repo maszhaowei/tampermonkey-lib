@@ -1,7 +1,37 @@
 import { util as tutil } from "../tampermonkey/util";
 import { util as blutil } from "./util";
 
-export class BilibiliLiveRequest {
+export class BilibiliApiRequest {
+    /**
+     * 
+     * @param {string} url 
+     * @param {URLSearchParams} [param] 
+     * @returns {Promise<BilibiliApiResponse>}
+     */
+    static #get(url, param) {
+        if (param) url += '?' + param.toString();
+        return tutil.gmGet(url);
+    }
+    /**
+     * 
+     * @param {string} url 
+     * @param {Object.<string,string>} [headers]
+     * @param {Document | XMLHttpRequestBodyInit} [data]
+     * @returns {Promise<BilibiliApiResponse>}
+     */
+    static #post(url, headers, data) {
+        return tutil.gmPost(url, headers, data);
+    }
+    /**
+     * 
+     * @param {number} uid 
+     * @returns {Promise<BilibiliApiResponse<string>>}
+     */
+    static getNotice(uid) {
+        return this.#get(`https://api.bilibili.com/x/space/notice?mid=${uid}&jsonp=jsonp`);
+    }
+}
+export class BilibiliLiveApiRequest {
     /**
      * 
      * @param {string} url 
@@ -114,7 +144,7 @@ export class BilibiliLiveRequest {
      * @param {number} giftId 
      * @param {number} price 
      * @param {number} coinType 
-     * @returns {Promise<MedalExpectationResponseData>}
+     * @returns {Promise<BilibiliLiveApiResponse<MedalExpectationResponseData>>}
      */
     static getMedalExpectation(targetId, giftId, price, coinType) {
         let param = new URLSearchParams();
@@ -128,7 +158,7 @@ export class BilibiliLiveRequest {
     /**
      * 
      * @param {number} mid 
-     * @returns {Promise<UserInfoResponseData>}
+     * @returns {Promise<BilibiliLiveApiResponse<UserInfoResponseData>>}
      */
     static getUserInfo(mid) {
         return this.#get(`https://api.bilibili.com/x/space/acc/info?mid=${mid}&jsonp=jsonp`);
@@ -138,14 +168,14 @@ export class BilibiliLiveRequest {
      * @param {number} mid 
      * @param {number} pageNumber 
      * @param {number} [pageSize] - Default to 50. Max is 50.
-     * @returns {Promise<FollowingResponseData>}
+     * @returns {Promise<BilibiliLiveApiResponse<FollowingResponseData>>}
      */
     static getFollowings(mid, pageNumber, pageSize = 50) {
         return this.#get(`https://api.bilibili.com/x/relation/followings?vmid=${mid}&pn=${pageNumber}&ps=${pageSize}`);
     }
     /**
      * 
-     * @returns {Promise<NavInfo>}
+     * @returns {Promise<BilibiliLiveApiResponse<NavInfo>>}
      */
     static getNav() {
         return this.#get('https://api.bilibili.com/x/web-interface/nav');
@@ -153,10 +183,18 @@ export class BilibiliLiveRequest {
     /**
      * 
      * @param {number} roomId 
-     * @returns {Promise<BasicRoomInfos>}
+     * @returns {Promise<BilibiliLiveApiResponse<BasicRoomInfos>>}
      */
     static getBasicRoomInfo(roomId) {
         return this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo?room_ids=${roomId}&req_biz=web_room_componet`);
+    }
+    /**
+     * 
+     * @param {number} roomId 
+     * @returns {Promise<BilibiliLiveApiResponse<RoomUserInfoResponseData>}
+     */
+    static getInfoByRoom(roomId) {
+        return this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=${roomId}`);
     }
     /**
      * 

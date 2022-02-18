@@ -1,5 +1,6 @@
+import { util as cutil } from '../common/util';
 export const util = {
-    getBilibiliToken() {
-        return util.getCookie("bili_jct");
+    getBilibiliToken: function () {
+        return cutil.getCookie("bili_jct");
     }
 };
