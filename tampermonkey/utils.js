@@ -124,6 +124,13 @@ export class GMStorageHelper {
         let expireTime = this.#calExpireTime(expireDays);
         GM_setValue(name, { value: value, expireDays: expireDays, expireTime: expireTime });
     }
+    /**
+     * 
+     * @param {string} name 
+     */
+    static deleteValue(name) {
+        GM_deleteValue(name);
+    }
     static clearExpiredValues() {
         let names = GM_listValues();
         let count = 0;
