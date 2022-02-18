@@ -355,5 +355,14 @@ export let util = {
      */
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    /**
+     * 
+     * @param {number} deadline - The time elapsed since the time origin, measured in milliseconds. 
+     * @param {WindowOrWorkerGlobalScope} [context] 
+     */
+    sleepUntil(deadline, context = window) {
+        let ms = deadline - context.performance.now();
+        return ms > 0 ? this.sleep(ms) : Promise.resolve();
     }
 };
