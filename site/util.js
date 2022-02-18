@@ -74,7 +74,7 @@ export const util = {
             const site = SearchSites[s];
             if (site instanceof Site && site.test()) return site;
         }
-        tutil.debug('Can\'t find current site.');
+        tutil.debug(`Can't find current search site: ${window.location.href}.`);
     },
     /**
      * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.
