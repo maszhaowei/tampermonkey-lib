@@ -324,7 +324,12 @@ export class PositionOption {
         this.ensureViewPort = ensureViewPort;
     }
 }
-
+/**
+ * @typedef {object} PlainError
+ * @property {number} code
+ * @property {string} [message]
+ * @property {PlainError[]} subErrors
+ */
 export class CustomError extends Error {
     code;
     /** @type {CustomError[]} */
@@ -346,5 +351,20 @@ export class CustomError extends Error {
      */
     appendSubError(e) {
         this.subErrors.push(e);
+    }
+    /**
+     * 
+     * @param {CustomError} e 
+     */
+    static #toPlainObject(e) {
+        /** @type {PlainError} */
+        let plainError = { code: e.code, message: e.message, subErrors: [] };
+        if (e.subErrors.length > 0) {
+            plainError.subErrors = e.subErrors.map(subError => this.#toPlainObject(subError));
+        }
+        return plainError;
+    }
+    toPlainObject() {
+        return CustomError.#toPlainObject(this);
     }
 }
