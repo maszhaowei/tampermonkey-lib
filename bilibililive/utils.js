@@ -101,6 +101,7 @@ export class BilibiliLiveRequest {
     static wearMedal(medalId) {
         if (!medalId) throw "invalid medalId: " + medalId;
         let token = blutil.getBilibiliToken();
+        if (!token) throw new Error('Failed to get bilibili token');
         let param = new URLSearchParams();
         param.append('medal_id', medalId);
         param.append('csrf_token', token);
@@ -166,10 +167,11 @@ export class BilibiliLiveRequest {
      */
     static sendDanmu(msg, rnd, roomId) {
         let token = blutil.getBilibiliToken();
+        if (!token) throw new Error('Failed to get bilibili token');
         let data = { bubble: 0, msg: msg, color: 5566168, mode: 1, fontsize: 25, rnd: rnd, roomid: roomId, csrf: token, csrf_token: token };
         let form = new FormData();
         Object.keys(data).forEach(key => form.append(key, data[key]));
         // Don't set content-type to auto generated formdata boundary.
-        return tutil.gmPost('https://api.live.bilibili.com/msg/send', {}, form);
+        return this.#post('https://api.live.bilibili.com/msg/send', {}, form);
     }
 }
