@@ -327,13 +327,24 @@ export class PositionOption {
 
 export class CustomError extends Error {
     code;
+    /** @type {CustomError[]} */
+    subErrors;
     /**
      * 
      * @param {number} code 
      * @param {string} [message] 
+     * @param {CustomError[]} [subErrors] 
      */
-    constructor(code, message) {
+    constructor(code, message, subErrors = []) {
         super(message);
         this.code = code;
+        this.subErrors = subErrors;
+    }
+    /**
+     * 
+     * @param {CustomError} e 
+     */
+    appendSubError(e) {
+        this.subErrors.push(e);
     }
 }

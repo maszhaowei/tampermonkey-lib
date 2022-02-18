@@ -1,5 +1,6 @@
 import { util } from "./util";
-import { util as cutil } from "../common/util";
+import { CustomError } from "./class";
+import { ErrorCode } from "./enum";
 export * as UUID from 'uuid';
 
 export class EnumHelper {
@@ -14,7 +15,7 @@ export class EnumHelper {
     static hasValue(enumObject, value) {
         this.#validateEnum(enumObject);
         for (let i in enumObject) {
-            if (cutil.isEqual(enumObject[i], value)) return true;
+            if (util.isEqual(enumObject[i], value)) return true;
         }
         return false;
     }
@@ -30,5 +31,11 @@ export class EnumHelper {
             if (typeof enumObject[i] == enumType) arr.push(enumObject[i]);
         }
         return arr;
+    }
+}
+
+export class ErrorUtils {
+    static convertToCustomError(e) {
+        return e instanceof CustomError ? e : e instanceof Error ? new CustomError(ErrorCode.COMMON, e.message) : new CustomError(ErrorCode.COMMON, e);
     }
 }
