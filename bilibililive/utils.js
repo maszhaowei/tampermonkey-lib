@@ -1,6 +1,17 @@
+import { CustomError } from "../common/class";
 import { util as tutil } from "../tampermonkey/util";
 import { util as blutil } from "./util";
 
+/**
+ * 
+ * @param {Promise<BilibiliApiResponse|BilibiliLiveApiResponse>} rspPromise 
+ * @returns 
+ */
+async function processRsp(rspPromise) {
+    const rsp = await rspPromise;
+    if (rsp.code !== 0) throw new CustomError(rsp.code, rsp.message);
+    return rsp.data;
+}
 export class BilibiliApiRequest {
     /**
      * 
@@ -25,10 +36,10 @@ export class BilibiliApiRequest {
     /**
      * 
      * @param {number} uid 
-     * @returns {Promise<BilibiliApiResponse<string>>}
+     * @returns {Promise<string>}
      */
     static getNotice(uid) {
-        return this.#get(`https://api.bilibili.com/x/space/notice?mid=${uid}&jsonp=jsonp`);
+        return processRsp(this.#get(`https://api.bilibili.com/x/space/notice?mid=${uid}&jsonp=jsonp`));
     }
 }
 export class BilibiliLiveApiRequest {
@@ -57,7 +68,7 @@ export class BilibiliLiveApiRequest {
      * @param {string} roomID 
      * @param {string} areaParentID 
      * @param {string} areaID 
-     * @returns {Promise<BilibiliLiveApiResponse<GiftConfigResponseData>>}
+     * @returns {Promise<GiftConfigResponseData>}
      */
     static getGiftConfig(roomID, areaParentID, areaID) {
         let param = new URLSearchParams();
@@ -65,18 +76,18 @@ export class BilibiliLiveApiRequest {
         param.append('room_id', roomID);
         param.append('area_parent_id', areaParentID);
         param.append('area_id', areaID);
-        return this.#get('https://api.live.bilibili.com/xlive/web-room/v1/giftPanel/giftConfig', param);
+        return processRsp(this.#get('https://api.live.bilibili.com/xlive/web-room/v1/giftPanel/giftConfig', param));
     }
     /**
      * 获取礼物包裹
      * @param {number} roomID 
-     * @returns {Promise<BilibiliLiveApiResponse<GiftBagResponseData>>}
+     * @returns {Promise<GiftBagResponseData>}
      */
     static getGiftBagList(roomID) {
         let param = new URLSearchParams();
         param.append('t', new Date().getTime());
         param.append('room_id', roomID);
-        return this.#get('https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list', param);
+        return processRsp(this.#get('https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list', param));
     }
     static sendBag(uid, giftID, anchorUID, giftNum, bagID, roomID, rnd) {
         let token = this.getToken();
@@ -97,17 +108,17 @@ export class BilibiliLiveApiRequest {
         param.append('csrf_token', token);
         param.append('csrf', token);
         param.append('visit_id', '');
-        return this.#post("https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag", param.toString());
+        return processRsp(this.#post("https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag", param.toString()));
     }
     /**
      * 
-     * @returns {Promise<BilibiliLiveApiResponse<WearedMedalInfo>>}
+     * @returns {Promise<WearedMedalInfo>}
      */
     static getWearedMedal() {
-        return this.#get("https://api.live.bilibili.com/live_user/v1/UserInfo/get_weared_medal");
+        return processRsp(this.#get("https://api.live.bilibili.com/live_user/v1/UserInfo/get_weared_medal"));
     }
     static getMedalListInRoom() {
-        return this.#get("https://api.live.bilibili.com/fans_medal/v1/FansMedal/get_list_in_room");
+        return processRsp(this.#get("https://api.live.bilibili.com/fans_medal/v1/FansMedal/get_list_in_room"));
     }
     static async getMedalCenterList() {
         let curPage = 1;
@@ -116,7 +127,7 @@ export class BilibiliLiveApiRequest {
         let fansMedalList = [];
         do {
             /** @type {MyMedalResponseData} */
-            let data = await (await this.#get(`https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page=${curPage}&page_size=10`)).data;
+            let data = await processRsp(this.#get(`https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page=${curPage}&page_size=10`));
             if (Array.isArray(data.items)) fansMedalList = fansMedalList.concat(data.items);
             totalPage = data.page_info.total_page;
             curPage++;
@@ -136,7 +147,7 @@ export class BilibiliLiveApiRequest {
         param.append('medal_id', medalId);
         param.append('csrf_token', token);
         param.append('csrf', token);
-        return this.#post("https://api.live.bilibili.com/xlive/web-room/v1/fansMedal/wear", param.toString());
+        return processRsp(this.#post("https://api.live.bilibili.com/xlive/web-room/v1/fansMedal/wear", param.toString()));
     }
     /**
      * 获取发送礼物后的预期勋章状态
@@ -144,7 +155,7 @@ export class BilibiliLiveApiRequest {
      * @param {number} giftId 
      * @param {number} price 
      * @param {number} coinType 
-     * @returns {Promise<BilibiliLiveApiResponse<MedalExpectationResponseData>>}
+     * @returns {Promise<MedalExpectationResponseData>}
      */
     static getMedalExpectation(targetId, giftId, price, coinType) {
         let param = new URLSearchParams();
@@ -153,55 +164,55 @@ export class BilibiliLiveApiRequest {
         param.append('coin_type', coinType);
         param.append('gift_id', giftId);
         param.append('platform', 'pc');
-        return this.#get('https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/room', param.toString());
+        return processRsp(this.#get('https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/room', param.toString()));
     }
     /**
      * 
      * @param {number} mid 
-     * @returns {Promise<BilibiliLiveApiResponse<UserInfoResponseData>>}
+     * @returns {Promise<UserInfoResponseData>}
      */
     static getUserInfo(mid) {
-        return this.#get(`https://api.bilibili.com/x/space/acc/info?mid=${mid}&jsonp=jsonp`);
+        return processRsp(this.#get(`https://api.bilibili.com/x/space/acc/info?mid=${mid}&jsonp=jsonp`));
     }
     /**
      * 
      * @param {number} mid 
      * @param {number} pageNumber 
      * @param {number} [pageSize] - Default to 50. Max is 50.
-     * @returns {Promise<BilibiliLiveApiResponse<FollowingResponseData>>}
+     * @returns {Promise<FollowingResponseData>}
      */
     static getFollowings(mid, pageNumber, pageSize = 50) {
-        return this.#get(`https://api.bilibili.com/x/relation/followings?vmid=${mid}&pn=${pageNumber}&ps=${pageSize}`);
+        return processRsp(this.#get(`https://api.bilibili.com/x/relation/followings?vmid=${mid}&pn=${pageNumber}&ps=${pageSize}`));
     }
     /**
      * 
-     * @returns {Promise<BilibiliLiveApiResponse<NavInfo>>}
+     * @returns {Promise<NavInfo>}
      */
     static getNav() {
-        return this.#get('https://api.bilibili.com/x/web-interface/nav');
+        return processRsp(this.#get('https://api.bilibili.com/x/web-interface/nav'));
     }
     /**
      * 
      * @param {number} roomId 
-     * @returns {Promise<BilibiliLiveApiResponse<BasicRoomInfos>>}
+     * @returns {Promise<BasicRoomInfos>}
      */
     static getBasicRoomInfo(roomId) {
-        return this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo?room_ids=${roomId}&req_biz=web_room_componet`);
+        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo?room_ids=${roomId}&req_biz=web_room_componet`));
     }
     /**
      * 
      * @param {number} roomId 
-     * @returns {Promise<BilibiliLiveApiResponse<RoomUserInfoResponseData>}
+     * @returns {Promise<RoomUserInfoResponseData>}
      */
     static getInfoByRoom(roomId) {
-        return this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=${roomId}`);
+        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=${roomId}`));
     }
     /**
      * 
      * @param {string} msg 
      * @param {number} rnd 
      * @param {number} roomId 
-     * @returns {Promise<BilibiliLiveApiResponse<SendMsgResponseData>>}
+     * @returns {Promise<SendMsgResponseData>}
      */
     static sendDanmu(msg, rnd, roomId) {
         let token = blutil.getBilibiliToken();
@@ -210,6 +221,6 @@ export class BilibiliLiveApiRequest {
         let form = new FormData();
         Object.keys(data).forEach(key => form.append(key, data[key]));
         // Don't set content-type to auto generated formdata boundary.
-        return this.#post('https://api.live.bilibili.com/msg/send', {}, form);
+        return processRsp(this.#post('https://api.live.bilibili.com/msg/send', {}, form));
     }
 }

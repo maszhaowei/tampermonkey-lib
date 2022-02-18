@@ -324,3 +324,16 @@ export class PositionOption {
         this.ensureViewPort = ensureViewPort;
     }
 }
+
+export class CustomError extends Error {
+    code;
+    /**
+     * 
+     * @param {number} code 
+     * @param {string} [message] 
+     */
+    constructor(code, message) {
+        super(message);
+        this.code = code;
+    }
+}
