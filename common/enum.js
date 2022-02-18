@@ -1,5 +1,4 @@
 import { KeyboardKeyCode, _TooltipPosition } from "./class";
-import { EnumHelper } from "./utils";
 
 export const KeyboardKeyCodes = {
     Space: new KeyboardKeyCode('Space', ' '),
@@ -85,14 +84,7 @@ export const GlobalEvents = {
     LOAD: 'load',
     MESSAGE: 'message',
     MOUSEDOWN: 'mousedown',
-    WHEEL: 'wheel',
-    /**
-     * 
-     * @returns {string[]}
-     */
-    toValueArray: function () {
-        return EnumHelper.toValueArray(GlobalEvents);
-    }
+    WHEEL: 'wheel'
 }
 /**
  * @enum {string}
@@ -119,4 +111,9 @@ export const ConsoleOutputLevel = {
     LOG: 'log',
     WARN: 'warn',
     ERROR: 'error'
+}
+/** @enum {number} */
+export const ErrorCode = {
+    COMMON: -10000,
+    SUCCESS: 0
 }
