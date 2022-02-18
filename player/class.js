@@ -25,7 +25,7 @@ class VideoEventDelegate extends EventObserverWrapper {
      * @param {Element} delegateEle
      */
     constructor(delegateEle) {
-        super(delegateEle, GlobalEvents.toValueArray());
+        super(delegateEle);
         this.#delegate = delegateEle;
         document.leave(Const.eventDelegateSelector, (leaveEle) => {
             if (leaveEle.isSameNode(this.#delegate)) {
