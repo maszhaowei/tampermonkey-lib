@@ -130,6 +130,11 @@
             "id": "Bilibili Space",
             "baseSiteId": "BILIBILI",
             "hrefRegEx": "^https://space\\.bilibili\\.com/\\d+"
+        },
+        {
+            "id": "BILIBILI_MEDAL_CENTER",
+            "baseSiteId": "BILIBILI",
+            "hrefRegEx": "^https://link\\.bilibili\\.com/.+/user-center/wearing-center/my-medal"
         }
     ],
     "videosites": [
