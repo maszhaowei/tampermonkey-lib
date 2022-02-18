@@ -3,6 +3,7 @@ var path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
+    bllib: path.join(__dirname, "bilibililive/main.js"),
     commonlib: path.join(__dirname, "common/main.js"),
     tampermonkeylib: path.join(__dirname, "tampermonkey/main.js"),
     sitelib: path.join(__dirname, "site/main.js"),
