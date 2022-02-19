@@ -42,6 +42,31 @@ export class BilibiliApiRequest {
     static getNotice(uid) {
         return processRsp(this.#get(`https://api.bilibili.com/x/space/notice?mid=${uid}&jsonp=jsonp`));
     }
+    /**
+     * 
+     * @param {number} mid 
+     * @returns {Promise<UserInfoResponseData>}
+     */
+    static getUserInfo(mid) {
+        return processRsp(this.#get(`https://api.bilibili.com/x/space/acc/info?mid=${mid}&jsonp=jsonp`));
+    }
+    /**
+     * 
+     * @param {number} mid 
+     * @param {number} pageNumber 
+     * @param {number} [pageSize] - Default to 50. Max is 50.
+     * @returns {Promise<FollowingResponseData>}
+     */
+    static getFollowings(mid, pageNumber, pageSize = 50) {
+        return processRsp(this.#get(`https://api.bilibili.com/x/relation/followings?vmid=${mid}&pn=${pageNumber}&ps=${pageSize}`));
+    }
+    /**
+     * 
+     * @returns {Promise<NavInfo>}
+     */
+    static getNav() {
+        return processRsp(this.#get('https://api.bilibili.com/x/web-interface/nav'));
+    }
 }
 export class BilibiliLiveApiRequest {
     /**
@@ -190,31 +215,6 @@ export class BilibiliLiveApiRequest {
         param.append('gift_id', giftId);
         param.append('platform', 'pc');
         return processRsp(this.#get('https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/room', param.toString()));
-    }
-    /**
-     * 
-     * @param {number} mid 
-     * @returns {Promise<UserInfoResponseData>}
-     */
-    static getUserInfo(mid) {
-        return processRsp(this.#get(`https://api.bilibili.com/x/space/acc/info?mid=${mid}&jsonp=jsonp`));
-    }
-    /**
-     * 
-     * @param {number} mid 
-     * @param {number} pageNumber 
-     * @param {number} [pageSize] - Default to 50. Max is 50.
-     * @returns {Promise<FollowingResponseData>}
-     */
-    static getFollowings(mid, pageNumber, pageSize = 50) {
-        return processRsp(this.#get(`https://api.bilibili.com/x/relation/followings?vmid=${mid}&pn=${pageNumber}&ps=${pageSize}`));
-    }
-    /**
-     * 
-     * @returns {Promise<NavInfo>}
-     */
-    static getNav() {
-        return processRsp(this.#get('https://api.bilibili.com/x/web-interface/nav'));
     }
     /**
      * 
