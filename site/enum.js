@@ -216,7 +216,7 @@ export const DefaultPlayerMetadatas = {
         volumeButtonSelector: "button[data-plyr=mute]", fullscreenButtonSelector: "button[data-plyr=fullscreen]"
     }),
     PRISM: new PlayerMetadata({
-        containerSelector: "#playerCnt", controlsSelector: ".prism-controlbar",
+        containerSelector: ".prism-player", controlsSelector: ".prism-controlbar",
         playButtonSelector: ".prism-play-btn", fullscreenButtonSelector: ".prism-fullscreen-btn"
     }),
     /**
