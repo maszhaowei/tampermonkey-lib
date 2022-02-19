@@ -116,7 +116,7 @@ export class BilibiliLiveApiRequest {
         return processRsp(this.#get('https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list', param));
     }
     static sendBag(uid, giftID, anchorUID, giftNum, bagID, roomID, rnd) {
-        let token = this.getToken();
+        let token = blutil.getBilibiliToken();
         let param = new URLSearchParams();
         param.append('uid', uid);
         param.append('gift_id', giftID);
