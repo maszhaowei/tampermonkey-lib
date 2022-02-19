@@ -134,7 +134,7 @@ export class BilibiliLiveApiRequest {
         param.append('csrf_token', token);
         param.append('csrf', token);
         param.append('visit_id', '');
-        return processRsp(this.#post("https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag", param.toString()));
+        return processRsp(this.#post("https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag", undefined, param.toString()));
     }
     /**
      * 
@@ -197,7 +197,7 @@ export class BilibiliLiveApiRequest {
         param.append('medal_id', medalId);
         param.append('csrf_token', token);
         param.append('csrf', token);
-        return processRsp(this.#post("https://api.live.bilibili.com/xlive/web-room/v1/fansMedal/wear", param.toString()));
+        return processRsp(this.#post("https://api.live.bilibili.com/xlive/web-room/v1/fansMedal/wear", undefined, param.toString()));
     }
     /**
      * 获取发送礼物后的预期勋章状态
