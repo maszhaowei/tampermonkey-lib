@@ -1,4 +1,4 @@
-import { CustomError } from "../common/class";
+import { Couple, CustomError } from "../common/class";
 import { ErrorCode } from "../common/enum";
 import { util as tutil } from "../tampermonkey/util";
 import { util as blutil } from "./util";
@@ -121,42 +121,43 @@ export class BilibiliLiveApiRequest {
     static getMedalListInRoom() {
         return processRsp(this.#get("https://api.live.bilibili.com/fans_medal/v1/FansMedal/get_list_in_room"));
     }
-    static async getMedalCenterList() {
+    static async #tryGetMedalCenterList(retry) {
         let curPage = 1;
         let totalPage = 0;
         /** @type {MyMedal[]} */
         let fansMedalList = [];
         let totalCount = 0;
-        let retryTimes = 0;
         do {
             /** @type {MyMedalResponseData} */
-            let data = await processRsp(this.#get(`https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page=${curPage}&page_size=10&retry=${retryTimes}`));
+            let data = await processRsp(this.#get(`https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page=${curPage}&page_size=10&retry=${retry}`));
             totalCount = data.count;
-            if (Array.isArray(data.items)) {
-                let duplicateExists = false;
-                for (let medal of data.items) {
-                    if (fansMedalList.some(fansMedal => fansMedal.target_id == medal.target_id)) duplicateExists = true;
-                    else {
-                        fansMedalList.push(medal);
-                        if (fansMedalList.length == totalCount) return fansMedalList;
-                    }
-                }
-                /** @todo 该接口查询到的数据排序不固定，存在重复数据时重新查询当前页 */
-                if (duplicateExists) {
-                    if (retryTimes >= 10) {
-                        throw new CustomError(ErrorCode.EXCEED_MAX_RETRY, `超过最大重试次数，已获取${fansMedalList.length}枚勋章，实际拥有${totalCount}枚勋章`);
-                    }
-                    curPage--;
-                    retryTimes++;
-                }
-            }
+            if (Array.isArray(data.items)) fansMedalList = fansMedalList.concat(data.items);
             totalPage = data.page_info.total_page;
             curPage++;
         } while (curPage <= totalPage);
-        if (fansMedalList.length !== totalCount) {
-            throw new CustomError(ErrorCode.COMMON, `获取勋章列表失败，已获取${fansMedalList.length}枚勋章，实际拥有${totalCount}枚勋章`);
+        return new Couple(fansMedalList, totalCount);
+    }
+    static async getMedalCenterList() {
+        /** @type {MyMedal[]} */
+        let fansMedalList = [];
+        let totalCount = 0;
+        let retryTimes = 0;
+        let anchorIds = [];
+        while (retryTimes <= 3) {
+            let medals = await this.#tryGetMedalCenterList(retryTimes);
+            totalCount = medals[1];
+            for (let medal of medals[0]) {
+                if (!anchorIds.includes(medal.target_id)) {
+                    fansMedalList.push(medal);
+                    anchorIds.push(medal.target_id);
+                    if (fansMedalList.length == totalCount) return fansMedalList;
+                }
+            }
+            /** @todo 该接口查询到的数据排序不固定，存在重复数据时重新查询当前页 */
+            retryTimes++;
         }
-        return fansMedalList;
+
+        throw new CustomError(ErrorCode.EXCEED_MAX_RETRY, `超过最大重试次数，已获取${fansMedalList.length}枚勋章，实际拥有${totalCount}枚勋章`);
     }
     /**
      * 
