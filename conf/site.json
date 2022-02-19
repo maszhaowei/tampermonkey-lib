@@ -224,7 +224,7 @@
             "originWhitelist": [
                 "https://www.meijubs.com"
             ],
-            "playerMetadataTemplate": "DPLAYER"
+            "playerMetadataTemplate": "PRISM"
         },
         {
             "id": "JAVTRAILERS_VIDEO",
