@@ -134,7 +134,12 @@
         {
             "id": "BILIBILI_MEDAL_CENTER",
             "baseSiteId": "BILIBILI",
-            "hrefRegEx": "^https://link\\.bilibili\\.com/.+/user-center/wearing-center/my-medal"
+            "hrefRegEx": "^https://link\\.bilibili\\.com/.+/user-center/wearing-center/my-medal",
+            "additionalInfo": {
+                "paginationInfo": {
+                    "currentBtnSelector": ".link-panigation li.selected"
+                }
+            }
         }
     ],
     "videosites": [
