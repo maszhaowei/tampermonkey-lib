@@ -115,5 +115,6 @@ export const ConsoleOutputLevel = {
 /** @enum {number} */
 export const ErrorCode = {
     COMMON: -10000,
-    SUCCESS: 0
+    SUCCESS: 0,
+    EXCEED_MAX_RETRY: 10000
 }
