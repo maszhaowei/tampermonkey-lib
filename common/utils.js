@@ -39,3 +39,37 @@ export class ErrorUtils {
         return e instanceof CustomError ? e : e instanceof Error ? new CustomError(ErrorCode.COMMON, e.message) : new CustomError(ErrorCode.COMMON, e);
     }
 }
+export class ArrayUtils {
+    /**
+     * Returns the first maximum element.
+     * @param {T[]} array 
+     * @param {(a:T,b:T)=>number} compareFn 
+     * @returns {T|undefined}
+     * @template T
+     */
+    static max(array, compareFn) {
+        if (!Array.isArray(array) || array.length == 0) return;
+        let maxEle = array[0];
+        for (let i = 1; i < array.length; i++) {
+            let curEle = array[i];
+            if (compareFn(curEle, maxEle) > 0) maxEle = curEle;
+        }
+        return maxEle;
+    }
+    /**
+     * Returns the first minimum element.
+     * @param {T[]} array 
+     * @param {(a:T,b:T)=>number} compareFn 
+     * @returns {T|undefined}
+     * @template T
+     */
+    static min(array, compareFn) {
+        if (!Array.isArray(array) || array.length == 0) return;
+        let minEle = array[0];
+        for (let i = 1; i < array.length; i++) {
+            let curEle = array[i];
+            if (compareFn(curEle, minEle) < 0) minEle = curEle;
+        }
+        return minEle;
+    }
+}
