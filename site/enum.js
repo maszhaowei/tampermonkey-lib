@@ -207,7 +207,7 @@ export const DefaultPlayerMetadatas = {
         fullscreenButtonSelector: "button.vjs-fullscreen-control", delegateIgnoreSelectors: [".vjs-related-carousel-holder"]
     }),
     DPLAYER: new PlayerMetadata({
-        containerSelector: "div#dplayer,div#mvideo,#dpplayer", controlsSelector: ".dplayer-controller",
+        containerSelector: "div.dplayer", controlsSelector: ".dplayer-controller",
         playButtonSelector: "button.dplayer-play-icon", volumeButtonSelector: "button.dplayer-volume-icon",
         fullscreenButtonSelector: "button.dplayer-full-icon", webFullscreenButtonSelector: ".dplayer-full-in-icon"
     }),
