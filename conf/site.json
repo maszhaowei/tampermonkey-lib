@@ -17,7 +17,8 @@
         "JAVTRAILERS_VIDEO": "JAVTRAILERS_VIDEO",
         "MSI": "MSI",
         "MSI_MOTHERBOARD_SUPPORT": "MSI Motherboard Support",
-        "BILIBILI_SPACE": "Bilibili Space"
+        "BILIBILI_SPACE": "Bilibili Space",
+        "hongniujiexi_红牛云": "hongniujiexi"
     },
     "sitecategories": {},
     "videocategories": {
@@ -232,6 +233,15 @@
             "playerMetadataTemplate": "PRISM"
         },
         {
+            "id": "hongniujiexi",
+            "baseSiteId": "hongniujiexi",
+            "hrefRegEx": "https://www.hongniujiexi.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ],
+            "playerMetadataTemplate": "DPLAYER"
+        },
+        {
             "id": "JAVTRAILERS_VIDEO",
             "baseSiteId": "JavTrailers",
             "hrefRegEx": "^https://javtrailers\\.com/video/[^/]+",
@@ -259,7 +269,8 @@
                 "https://jx.jxbdzyw.com",
                 "https://sod.bunediy.com",
                 "https://jx.huishij.com",
-                "https://zy.aoxtv.com"
+                "https://zy.aoxtv.com",
+                "https://www.hongniujiexi.com"
             ],
             "additionalInfo": {
                 "prevEpisodeSelector": "i.icon-rewind1",
