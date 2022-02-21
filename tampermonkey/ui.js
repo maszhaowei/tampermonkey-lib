@@ -8,14 +8,14 @@ function randomId() {
 }
 /**
  * 
- * @param {HTMLElement} element 
+ * @param {Element} element 
  */
 function hideElement(element) {
     element?.classList.add(FORCE_HIDDEN_CLASSNAME);
 }
 /**
  * 
- * @param {HTMLElement} element 
+ * @param {Element} element 
  */
 function unhideElement(element) {
     element?.classList.remove(FORCE_HIDDEN_CLASSNAME);
@@ -83,7 +83,7 @@ export const ui = {
     },
     /**
      * Hide {@link hideTarget} in {@link context}. Dependency: context.arrive.
-     * @param {string|HTMLElement} hideTarget 
+     * @param {string|Element} hideTarget 
      * @param {Element|Document} [context] - Context to watch for creation of {@link hideTarget} if it's a selector. Default to document.
      */
     hide: function (hideTarget, context = document) {
@@ -92,11 +92,18 @@ export const ui = {
                 hideElement(this);
             })
         }
-        else if (hideTarget instanceof HTMLElement) hideElement(hideTarget);
+        else if (hideTarget instanceof Element) hideElement(hideTarget);
+    },
+    /**
+     * 
+     * @param {Element} target 
+     */
+    unhide: function (target) {
+        unhideElement(target);
     },
     /**
      * Collapse {@link element} to height of {@link collapseHeight}(px). Mouse over to restore height and mouse leave to collapse again.
-     * @param {HTMLElement} element 
+     * @param {Element} element 
      * @param {number} [collapseHeight] - Default to 20.
      * @param {()=>void} [collapseCallback]
      * @param {()=>void} [expandCallback]
@@ -131,7 +138,7 @@ export const ui = {
         });
     },
     /**
-     * @param {HTMLElement} element 
+     * @param {Element} element 
      */
     mouseToggle(element) {
         let children = element.children;
