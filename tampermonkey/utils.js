@@ -92,7 +92,7 @@ export class GMStorageHelper {
         return storageObj && storageObj.expireTime !== undefined;
     }
     static #calExpireTime(expireDays) {
-        return expireDays > 0 ? (Date.now() + expireDays * 24 * 3600 * 1000) : 0;
+        return expireDays !== 0 ? (Date.now() + expireDays * 24 * 3600 * 1000) : 0;
     }
     /**
      * Will auto renew.
@@ -117,9 +117,11 @@ export class GMStorageHelper {
      * @param {number} [expireDays] Expiration timeout in days. Default to previously stored value or 30. Set to 0 to never expire.
      */
     static setValue(name, value, expireDays) {
-        /** @type {StorageObj} */
-        let storageObj = GM_getValue(name);
-        expireDays = expireDays ?? storageObj?.expireDays ?? 30;
+        if (expireDays === undefined) {
+            /** @type {StorageObj} */
+            let storageObj = GM_getValue(name);
+            expireDays = storageObj?.expireDays ?? 30;
+        }
         // Use expireDays for renewal.
         let expireTime = this.#calExpireTime(expireDays);
         GM_setValue(name, { value: value, expireDays: expireDays, expireTime: expireTime });
