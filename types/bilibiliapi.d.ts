@@ -319,6 +319,7 @@ interface BasicRoomInfo {
     room_id: number, // 5050
     uid: number, // 433351
     area_id: number, // 236
+    live_status: 0 | 1,
     parent_area_id: number, // 6
     short_id: number, // 0(表示和room_id相同)
     uname: string, // "EdmundDZhang"
