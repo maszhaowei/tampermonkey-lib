@@ -158,8 +158,12 @@ export class BilibiliLiveApiRequest {
             totalCount = data.count;
             if (Array.isArray(data.items)) {
                 data.items.forEach(serverFansMedal => {
-                    serverFansMedal.short_id = serverFansMedal.roomid;
-                    fansMedalList.push(serverFansMedal);
+                    /** @type {MyMedal} */
+                    let myMedal = serverFansMedal;
+                    myMedal.short_id = serverFansMedal.roomid;
+                    // roomid is the value of short id.
+                    delete serverFansMedal.roomid;
+                    fansMedalList.push(myMedal);
                 })
             }
             totalPage = data.page_info.total_page;
@@ -188,6 +192,25 @@ export class BilibiliLiveApiRequest {
         }
 
         throw new CustomError(ErrorCode.EXCEED_MAX_RETRY, `超过最大重试次数，已获取${fansMedalList.length}枚勋章，实际拥有${totalCount}枚勋章`);
+    }
+    static async getExtendedMedalList() {
+        let medals = await this.getMedalCenterList();
+        /** @type {ExtendedMedal[]} */
+        let extendedMedals = [];
+        let pMedalRoomInfos = [];
+        medals.forEach(medal => {
+            /** @type {ExtendedMedal} */
+            let extendedMedal = medal;
+            // fansMedal.roomid实际为short_id，需要重新查询
+            pMedalRoomInfos.push(this.getBasicRoomInfo(medal.short_id).then(basicRoomInfos => {
+                for (let roomId in basicRoomInfos.by_room_ids) {
+                    extendedMedal.roomid = basicRoomInfos.by_room_ids[roomId].room_id;
+                    extendedMedals.push(extendedMedal);
+                    return;
+                }
+            }));
+        });
+        return Promise.all(pMedalRoomInfos).then(() => extendedMedals);
     }
     /**
      * 
@@ -223,7 +246,7 @@ export class BilibiliLiveApiRequest {
     }
     /**
      * 
-     * @param {number} roomId 
+     * @param {number} roomId - Live room id or short id.
      * @returns {Promise<BasicRoomInfos>}
      */
     static getBasicRoomInfo(roomId) {
