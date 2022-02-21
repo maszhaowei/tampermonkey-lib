@@ -156,7 +156,12 @@ export class BilibiliLiveApiRequest {
             /** @type {MyMedalResponseData} */
             let data = await processRsp(this.#get(`https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page=${curPage}&page_size=10&retry=${retry}`));
             totalCount = data.count;
-            if (Array.isArray(data.items)) fansMedalList = fansMedalList.concat(data.items);
+            if (Array.isArray(data.items)) {
+                data.items.forEach(serverFansMedal => {
+                    serverFansMedal.short_id = serverFansMedal.roomid;
+                    fansMedalList.push(serverFansMedal);
+                })
+            }
             totalPage = data.page_info.total_page;
             curPage++;
         } while (curPage <= totalPage);
