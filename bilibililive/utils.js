@@ -160,8 +160,8 @@ export class BilibiliLiveApiRequest {
                 data.items.forEach(serverFansMedal => {
                     /** @type {MyMedal} */
                     let myMedal = serverFansMedal;
+                    // ServerFansMedal.roomid is in fact the value of short_id
                     myMedal.short_id = serverFansMedal.roomid;
-                    // roomid is the value of short id.
                     delete serverFansMedal.roomid;
                     fansMedalList.push(myMedal);
                 })
@@ -199,15 +199,14 @@ export class BilibiliLiveApiRequest {
         let extendedMedals = [];
         let pMedalRoomInfos = [];
         medals.forEach(medal => {
-            // 直播间不存在
-            if (!medal.short_id) return;
             /** @type {ExtendedMedal} */
             let extendedMedal = medal;
-            // fansMedal.roomid实际为short_id，需要重新查询
+            extendedMedals.push(extendedMedal);
+            // Live room not exists, can't get room info.
+            if (!medal.short_id) return;
             pMedalRoomInfos.push(this.getBasicRoomInfo(medal.short_id).then(basicRoomInfos => {
                 for (let roomId in basicRoomInfos.by_room_ids) {
                     extendedMedal.roomid = basicRoomInfos.by_room_ids[roomId].room_id;
-                    extendedMedals.push(extendedMedal);
                     return;
                 }
             }));
