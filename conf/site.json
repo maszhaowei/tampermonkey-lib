@@ -141,6 +141,18 @@
                     "currentBtnSelector": ".link-panigation li.selected"
                 }
             }
+        },
+        {
+            "id": "JABLE",
+            "additionalInfo": {
+                "paginationInfo": {
+                    "currentBtnSelector": ".pagination span.active",
+                    "currentWrapperSelector": "li",
+                    "currentWrapperDescendantSelector": "a",
+                    "firstBtnSelector": ".pagination li:first-child a",
+                    "lastBtnSelector": ".pagination li:last-child a"
+                }
+            }
         }
     ],
     "videosites": [
