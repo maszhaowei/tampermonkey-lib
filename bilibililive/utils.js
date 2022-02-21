@@ -199,6 +199,8 @@ export class BilibiliLiveApiRequest {
         let extendedMedals = [];
         let pMedalRoomInfos = [];
         medals.forEach(medal => {
+            // 直播间不存在
+            if (!medal.short_id) return;
             /** @type {ExtendedMedal} */
             let extendedMedal = medal;
             // fansMedal.roomid实际为short_id，需要重新查询

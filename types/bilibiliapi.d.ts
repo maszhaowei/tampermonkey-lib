@@ -252,7 +252,7 @@ interface ServerFansMedal {
     medal_id: number, // 2
     next_intimacy: number, // 250000
     today_feed: number, // 100
-    roomid: number, // 116（短号）
+    roomid: number, // 116（短号），可能为0表示直播间不存在
     status: 0 | 1, // 0
     target_id: number, // 433351,
     target_name: string, // "EdmundDZhang",
@@ -281,7 +281,7 @@ interface MyMedal {
     medal_id: number, // 2
     next_intimacy: number, // 250000
     today_feed: number, // 100
-    short_id: number, // 116
+    short_id: number, // 116，可能为0表示直播间不存在
     status: 0 | 1, // 0
     target_id: number, // 433351,
     target_name: string, // "EdmundDZhang",
