@@ -277,4 +277,12 @@ export class BilibiliLiveApiRequest {
         // Don't set content-type to auto generated formdata boundary.
         return processRsp(this.#post('https://api.live.bilibili.com/msg/send', {}, form));
     }
+    /**
+     * 
+     * @param {number} roomid 
+     * @returns {Promise<DanmuHistoryResponseData>}
+     */
+    static getDanmuHistory(roomid) {
+        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/dM/gethistory?roomid=${roomid}`));
+    }
 }

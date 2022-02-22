@@ -345,3 +345,10 @@ interface BilibiliLiveApiResponse<T> {
     message: string,
     msg: string
 }
+
+interface AdminHistory { }
+interface RoomHistory { }
+interface DanmuHistoryResponseData {
+    admin: AdminHistory[],
+    room: RoomHistory[],
+}
