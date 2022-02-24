@@ -266,12 +266,15 @@ export class BilibiliLiveApiRequest {
      * @param {string} msg 
      * @param {number} rnd 
      * @param {number} roomId 
+     * @param {number} [bubble] - Default to 0.
+     * @param {number} [mode] - Default to 1.
+     * @param {number} [color] - Defalut to 16777215(white).
      * @returns {Promise<SendMsgResponseData>}
      */
-    static sendDanmu(msg, rnd, roomId) {
+    static sendDanmu(msg, rnd, roomId, bubble = 0, mode = 1, color = 16777215) {
         let token = blutil.getBilibiliToken();
         if (!token) throw new CustomError(ErrorCode.COMMON, 'Failed to get bilibili token');
-        let data = { bubble: 0, msg: msg, color: 5566168, mode: 1, fontsize: 25, rnd: rnd, roomid: roomId, csrf: token, csrf_token: token };
+        let data = { bubble: bubble, msg: msg, color: color, mode: mode, fontsize: 25, rnd: rnd, roomid: roomId, csrf: token, csrf_token: token };
         let form = new FormData();
         Object.keys(data).forEach(key => form.append(key, data[key]));
         // Don't set content-type to auto generated formdata boundary.

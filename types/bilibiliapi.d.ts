@@ -300,6 +300,18 @@ interface FollowingResponseData {
     total: number
 }
 
+interface RoomDanmuConfig {
+    mode: number, // 1
+    color: number, // 5566168
+    length: number, // 30
+    room_id: number // 948391
+}
+interface RoomUserProperty {
+    uname_color: string, // ""
+    bubble: number, // 0
+    danmu: RoomDanmuConfig,
+    bubble_color: string // ""
+}
 interface RoomUserInfoResponseData {
     medal: {
         up_medal: {
@@ -308,7 +320,8 @@ interface RoomUserInfoResponseData {
             medal_color: number, // 6067854
             level: number // 1
         }
-    }
+    },
+    property: RoomUserProperty
 }
 
 interface NavInfo {
