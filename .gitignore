@@ -8,6 +8,6 @@ jsconfig.json
 dist
 *.LICENSE.txt
 index.html
-types/*.d.ts
+types/globals.d.ts
 *.dat
 .gitignore
