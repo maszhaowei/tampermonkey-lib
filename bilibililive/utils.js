@@ -230,13 +230,15 @@ export class BilibiliLiveApiRequest {
         return processRsp(this.#get('https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/room', param.toString()));
     }
     /**
-     * 接口支持最多30个查询参数，此处即29个roomid
-     * @param {number[]} roomIds - Live room id or short id.
+     * 接口支持最多29个roomid. {@link uids}有值时服务器将会忽略{@link roomIds}.
+     * @param {number[]} [roomIds] - Live room id or short id.
+     * @param {number[]} [uids] - User id.
      * @returns {Promise<BasicRoomInfos>}
      */
-    static getBasicRoomInfos(roomIds) {
+    static getBasicRoomInfos(roomIds = [], uids = []) {
         let param = new URLSearchParams();
         roomIds.forEach(roomid => param.append('room_ids', roomid));
+        uids.forEach(uid => param.append('uids', uid));
         param.append('req_biz', 'web_room_componet');
         return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo`, param));
     }
