@@ -10,3 +10,4 @@ dist
 index.html
 types/*.d.ts
 *.dat
+.gitignore
