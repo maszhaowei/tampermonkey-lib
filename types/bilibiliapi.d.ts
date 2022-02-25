@@ -290,7 +290,7 @@ interface BasicRoomInfo {
 
 interface BasicRoomInfos {
     by_room_ids: {
-        [key: string]: BasicRoomInfo
+        [key: string]: BasicRoomInfo // key是长号，即时查询时使用的是短号
     }
 }
 
