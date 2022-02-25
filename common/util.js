@@ -27,7 +27,7 @@ export let util = {
             let obj = objs[i];
             // /** Prevent browsers to output live value of objs. {@link https://developer.mozilla.org/en-US/docs/Web/API/console/log#logging_objects} */
             // arr.push(util.isObject(obj) ? JSON.parse(JSON.stringify(obj)) : obj);
-            arr.push(obj.toPlainObject ? obj.toPlainObject() : obj);
+            arr.push(util.isObject(obj) && obj.toPlainObject ? obj.toPlainObject() : obj);
         }
         switch (outputLevel) {
             case ConsoleOutputLevel.DEBUG:
