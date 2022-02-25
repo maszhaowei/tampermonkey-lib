@@ -480,6 +480,7 @@ export class VideoInstance extends EventObserverWrapper {
      */
     fastforward(playbackRate = 3) {
         this.#video.playbackRate = playbackRate;
+        if (this.#isFF) return;
         this.#pausedBeforeFF = this.#video.paused;
         // 快进时自动播放
         if (this.#video.paused) this.togglePlay();
