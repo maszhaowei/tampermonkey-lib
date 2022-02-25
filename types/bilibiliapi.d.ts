@@ -217,7 +217,7 @@ interface UserInfoResponseData {
 interface ServerFansMedal extends MedalBase {
     can_deleted: boolean, // true
     guard_medal_title: string, // 未开启加成
-    roomid: number, // 5050
+    roomid: number, // 116（短号），可能为0表示直播间不存在
     status: number, // 1
     uname: string, // EdmundDZhang
 }
@@ -229,11 +229,11 @@ interface MyMedalResponseData {
     },
     count: number
 }
-// 用ServerFansMedal.roomid填充short_id
+/** 用{@link ServerFansMedal.roomid}填充short_id */
 interface MyMedal extends MedalBase {
     can_deleted: boolean, // true
     guard_medal_title: string, // 未开启加成
-    short_id: number, // 116，可能为0表示直播间不存在
+    short_id: number, // 116
     status: number, // 1
     uname: string, // EdmundDZhang
 }
