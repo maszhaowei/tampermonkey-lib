@@ -233,7 +233,7 @@ interface MyMedalResponseData {
 interface MyMedal extends MedalBase {
     can_deleted: boolean, // true
     guard_medal_title: string, // 未开启加成
-    short_id: number, // 116
+    short_id: number, // 116，可能为0表示直播间不存在
     status: number, // 1
     uname: string, // EdmundDZhang
 }

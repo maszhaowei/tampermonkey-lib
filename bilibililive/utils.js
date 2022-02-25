@@ -171,6 +171,10 @@ export class BilibiliLiveApiRequest {
         } while (curPage <= totalPage);
         return new Couple(fansMedalList, totalCount);
     }
+    /**
+     * 
+     * @returns {Promise<MyMedal[]>}
+     */
     static async getMedalCenterList() {
         /** @type {MyMedal[]} */
         let fansMedalList = [];
@@ -192,26 +196,6 @@ export class BilibiliLiveApiRequest {
         }
 
         throw new CustomError(ErrorCode.EXCEED_MAX_RETRY, `超过最大重试次数，已获取${fansMedalList.length}枚勋章，实际拥有${totalCount}枚勋章`);
-    }
-    static async getExtendedMedalList() {
-        let medals = await this.getMedalCenterList();
-        /** @type {ExtendedMedal[]} */
-        let extendedMedals = [];
-        let pMedalRoomInfos = [];
-        medals.forEach(medal => {
-            /** @type {ExtendedMedal} */
-            let extendedMedal = medal;
-            extendedMedals.push(extendedMedal);
-            // Live room not exists, can't get room info.
-            if (!medal.short_id) return;
-            pMedalRoomInfos.push(this.getBasicRoomInfo(medal.short_id).then(basicRoomInfos => {
-                for (let roomId in basicRoomInfos.by_room_ids) {
-                    extendedMedal.roomid = basicRoomInfos.by_room_ids[roomId].room_id;
-                    return;
-                }
-            }));
-        });
-        return Promise.all(pMedalRoomInfos).then(() => extendedMedals);
     }
     /**
      * 
@@ -250,7 +234,7 @@ export class BilibiliLiveApiRequest {
      * @param {number[]} roomIds - Live room id or short id.
      * @returns {Promise<BasicRoomInfos>}
      */
-    static getBasicRoomInfo(...roomIds) {
+    static getBasicRoomInfos(roomIds) {
         let param = new URLSearchParams();
         roomIds.forEach(roomid => param.append('room_ids', roomid));
         param.append('req_biz', 'web_room_componet');
@@ -302,5 +286,43 @@ export class BilibiliUtils {
      */
     static async getAnchorMedal(anchorId) {
         return (await BilibiliLiveApiRequest.getMedalExpectation(anchorId, 1, 100, 2)).current?.medal;
+    }
+
+    /**
+     * 
+     * @param {number[]} roomIds - Live room id or short id.
+     * @returns {Promise<Map<string,BasicRoomInfo>>}
+     */
+    static async getBasicRoomInfos(roomIds) {
+        /** @type {Map<string,BasicRoomInfo>} */
+        let map = new Map();
+        let basicRoomInfos = await BilibiliLiveApiRequest.getBasicRoomInfos(roomIds);
+        if (!basicRoomInfos.by_room_ids) return map;
+        for (let id in basicRoomInfos.by_room_ids) {
+            let basicRoomInfo = basicRoomInfos.by_room_ids[id];
+            if (basicRoomInfo.short_id) map.set(basicRoomInfo.short_id, basicRoomInfo);
+            map.set(basicRoomInfo.room_id, basicRoomInfo);
+        }
+        return map;
+    }
+    /**
+     * 
+     * @returns {Promise<ExtendedMedal[]>}
+     */
+    static async getExtendedMedalList() {
+        let medals = await BilibiliLiveApiRequest.getMedalCenterList();
+        /** @type {ExtendedMedal[]} */
+        let extendedMedals = [];
+        let basicRoomInfos = await this.getBasicRoomInfos(medals.map(medal => medal.short_id));
+        medals.forEach(medal => {
+            /** @type {ExtendedMedal} */
+            let extendedMedal = medal;
+            extendedMedals.push(extendedMedal);
+            let shortId = medal.short_id;
+            // Live room not exists, can't get room info.
+            if (!shortId || !basicRoomInfos.has(shortId)) return;
+            extendedMedal.roomid = basicRoomInfos.get(shortId).room_id;
+        });
+        return extendedMedals;
     }
 }
