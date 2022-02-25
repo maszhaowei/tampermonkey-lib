@@ -57,36 +57,6 @@ interface GiftConfigResponseData {
     guard_resources: any[]
 }
 
-interface AnchorInfo {
-    uid: number, // 433351
-    uname: string, // "EdmundDZhang"
-    gender: number, // 1
-    face: string, // "https://i1.hdslb.com/bfs/face/50900541a74f7875867c38a1e8e572b44b388060.jpg"
-    silence: 0 | 1, // 0
-    masterVip: number, // 2
-    masterRank: number, // 10000
-    masterLevel: number, // 6
-    masterHeadpic: string, // ""
-    masterVerify: 0 | 1, // 0
-    mobileVerified: 0 | 1, // 1
-    identification: 0 | 1, // 1
-    official: {
-        role: number, // 2
-        title: string, // "bilibili 2020百大UP主、直播签约主播"
-        desc: string // "代表作：《这不是解说》《游戏蒙太奇》《DREAM.E游戏测评》"
-    },
-    rank: number, // 10000
-    platform_user_level: number, // 6
-    vip_type: number, // 2
-    mobile_verify: 0 | 1, // 0
-    official_verify: {
-        role: number, // 2
-        title: string, // "bilibili 2020百大UP主、直播签约主播"
-        desc: string, // "代表作：《这不是解说》《游戏蒙太奇》《DREAM.E游戏测评》"
-        type: number // -1
-    }
-}
-
 interface MedalBase {
     uid: number, // 206620
     target_id: number, // 433351
@@ -127,6 +97,38 @@ interface MedalInfo extends MedalBase {
     can_delete: boolean, // true
 }
 
+/* #region obsolete */
+interface AnchorInfo {
+    uid: number, // 433351
+    uname: string, // "EdmundDZhang"
+    gender: number, // 1
+    face: string, // "https://i1.hdslb.com/bfs/face/50900541a74f7875867c38a1e8e572b44b388060.jpg"
+    silence: 0 | 1, // 0
+    masterVip: number, // 2
+    masterRank: number, // 10000
+    masterLevel: number, // 6
+    masterHeadpic: string, // ""
+    masterVerify: 0 | 1, // 0
+    mobileVerified: 0 | 1, // 1
+    identification: 0 | 1, // 1
+    official: {
+        role: number, // 2
+        title: string, // "bilibili 2020百大UP主、直播签约主播"
+        desc: string // "代表作：《这不是解说》《游戏蒙太奇》《DREAM.E游戏测评》"
+    },
+    rank: number, // 10000
+    platform_user_level: number, // 6
+    vip_type: number, // 2
+    mobile_verify: 0 | 1, // 0
+    official_verify: {
+        role: number, // 2
+        title: string, // "bilibili 2020百大UP主、直播签约主播"
+        desc: string, // "代表作：《这不是解说》《游戏蒙太奇》《DREAM.E游戏测评》"
+        type: number // -1
+    }
+}
+
+/** @deprecated Use {@link MyMedal} */
 interface FansMedal extends MedalInfo {
     medal_level: number, // 17
     todayFeed: number, // 106
@@ -139,6 +141,7 @@ interface FansMedal extends MedalInfo {
     roomid: number // 5050
 }
 
+/** @deprecated Use {@link MyMedalResponseData} */
 interface MedalCenterListResponseData {
     medalCount: number,
     count: number,
@@ -149,6 +152,7 @@ interface MedalCenterListResponseData {
         curPage: number
     }
 }
+/* #endregion */
 
 interface RoomInfo {
     title: string, // "宇宙浩渺，而你自成星系。"
