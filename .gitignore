@@ -8,5 +8,5 @@ jsconfig.json
 dist
 *.LICENSE.txt
 index.html
-types/globals.d.ts
+types/*.d.ts
 *.dat
