@@ -290,7 +290,7 @@ export class BilibiliUtils {
 
     /**
      * 
-     * @param {number[]} roomIds - Live room id or short id.
+     * @param {number[]} roomIds - Live room id or short id. 0 will cause server to return error.
      * @returns {Promise<Map<number,BasicRoomInfo>>}
      */
     static async getBasicRoomInfos(roomIds) {
@@ -319,19 +319,28 @@ export class BilibiliUtils {
      * @returns {Promise<ExtendedMedal[]>}
      */
     static async getExtendedMedalList() {
-        // short_id为0时查询roominfo服务器会报错500
-        let medals = (await BilibiliLiveApiRequest.getMedalCenterList()).filter(medal => medal.short_id);
+        /** @type {MyMedal[]} 需要进一步查询roomid */
+        let needQueryMedals = []
         /** @type {ExtendedMedal[]} */
         let extendedMedals = [];
-        let basicRoomInfos = await this.getBasicRoomInfos(medals.map(medal => medal.short_id));
-        medals.forEach(medal => {
+        (await BilibiliLiveApiRequest.getMedalCenterList()).forEach(medal => {
+            if (medal.short_id) {
+                needQueryMedals.push(medal);
+            }
+            // short_id为0时查询roominfo服务器会报错500
+            else {
+                /** @type {ExtendedMedal} */
+                let extendedMedal = medal;
+                extendedMedal.short_id = extendedMedal.roomid = 0;
+                extendedMedals.push(extendedMedal);
+            }
+        });
+        let basicRoomInfos = await this.getBasicRoomInfos(needQueryMedals.map(medal => medal.short_id));
+        needQueryMedals.forEach(medal => {
             /** @type {ExtendedMedal} */
             let extendedMedal = medal;
+            extendedMedal.roomid = basicRoomInfos.get(medal.short_id).room_id;
             extendedMedals.push(extendedMedal);
-            let shortId = medal.short_id;
-            // Live room not exists, can't get room info.
-            if (!shortId || !basicRoomInfos.has(shortId)) return;
-            extendedMedal.roomid = basicRoomInfos.get(shortId).room_id;
         });
         return extendedMedals;
     }
