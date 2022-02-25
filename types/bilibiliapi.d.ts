@@ -279,16 +279,32 @@ interface NavInfo {
 }
 
 interface BasicRoomInfo {
-    room_id: number, // 5050
-    uid: number, // 433351
-    area_id: number, // 236
-    live_status: 0 | 1,
+    area_id: number, // 555
+    area_name: string, // 艾尔登法环
+    attention: number, // 3149378
+    background: string, // http://i0.hdslb.com/bfs/live/room_bg/cdfd9c09d7c87baa222bbe424ccb05296aad9550.jpg
+    cover: string, // http://i0.hdslb.com/bfs/live/room_cover/17c749332753cb813ef2d0a9d276ceec375907a2.jpg
+    description: string, // 致各位上舰的舰长们...
+    join_slide: number, // 1
+    live_id: number, // 216856742770774980
+    live_status: number, // 1
+    live_time: string, // 2022-02-25 18:05:06
+    live_url: string, // https://live.bilibili.com/5050
+    online: number, // 5218109
     parent_area_id: number, // 6
-    short_id: number, // 0(表示和room_id相同)
-    uname: string, // "EdmundDZhang"
+    parent_area_name: string, // 单机游戏
+    room_id: number, // 5050
+    short_id: number, // 0
+    tags: string, // 老E,主机游戏,单机游戏
+    title: string, // 老头环，还是简单了。
+    uid: number, // 433351
+    uname: string, // EdmundDZhang
 }
 
 interface BasicRoomInfos {
+    by_uids: {
+        [key: string]: BasicRoomInfo
+    },
     by_room_ids: {
         [key: string]: BasicRoomInfo // key是长号，即时查询时使用的是短号
     }

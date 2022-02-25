@@ -295,7 +295,7 @@ export class BilibiliUtils {
      * @param {number[]} roomIds - Live room id or short id. 0 will cause server to return error.
      * @returns {Promise<Map<number,BasicRoomInfo>>}
      */
-    static async getBasicRoomInfos(roomIds) {
+    static async getBasicRoomInfosByRoom(roomIds) {
         let batchRoomIds = [];
         do {
             batchRoomIds.push(roomIds.splice(0, 20));
@@ -313,6 +313,23 @@ export class BilibiliUtils {
                     map.set(basicRoomInfo.room_id, basicRoomInfo);
                 }
             })
+            return map;
+        });
+    }
+    /**
+     * 
+     * @param {number[]} uids 
+     * @returns {Promise<Map<number,BasicRoomInfo>>}
+     */
+    static async getBasicRoomInfosByUser(uids) {
+        return BilibiliLiveApiRequest.getBasicRoomInfos(undefined, uids).then(basicRoomInfos => {
+            /** @type {Map<number,BasicRoomInfo>} */
+            let map = new Map();
+            if (!basicRoomInfos.by_uids) return map;
+            for (let uid in basicRoomInfos.by_uids) {
+                let basicRoomInfo = basicRoomInfos.by_uids[uid];
+                map.set(basicRoomInfo.uid, basicRoomInfo);
+            }
             return map;
         });
     }
@@ -337,7 +354,7 @@ export class BilibiliUtils {
                 extendedMedals.push(extendedMedal);
             }
         });
-        let basicRoomInfos = await this.getBasicRoomInfos(needQueryMedals.map(medal => medal.short_id));
+        let basicRoomInfos = await this.getBasicRoomInfosByRoom(needQueryMedals.map(medal => medal.short_id));
         needQueryMedals.forEach(medal => {
             /** @type {ExtendedMedal} */
             let extendedMedal = medal;
