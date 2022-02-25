@@ -291,7 +291,7 @@ export class BilibiliUtils {
     /**
      * 
      * @param {number[]} roomIds - Live room id or short id.
-     * @returns {Promise<Map<string,BasicRoomInfo>>}
+     * @returns {Promise<Map<number,BasicRoomInfo>>}
      */
     static async getBasicRoomInfos(roomIds) {
         let batchRoomIds = [];
@@ -300,7 +300,7 @@ export class BilibiliUtils {
         } while (roomIds.length > 0);
         let pRoomInfos = batchRoomIds.map(ids => BilibiliLiveApiRequest.getBasicRoomInfos(ids));
         return Promise.all(pRoomInfos).then(basicRoomInfosArr => {
-            /** @type {Map<string,BasicRoomInfo>} */
+            /** @type {Map<number,BasicRoomInfo>} */
             let map = new Map();
             basicRoomInfosArr.forEach(basicRoomInfos => {
                 // 没有查询到room信息
