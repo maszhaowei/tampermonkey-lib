@@ -81,6 +81,7 @@ export const GlobalEvents = {
     CONTEXTMENU: 'contextmenu',
     DBLCLICK: 'dblclick',
     KEYDOWN: 'keydown',
+    KEYUP: 'keyup',
     LOAD: 'load',
     MESSAGE: 'message',
     MOUSEDOWN: 'mousedown',
