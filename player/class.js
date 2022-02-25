@@ -473,6 +473,7 @@ export class VideoInstance extends EventObserverWrapper {
     }
     // 记录快进前的暂停状态
     #pausedBeforeFF = false;
+    #isFF = false;
     /**
      * 
      * @param {number} [playbackRate] - Default to 3.
@@ -483,12 +484,15 @@ export class VideoInstance extends EventObserverWrapper {
         // 快进时自动播放
         if (this.#video.paused) this.togglePlay();
         this.showTooltip(this.#video.playbackRate + "x");
+        this.#isFF = true;
     }
     resumeFromFastforward() {
+        if (!this.#isFF) return;
         this.#video.playbackRate = this.#video.defaultPlaybackRate;
         // 恢复快进前暂停状态
         if (this.#pausedBeforeFF && !this.#video.paused) this.togglePlay();
         this.showTooltip(this.#video.playbackRate + "x");
+        this.#isFF = false;
     }
     /* #endregion */
     clean() {
