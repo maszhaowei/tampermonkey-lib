@@ -319,7 +319,8 @@ export class BilibiliUtils {
      * @returns {Promise<ExtendedMedal[]>}
      */
     static async getExtendedMedalList() {
-        let medals = await BilibiliLiveApiRequest.getMedalCenterList();
+        // short_id为0时查询roominfo服务器会报错500
+        let medals = (await BilibiliLiveApiRequest.getMedalCenterList()).filter(medal => medal.short_id);
         /** @type {ExtendedMedal[]} */
         let extendedMedals = [];
         let basicRoomInfos = await this.getBasicRoomInfos(medals.map(medal => medal.short_id));
