@@ -471,6 +471,25 @@ export class VideoInstance extends EventObserverWrapper {
         }
         else return cui.isFullscreen() ? this.exitFullscreen(false) : this.requestFullscreen(false);
     }
+    // 记录快进前的暂停状态
+    #pausedBeforeFF = false;
+    /**
+     * 
+     * @param {number} [playbackRate] - Default to 3.
+     */
+    fastforward(playbackRate = 3) {
+        this.#video.playbackRate = playbackRate;
+        this.#pausedBeforeFF = this.#video.paused;
+        // 快进时自动播放
+        if (this.#video.paused) this.togglePlay();
+        this.showTooltip(this.#video.playbackRate + "x");
+    }
+    resumeFromFastforward() {
+        this.#video.playbackRate = this.#video.defaultPlaybackRate;
+        // 恢复快进前暂停状态
+        if (this.#pausedBeforeFF && !this.#video.paused) this.togglePlay();
+        this.showTooltip(this.#video.playbackRate + "x");
+    }
     /* #endregion */
     clean() {
         this.#videoDelegate.unbindVideo(this.#video);
