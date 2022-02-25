@@ -255,11 +255,14 @@ export class BilibiliLiveApiRequest {
     }
     /**
      * 
-     * @param {number} roomId - Live room id or short id.
+     * @param {number[]} roomIds - Live room id or short id.
      * @returns {Promise<BasicRoomInfos>}
      */
-    static getBasicRoomInfo(roomId) {
-        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo?room_ids=${roomId}&req_biz=web_room_componet`));
+    static getBasicRoomInfo(...roomIds) {
+        let param = new URLSearchParams();
+        roomIds.forEach(roomid => param.append('room_ids', roomid));
+        param.append('req_biz', 'web_room_componet');
+        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo`, param));
     }
     /**
      * 
