@@ -277,6 +277,14 @@ export class BilibiliLiveApiRequest {
     static getDanmuHistory(roomid) {
         return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/dM/gethistory?roomid=${roomid}`));
     }
+    /**
+     * 
+     * @param {number} roomid 
+     * @returns {Promise<WidgetBannerListResponseData>}
+     */
+    static getWidgetBannerList(roomid) {
+        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/activity-interface/v1/widgetBanner/GetWidgetBannerList?room_id=${roomid}&platform=pc`));
+    }
 }
 
 export class BilibiliUtils {
@@ -362,5 +370,13 @@ export class BilibiliUtils {
             extendedMedals.push(extendedMedal);
         });
         return extendedMedals;
+    }
+    /**
+     * 
+     * @param {number} roomid 
+     * @returns 
+     */
+    static async isLiveEnbaled(roomid) {
+        return !!(await BilibiliLiveApiRequest.getWidgetBannerList(roomid)).list;
     }
 }

@@ -331,3 +331,7 @@ interface DanmuHistoryResponseData {
     admin: AdminHistory[],
     room: RoomHistory[],
 }
+
+interface WidgetBannerListResponseData {
+    list: any
+}
