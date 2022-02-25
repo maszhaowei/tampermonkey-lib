@@ -247,6 +247,14 @@ export class BilibiliLiveApiRequest {
     }
     /**
      * 
+     * @param {number} anchorId 
+     * @returns {Promise<ExpectationMedalInfo>}
+     */
+    static async getAnchorMedal(anchorId) {
+        return (await this.getMedalExpectation(anchorId, 1, 100, 2)).current?.medal;
+    }
+    /**
+     * 
      * @param {number} roomId - Live room id or short id.
      * @returns {Promise<BasicRoomInfos>}
      */
