@@ -230,7 +230,7 @@ export class BilibiliLiveApiRequest {
         return processRsp(this.#get('https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/room', param.toString()));
     }
     /**
-     * 
+     * 接口支持最多30个查询参数，此处即29个roomid
      * @param {number[]} roomIds - Live room id or short id.
      * @returns {Promise<BasicRoomInfos>}
      */
@@ -294,16 +294,25 @@ export class BilibiliUtils {
      * @returns {Promise<Map<string,BasicRoomInfo>>}
      */
     static async getBasicRoomInfos(roomIds) {
-        /** @type {Map<string,BasicRoomInfo>} */
-        let map = new Map();
-        let basicRoomInfos = await BilibiliLiveApiRequest.getBasicRoomInfos(roomIds);
-        if (!basicRoomInfos.by_room_ids) return map;
-        for (let id in basicRoomInfos.by_room_ids) {
-            let basicRoomInfo = basicRoomInfos.by_room_ids[id];
-            if (basicRoomInfo.short_id) map.set(basicRoomInfo.short_id, basicRoomInfo);
-            map.set(basicRoomInfo.room_id, basicRoomInfo);
-        }
-        return map;
+        let batchRoomIds = [];
+        do {
+            batchRoomIds.push(roomIds.splice(0, 20));
+        } while (roomIds.length > 0);
+        let pRoomInfos = batchRoomIds.map(ids => BilibiliLiveApiRequest.getBasicRoomInfos(ids));
+        return Promise.all(pRoomInfos).then(basicRoomInfosArr => {
+            /** @type {Map<string,BasicRoomInfo>} */
+            let map = new Map();
+            basicRoomInfosArr.forEach(basicRoomInfos => {
+                // 没有查询到room信息
+                if (!basicRoomInfos.by_room_ids) return;
+                for (let id in basicRoomInfos.by_room_ids) {
+                    let basicRoomInfo = basicRoomInfos.by_room_ids[id];
+                    if (basicRoomInfo.short_id) map.set(basicRoomInfo.short_id, basicRoomInfo);
+                    map.set(basicRoomInfo.room_id, basicRoomInfo);
+                }
+            })
+            return map;
+        });
     }
     /**
      * 
