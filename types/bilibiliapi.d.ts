@@ -57,46 +57,6 @@ interface GiftConfigResponseData {
     guard_resources: any[]
 }
 
-interface MedalBase {
-    uid: number, // 206620
-    target_id: number, // 433351
-    target_name: string, // "EdmundDZhang"
-    medal_id: number, // 2
-    level: number, // 17
-    medal_name: string, // "大母鹅"
-    medal_color: number, // 13081892
-    intimacy: number, // 64457
-    next_intimacy: number, // 100000
-    day_limit: number, // 1500
-    today_feed: number, // 106
-    medal_color_start: number, // 13081892
-    medal_color_end: number, // 13081892
-    medal_color_border: number, // 13081892
-    is_lighted: 0 | 1, // 1
-    guard_level: number, // 0
-}
-
-interface MedalInfo extends MedalBase {
-    guard_type: number, // 0
-    is_receive: 0 | 1, // 1
-    last_wear_time: number, // 1633627760
-    lpl_status: number, // 0
-    master_available: 0 | 1, // 1
-    master_status: 0 | 1, // 1
-    receive_channel: number, // 1
-    receive_time: string, // "2020-04-07 20:44:02"
-    score: number, // 214358
-    status: 0 | 1, // 1
-    source: number, // 1
-    today_intimacy: number, // 106
-    target_face: string, // "https://i1.hdslb.com/bfs/face/50900541a74f7875867c38a1e8e572b44b388060.jpg"
-    live_stream_status: 0 | 1, // 0
-    icon_code: number, // 0
-    icon_text: string, // ""
-    rank: string, // ""
-    can_delete: boolean, // true
-}
-
 /* #region obsolete */
 interface AnchorInfo {
     uid: number, // 433351
@@ -128,73 +88,86 @@ interface AnchorInfo {
     }
 }
 
-/** @deprecated Use {@link MyMedal} */
-interface FansMedal extends MedalInfo {
-    medal_level: number, // 17
-    todayFeed: number, // 106
-    dayLimit: number, // 1500
-    uname: string, // "EdmundDZhang"
-    color: number, // 13081892
-    medalName: string, // "大母鹅"
-    guard_medal_title: string, // "未开启加成"
-    anchorInfo: AnchorInfo,
-    roomid: number // 5050
-}
-
-/** @deprecated Use {@link MyMedalResponseData} */
-interface MedalCenterListResponseData {
-    medalCount: number,
-    count: number,
-    fansMedalList: FansMedal[],
-    name: string,
-    pageinfo: {
-        totalpages: number,
-        curPage: number
-    }
-}
-/* #endregion */
-
 interface RoomInfo {
-    title: string, // "宇宙浩渺，而你自成星系。"
+    title: string, // 老头环，还是简单了。
     room_id: number, // 5050
     uid: number, // 433351
-    online: number, // 2375988
-    live_time: number, // 1633085378
-    live_status: 0 | 1, // 1
+    online: number, // 4605959
+    live_time: number, // 1645765849
+    live_status: number, // 1
     short_id: number, // 0
     area: number, // 1
-    area_name: string, // "单机联机"
-    area_v2_id: number, // 236
-    area_v2_name: string, // "主机游戏"
-    area_v2_parent_name: string, // "单机游戏"
+    area_name: string, // 单机联机
+    area_v2_id: number, // 555
+    area_v2_name: string, // 艾尔登法环
+    area_v2_parent_name: string, // 单机游戏
     area_v2_parent_id: number, // 6
-    uname: string, // "EdmundDZhang"
-    face: string, // "https://i1.hdslb.com/bfs/face/50900541a74f7875867c38a1e8e572b44b388060.jpg"
-    tag_name: string, // "以撒,minecraft,饥荒,彩虹六号,东方"
-    tags: string, // "老E,主机游戏,单机游戏"
-    cover_from_user: string, // "https://i0.hdslb.com/bfs/live/room_cover/17c749332753cb813ef2d0a9d276ceec375907a2.jpg"
-    keyframe: string, // "https://i0.hdslb.com/bfs/live-key-frame/keyframe10012342000000005050aows50.jpg"
-    lock_till: string, // "0000-00-00 00:00:00"
-    hidden_till: string, // "0000-00-00 00:00:00"
-    broadcast_type: number // 0
+    uname: string, // EdmundDZhang
+    face: string, // https://i1.hdslb.com/bfs/face/50900541a74f7875867c38a1e8e572b44b388060.jpg
+    tag_name: string, // 以撒,minecraft,饥荒,彩虹六号,东方
+    tags: string, // 老E,主机游戏,单机游戏
+    cover_from_user: string, // https://i0.hdslb.com/bfs/live/room_cover/17c749332753cb813ef2d0a9d276ceec375907a2.jpg
+    keyframe: string, // https://i0.hdslb.com/bfs/live-key-frame/keyframe02251625000000005050no75xu.jpg
+    lock_till: string, // 0000-00-00 00:00:00
+    hidden_till: string, // 0000-00-00 00:00:00
+    broadcast_type: number, // 0
 }
 
-interface WearedMedalInfo extends MedalInfo {
+interface MedalBase {
+    day_limit: number, // 1500
+    guard_level: number, // 0
+    intimacy: number, // 26415
+    is_lighted: 0 | 1, // 1
+    level: number, // 18
+    medal_color_border: number, // 13081892
+    medal_color_end: number, // 13081892
+    medal_color_start: number, // 13081892
+    medal_id: number, // 2
+    medal_name: string, // 大母鹅
+    next_intimacy: number, // 250000
+    target_id: number, // 433351
+    target_name: string, // EdmundDZhang
+    today_feed: number, // 100
+}
+
+interface WearedMedalInfo extends MedalBase {
+    guard_type: number, // 0
+    is_receive: 0 | 1, // 1
+    last_wear_time: number, // 1646323283
+    lpl_status: number, // 0
+    master_available: number, // 1
+    master_status: number, // 1
+    receive_channel: number, // 1
+    receive_time: string, // 2020-04-07 20:44:02
+    score: number, // 276316
+    source: number, // 1
+    status: number, // 1
+    today_intimacy: number, // 100
+    uid: number, // 206620
+    target_face: string, // https://i1.hdslb.com/bfs/face/50900541a74f7875867c38a1e8e572b44b388060.jpg
+    live_stream_status: number, // 0
+    icon_code: number, // 0
+    icon_text: string, // 
+    rank: string, // -
+    medal_color: number, // 13081892
+    can_delete: boolean, // true
     is_union: 0 | 1, // 0
-    roominfo: RoomInfo
+    roominfo: RoomInfo,
 }
 
+// target_name为空，需要重新查询
 interface ExpectationMedalInfo extends MedalBase {
-    wearing_status: 0 | 1, // 0
+    uid: number, // 206620
+    medal_color: number, // 13081892
+    wearing_status: number, // 1
     medal_icon_id: number, // 0
-    medal_icon_url: string, // ""
+    medal_icon_url: string, //  
 }
 
 interface ExpectationDesc {
     message: string, // {"需3.5万亲密度升级", "+1亲密度"},
     url: string // ""
 }
-
 interface MedalExpectation {
     medal: ExpectationMedalInfo,
     description: ExpectationDesc[]
@@ -241,26 +214,12 @@ interface UserInfoResponseData {
     name: string, // "EdmundDZhang"
 }
 /** Data structure returned from server. */
-interface ServerFansMedal {
+interface ServerFansMedal extends MedalBase {
     can_deleted: boolean, // true
-    day_limit: number, // 1500
-    guard_level: number, // 0
-    guard_medal_title: string, // "未开启加成"
-    intimacy: number, // 20950
-    is_lighted: 0 | 1, // 1
-    level: number, // 18
-    medal_name: string, // "大母鹅"
-    medal_color_border: number, // 13081892
-    medal_color_end: number, // 13081892
-    medal_color_start: number, // 13081892
-    medal_id: number, // 2
-    next_intimacy: number, // 250000
-    today_feed: number, // 100
-    roomid: number, // 116（短号），可能为0表示直播间不存在
-    status: 0 | 1, // 0
-    target_id: number, // 433351,
-    target_name: string, // "EdmundDZhang",
-    uname: string // "EdmundDZhang"
+    guard_medal_title: string, // 未开启加成
+    roomid: number, // 5050
+    status: number, // 1
+    uname: string, // EdmundDZhang
 }
 interface MyMedalResponseData {
     items: ServerFansMedal[],
@@ -270,26 +229,13 @@ interface MyMedalResponseData {
     },
     count: number
 }
-interface MyMedal {
+// 用ServerFansMedal.roomid填充short_id
+interface MyMedal extends MedalBase {
     can_deleted: boolean, // true
-    day_limit: number, // 1500
-    guard_level: number, // 0
-    guard_medal_title: string, // "未开启加成"
-    intimacy: number, // 20950
-    is_lighted: 0 | 1, // 1
-    level: number, // 18
-    medal_name: string, // "大母鹅"
-    medal_color_border: number, // 13081892
-    medal_color_end: number, // 13081892
-    medal_color_start: number, // 13081892
-    medal_id: number, // 2
-    next_intimacy: number, // 250000
-    today_feed: number, // 100
+    guard_medal_title: string, // 未开启加成
     short_id: number, // 116，可能为0表示直播间不存在
-    status: 0 | 1, // 0
-    target_id: number, // 433351,
-    target_name: string, // "EdmundDZhang",
-    uname: string // "EdmundDZhang"
+    status: number, // 1
+    uname: string, // EdmundDZhang
 }
 interface ExtendedMedal extends MyMedal {
     roomid: number // 5050
