@@ -23,6 +23,27 @@ export const util = {
      * Output message to web console in gourp {@link scriptName}.
      * @param  {...any} objs 
      */
+    info: function (...objs) {
+        cutil.consoleOutput(scriptName, ConsoleOutputLevel.INFO, ...objs);
+    },
+    /**
+     * Output message to web console in gourp {@link scriptName}.
+     * @param  {...any} objs 
+     */
+    log: function (...objs) {
+        cutil.consoleOutput(scriptName, ConsoleOutputLevel.LOG, ...objs);
+    },
+    /**
+     * Output message to web console in gourp {@link scriptName}.
+     * @param  {...any} objs 
+     */
+    warn: function (...objs) {
+        cutil.consoleOutput(scriptName, ConsoleOutputLevel.WARN, ...objs);
+    },
+    /**
+     * Output message to web console in gourp {@link scriptName}.
+     * @param  {...any} objs 
+     */
     error: function (...objs) {
         cutil.consoleOutput(scriptName, ConsoleOutputLevel.ERROR, ...objs);
     },
