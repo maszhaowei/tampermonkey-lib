@@ -245,10 +245,18 @@ export class BilibiliLiveApiRequest {
     /**
      * 
      * @param {number} roomId 
-     * @returns {Promise<RoomUserInfoResponseData>}
+     * @returns {Promise<RoomInfoByUserResponseData>}
      */
-    static getInfoByRoom(roomId) {
+    static getRoomInfoByUser(roomId) {
         return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=${roomId}`));
+    }
+    /**
+     * 
+     * @param {number} roomId 
+     * @returns {Promise<RoomInfoByRoomResponseData>}
+     */
+    static getRoomInfoByRoom(roomId) {
+        return processRsp(this.#get(`https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=${roomId}`));
     }
     /**
      * 

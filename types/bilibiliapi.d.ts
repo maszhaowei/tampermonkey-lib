@@ -250,6 +250,7 @@ interface FollowingResponseData {
     total: number
 }
 
+/* #region getRoomInfoByUser */
 interface RoomDanmuConfig {
     mode: number, // 1
     color: number, // 5566168
@@ -262,7 +263,7 @@ interface RoomUserProperty {
     danmu: RoomDanmuConfig,
     bubble_color: string // ""
 }
-interface RoomUserInfoResponseData {
+interface RoomInfoByUserResponseData {
     medal: {
         up_medal: {
             uid: number, // 546195
@@ -273,6 +274,82 @@ interface RoomUserInfoResponseData {
     },
     property: RoomUserProperty
 }
+/* #endregion */
+
+/* #region getRoomInfoByRoom */
+interface SwitchInfo {
+    close_danmaku: boolean, // false
+    close_gift: boolean, // true
+    close_guard: boolean, // true
+    close_online: boolean, // false
+}
+interface NewSwitchInfo {
+    "fans-club": 0 | 1, // 1
+    "fans-medal-progress": 0 | 1, // 1
+    "gift-bay-screen": 0 | 1, // 1
+    "room-activity": 0 | 1, // 0
+    "room-anchor_rank": 0 | 1, // 0
+    "room-board": 0 | 1, // 1
+    "room-danmaku-editor": 0 | 1, // 1
+    "room-effect": 0 | 1, // 0
+    "room-enter": 0 | 1, // 1
+    "room-fans_medal": 0 | 1, // 1
+    "room-feedback": 0 | 1, // 1
+    "room-hot-rank": 0 | 1, // 1
+    "room-hour_rank": 0 | 1, // 0
+    "room-info-integral": 0 | 1, // 0
+    "room-info-popularity": 0 | 1, // 1
+    "room-my-idol": 0 | 1, // 1
+    "room-player-watermark": 0 | 1, // 1
+    "room-prop-send": 0 | 1, // 0
+    "room-recommend-live_off": 0 | 1, // 0
+    "room-report": 0 | 1, // 1
+    "room-sailing": 0 | 1, // 0
+    "room-silver_seeds-box": 0 | 1, // 1
+    "room-socket": 0 | 1, // 1
+    "room-super-chat": 0 | 1, // 0
+    "room-supplication": 0 | 1, // 1
+    "room-tab": 0 | 1, // 1
+    "room-topic": 0 | 1, // 1
+    "room-web_banner": 0 | 1, // 0
+    "room-week_rank": 0 | 1, // 0
+    "room-wishing_bottle": 0 | 1, // 1
+}
+interface RoomInfoByRoomResponseData {
+    activity_init_info: object,
+    ad_banner_info: object,
+    anchor_info: object,
+    area_rank_info: object,
+    battle_info: object, // null
+    battle_rank_entry_info: object,
+    dm_emoticon_info: object,
+    dm_tag_info: object,
+    game_info: object,
+    gift_memory_info: object,
+    guard_info: object,
+    hot_rank_info: object, // null
+    lol_info: object,
+    new_switch_info: NewSwitchInfo,
+    news_info: object,
+    online_gold_rank_info_v2: object,
+    pk_info: object, // null
+    player_throttle_info: object,
+    rankdb_info: object,
+    record_switch_info: object,
+    room_config_info: object,
+    room_info: object,
+    silent_room_info: object,
+    skin_info: object,
+    super_chat_info: object,
+    switch_info: SwitchInfo,
+    tab_info: object,
+    topic_info: object,
+    video_connection_info: object, // null
+    voice_join_info: object,
+    watched_show: object,
+    web_banner_info: object,
+}
+/* #endregion */
 
 interface NavInfo {
     mid: number, // 206620
