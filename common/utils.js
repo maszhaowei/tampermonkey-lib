@@ -35,8 +35,14 @@ export class EnumHelper {
 }
 
 export class ErrorUtils {
-    static convertToCustomError(e) {
-        return e instanceof CustomError ? e : e instanceof Error ? new CustomError(ErrorCode.COMMON, e.message) : new CustomError(ErrorCode.COMMON,JSON.stringify(e));
+    /**
+     * 
+     * @param {*} e 
+     * @param {number} [errorCode] - code used if {@link e} is not CustomError. Default to {@link ErrorCode.COMMON}
+     * @returns 
+     */
+    static convertToCustomError(e, errorCode = ErrorCode.COMMON) {
+        return e instanceof CustomError ? e : e instanceof Error ? new CustomError(errorCode, e.message) : new CustomError(errorCode, JSON.stringify(e));
     }
 }
 export class ArrayUtils {
