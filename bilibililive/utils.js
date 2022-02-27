@@ -379,12 +379,4 @@ export class BilibiliUtils {
         });
         return extendedMedals;
     }
-    /**
-     * 
-     * @param {number} roomid 
-     * @returns 
-     */
-    static async isLiveEnbaled(roomid) {
-        return !!(await BilibiliLiveApiRequest.getWidgetBannerList(roomid)).list;
-    }
 }
