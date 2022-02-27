@@ -77,12 +77,12 @@ export const util = {
         tutil.debug(`Can't find current search site: ${window.location.href}.`);
     },
     /**
-     * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githubusercontent.com.
+     * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: cdn.jsdelivr.net.
      * @param {'dev'|'master'} branch - Branch. Default to master.
      */
     updateRemoteSiteConfig: async function (branch = 'master') {
         if (branch != 'dev' && branch != 'master') return Promise.reject('Invalid branch');
-        const res = await tutil.gmGet(`https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/${branch}/conf/site.json`, undefined, undefined, true);
+        const res = await tutil.gmGet(`https://cdn.jsdelivr.net/gh/maszhaowei/tampermonkey-lib@${branch}/conf/site.json`, undefined, undefined, true);
         /** @type {Error[]} */
         let errors = [];
         if (!cutil.isObject(res)) return Promise.reject('json content is not an object');
