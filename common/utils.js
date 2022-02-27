@@ -36,7 +36,7 @@ export class EnumHelper {
 
 export class ErrorUtils {
     static convertToCustomError(e) {
-        return e instanceof CustomError ? e : e instanceof Error ? new CustomError(ErrorCode.COMMON, e.message) : new CustomError(ErrorCode.COMMON, e);
+        return e instanceof CustomError ? e : e instanceof Error ? new CustomError(ErrorCode.COMMON, e.message) : new CustomError(ErrorCode.COMMON,JSON.stringify(e));
     }
 }
 export class ArrayUtils {
