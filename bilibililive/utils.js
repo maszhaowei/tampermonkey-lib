@@ -379,4 +379,13 @@ export class BilibiliUtils {
         });
         return extendedMedals;
     }
+    /**
+     * 判断主播是否启用了直播。
+     * @param {number} roomid 
+     * @returns 
+     */
+    static async isLiveEnabled(roomid) {
+        let roomInfo = await BilibiliLiveApiRequest.getRoomInfoByRoom(roomid);
+        return roomInfo.new_switch_info?.["room-recommend-live_off"] == 1;
+    }
 }
