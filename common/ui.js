@@ -118,11 +118,11 @@ function _getCoord(displayElement, options) {
     if (insideY && position.includes('right') || (!insideY && position.includes('left'))) left -= tooltipRect.width;
 
     let vw = _getViewPortDimension(_getOwnerWindow(options.target), false);
-    if (options.ensureViewPort) {
+    if (options.ensureViewPort && options.fixed) {
         if (left < 0) left = 0;
         else if (vw.width < Math.round(left + tooltipRect.width)) left = vw.width - tooltipRect.width;
         if (top < 0) top = 0;
-        else if (vw.height < Math.round(top + tooltipRect.height)) left = vw.height - tooltipRect.height;
+        else if (vw.height < Math.round(top + tooltipRect.height)) top = vw.height - tooltipRect.height;
     }
     return { left: left, top: top };
 }
