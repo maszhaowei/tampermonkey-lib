@@ -303,8 +303,8 @@ export class PositionOption {
      * @param {object} options
      * @param {Element} options.target - Target element for positioning.
      * @param {string} [options.position] - Position to display. Default to "center-center". See TooltipPosition for available values.
-     * @param {number} [options.top] - Additional y offset. Default to 0.
-     * @param {number} [options.left] - Additional x offset. Default to 0.
+     * @param {number} [options.top] - Additional top offset. Default to 0.
+     * @param {number} [options.left] - Additional left offset. Default to 0.
      * @param {boolean} [options.insideX] - Whether the displayed message is inside horizontal axes of {@link target}. Default to true.
      * @param {boolean} [options.insideY] - Whether the displayed message is inside vertical axes of {@link target}. Default to true.
      * @param {boolean} [options.insideX] - Whether the displayed message is inside {@link target}. Default to true.
