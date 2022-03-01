@@ -315,6 +315,15 @@ interface NewSwitchInfo {
     "room-week_rank": 0 | 1, // 0
     "room-wishing_bottle": 0 | 1, // 1
 }
+interface WatchedShow {
+    icon: string, // 
+    icon_location: number, // 0
+    icon_web: string, // 
+    num: number, // 153986
+    switch: boolean, // true
+    text_large: string, // 15.3万人看过
+    text_small: string, // 15.3万
+}
 interface RoomInfoByRoomResponseData {
     activity_init_info: object,
     ad_banner_info: object,
@@ -346,7 +355,7 @@ interface RoomInfoByRoomResponseData {
     topic_info: object,
     video_connection_info: object, // null
     voice_join_info: object,
-    watched_show: object,
+    watched_show: WatchedShow,
     web_banner_info: object,
 }
 /* #endregion */
