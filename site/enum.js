@@ -53,6 +53,8 @@ export const SiteIDs = {
     MEIJUBS_VIDEO_PORTAL: 'MEIJUBS_VIDEO_PORTAL',
     MEIJUTTB: 'MEIJUTTB',
     MINGTIAN6: 'MINGTIAN6',
+    MIHOYO: 'MIHOYO',
+    MIHOYO_YS_MAP: 'MIHOYO_YS_MAP',
     MM9842: 'MM9842',
     MM9842_VIDEO: 'MM9842_VIDEO',
     NEXUSMODS: 'NEXUSMODS',
@@ -137,6 +139,14 @@ export const Sites = {
         id: SiteIDs.MEIJUBS, baseSiteId: SiteIDs.MEIJUBS,
         origin: "https://www.meijubs.com",
         siteCategories: [SiteCategories.VIDEO_STREAMING]
+    }),
+    MIHOYO: new Site({
+        id: SiteIDs.MIHOYO, baseSiteId: SiteIDs.MIHOYO,
+        origin: "https://www.mihoyo.com"
+    }),
+    MIHOYO_YS_MAP: new Site({
+        id: SiteIDs.MIHOYO_YS_MAP, baseSiteId: SiteIDs.MIHOYO,
+        hrefRegEx: /https:\/\/webstatic-sea.mihoyo.com\/app\/ys-map-sea\//
     }),
     MM9842: new Site({
         id: SiteIDs.MM9842, baseSiteId: SiteIDs.MM9842,
