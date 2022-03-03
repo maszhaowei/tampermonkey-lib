@@ -116,10 +116,12 @@ export let util = {
     /**
      * 
      * @param {string} key 
+     * @param {boolean} includeHash - Whether to get query param in window.location.hash. Default to false.
      * @returns 
      */
-    getQueryParameter: function (key) {
-        for (let [k, v] of new URLSearchParams(window.location.search).entries()) {
+    getQueryParameter: function (key, includeHash = false) {
+        let searchString = includeHash ? window.location.hash.replace(/#.*?\?/, '?') : window.location.search;
+        for (let [k, v] of new URLSearchParams(searchString).entries()) {
             if (k === key) return v;
         }
     },
