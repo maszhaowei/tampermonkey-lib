@@ -355,7 +355,7 @@ export const VideoPortalSites = {
     }),
     MEIJUBS_VIDEO_PORTAL: new VideoPortalSite({
         id: SiteIDs.MEIJUBS_VIDEO_PORTAL, baseSiteId: SiteIDs.MEIJUBS, hrefRegEx: /^https:\/\/www\.meijubs\.com\/play\/.+/,
-        videoCategories: [VideoCategories.TV_SERIES],
+        videoCategories: [VideoCategories.TV_SERIES], pathIframeSelectors: ['iframe#cciframe'],
         originWhitelist: ["https://vod3.buycar5.cn", "https://jx.444662.cn", "https://vod4.buycar5.cn", "https://v7.dious.cc"]
     }),
     NEXUSMODS_VIDEO_PORTAL: new VideoPortalSite({
