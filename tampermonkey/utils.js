@@ -172,7 +172,7 @@ export class FutureHelper {
      * @param {string} selector
      * @param {string[]} remainingSelectors 
      */
-    static _chainArrive(context, selector, remainingSelectors) {
+    static #chainArrive(context, selector, remainingSelectors) {
         return new Promise((resolve, reject) => {
             /** @type {Promise<Document|Element>} */
             let pContext = new Promise(r => {
@@ -183,7 +183,7 @@ export class FutureHelper {
             });
             pContext.then(context => {
                 context.arrive(selector, { existing: true }, (element) => {
-                    if (remainingSelectors.length > 0) this._chainArrive(element, remainingSelectors.shift(), remainingSelectors)
+                    if (remainingSelectors.length > 0) this.#chainArrive(element, remainingSelectors.shift(), remainingSelectors)
                         .then(result => resolve([element].concat(result)), result => reject(result));
                     else resolve([element]);
                 });
@@ -197,6 +197,6 @@ export class FutureHelper {
     static chainArrive(selectors = []) {
         if (selectors.length == 0) return Promise.resolve([]);
         let copy = Array.from(selectors);
-        return this._chainArrive(document, copy.shift(), copy);
+        return this.#chainArrive(document, copy.shift(), copy);
     }
 }
