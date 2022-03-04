@@ -26,7 +26,7 @@ function unhideElement(element) {
  * @param {Array<ApplyMethodSignature>} restSigs 
  * @param {number} interval 
  * @param {number} waitTimeout 
- * @returns {Promise<Element[]|Error>}
+ * @returns {Promise<any[]|Error>}
  */
 function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
     let context = applySig.thisArg;
@@ -68,7 +68,7 @@ export const ui = {
      * @returns 
      */
     asyncChainFn: function (sigs, interval = 0, waitTimeout = 2000) {
-        if (!Array.isArray(sigs) || sigs.length == 0) return;
+        if (!Array.isArray(sigs) || sigs.length == 0) return Promise.resolve([]);
         return asyncRecursiveFn(sigs.shift(), sigs, interval, waitTimeout);
     },
     /**
