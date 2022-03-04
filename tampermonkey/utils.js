@@ -205,8 +205,8 @@ export class FutureHelper {
                 }
                 else r(context);
             });
-            pContext.then(context => {
-                context.arrive(selector, { existing: true }, (element) => {
+            pContext.then(newContext => {
+                newContext.arrive(selector, { existing: true }, (element) => {
                     if (remainingSelectors.length > 0) this.#chainArrive(element, remainingSelectors.shift(), remainingSelectors)
                         .then(result => resolve([element].concat(result)), result => reject(result));
                     else {
