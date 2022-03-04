@@ -26,6 +26,8 @@ export const SiteIDs = {
     '7MM': '7MM',
     '7MM_VIDEO_PORTAL': '7MM_VIDEO',
     '7MM_SEARCH': '7MM_SEARCH',
+    APP_SAMPLE: 'APP_SAMPLE',
+    APP_SAMPLE_GI_MAP: 'APP_SAMPLE_GI_MAP',
     AVGLE: 'AVGLE',
     AVGLE_VIDEO: 'AVGLE_VIDEO',
     AVGLE_EMBED_VIDEO: 'AVGLE_EMBED',
@@ -89,6 +91,14 @@ export const Sites = {
         id: SiteIDs["7MM"], baseSiteId: SiteIDs["7MM"],
         origin: "https://7mmtv.tv", hrefRegEx: /^https:\/\/7mmtv\.tv\/.*/,
         siteCategories: [SiteCategories.JAV, SiteCategories.VIDEO_STREAMING]
+    }),
+    APP_SAMPLE: new Site({
+        id: SiteIDs.APP_SAMPLE, baseSiteId: SiteIDs.APP_SAMPLE,
+        origin: "https://www.appsample.com"
+    }),
+    APP_SAMPLE_GI_MAP: new Site({
+        id: SiteIDs.APP_SAMPLE_GI_MAP, baseSiteId: SiteIDs.APP_SAMPLE,
+        hrefRegEx: /^https:\/\/genshin-impact-map.appsample.com\//
     }),
     AVGLE: new Site({
         id: SiteIDs.AVGLE, baseSiteId: SiteIDs.AVGLE,
@@ -312,7 +322,7 @@ export const VideoSites = {
             playButtonSelector: "button.ytp-play-button", volumeButtonSelector: "button.ytp-mute-button",
             fullscreenButtonSelector: "button.ytp-fullscreen-button"
         }),
-        originWhitelist: ['https://www.nexusmods.com']
+        originWhitelist: ['https://www.nexusmods.com', 'https://genshin-impact-map.appsample.com']
     }),
     /**
      * Get enum by site id.
@@ -332,6 +342,12 @@ export const VideoPortalSites = {
         videoCategories: [VideoCategories.PORNOGRAPHIC_FILM],
         originWhitelist: ["https://mm9842.com", "https://avgle.com"]
     }),
+    APP_SAMPLE_GI_MAP: new VideoPortalSite({
+        id: SiteIDs.APP_SAMPLE_GI_MAP, baseSiteId: SiteIDs.APP_SAMPLE,
+        hrefRegEx: /^https:\/\/genshin-impact-map.appsample.com\//,
+        videoCategories: [VideoCategories.GAMING],
+        originWhitelist: ["https://www.youtube.com"]
+    }),
     FANDOM_VIDEO_PORTAL: new VideoPortalSite({
         id: SiteIDs.FANDOM_VIDEO_PORTAL, baseSiteId: SiteIDs.FANDOM, hrefRegEx: /^https:\/\/.+\.fandom\.com\/wiki\/.+/,
         videoCategories: [SiteCategories.WIKI],
@@ -344,7 +360,7 @@ export const VideoPortalSites = {
     }),
     NEXUSMODS_VIDEO_PORTAL: new VideoPortalSite({
         id: SiteIDs.NEXUSMODS_VIDEO_PORTAL, baseSiteId: SiteIDs.NEXUSMODS, hrefRegEx: /^https:\/\/www\.nexusmods\.com\/[^/]+\/mods\/\d+/,
-        videoCategories: [SiteCategories.GAMING],
+        videoCategories: [VideoCategories.GAMING],
         originWhitelist: ["https://www.youtube.com"]
     }),
     /**

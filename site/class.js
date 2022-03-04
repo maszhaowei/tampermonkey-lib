@@ -7,6 +7,7 @@ import { util as tutil } from "../tampermonkey/util";
  * @enum {string}
  */
 export const _VideoCategories = {
+    GAMING: "Gaming",
     JAV: "JAV",
     TV_SERIES: "TV Series",
     MOVIE: "Movie",
