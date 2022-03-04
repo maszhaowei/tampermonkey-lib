@@ -1,4 +1,5 @@
 import { ApplyMethodSignature, LooseMap, Couple } from "../common/class";
+import { GlobalEvents } from "../common/enum";
 import { util } from "./util";
 export class ObjectCacheHelper {
     /** @type {LooseMap<Couple<object,string>,ApplyMethodSignature>} */
@@ -167,15 +168,35 @@ export class GMStorageHelper {
 export class FutureHelper {
     /**
      * 
-     * @param {string} selector 
-     * @param {boolean} [existing] - Default to true.
-     * @returns {Promise<Element>}
+     * @param {Element|Document} context
+     * @param {string} selector
+     * @param {string[]} remainingSelectors 
      */
-    static arrive(selector, existing = true) {
-        return new Promise((resolve) => {
-            document.arrive(selector, { existing: existing }, function () {
-                resolve(this);
+    static _chainArrive(context, selector, remainingSelectors) {
+        return new Promise((resolve, reject) => {
+            /** @type {Promise<Document|Element>} */
+            let pContext = new Promise(r => {
+                if (context instanceof HTMLIFrameElement) {
+                    context.addEventListener(GlobalEvents.LOAD, () => r(context.contentDocument));
+                }
+                else r(context);
             });
-        })
+            pContext.then(context => {
+                context.arrive(selector, { existing: true }, (element) => {
+                    if (remainingSelectors.length > 0) this._chainArrive(element, remainingSelectors.shift(), remainingSelectors)
+                        .then(result => resolve([element].concat(result)), result => reject(result));
+                    else resolve([element]);
+                });
+            });
+        });
+    }
+    /**
+     * 
+     * @param {string[]} selectors 
+     */
+    static chainArrive(selectors = []) {
+        if (selectors.length == 0) return Promise.resolve([]);
+        let copy = Array.from(selectors);
+        return this._chainArrive(document, copy.shift(), copy);
     }
 }
