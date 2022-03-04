@@ -168,15 +168,25 @@ export class GMStorageHelper {
 export class FutureHelper {
     /**
      * 
+     * @param {HTMLIFrameElement} iframe 
+     * @returns {Promise<HTMLIFrameElement>}
+     */
+    static #waitIframeLoad(iframe) {
+        return new Promise(resolve => {
+            if (iframe.contentDocument?.readyState == DocumentReadyState.COMPLETE) resolve(iframe);
+            else iframe.addEventListener(GlobalEvents.LOAD, () => resolve(iframe));
+        });
+    }
+    /**
+     * 
      * @param {string} iframeSelector 
      * @param {Document|Element} [context] 
      * @returns {Promise<HTMLIFrameElement>} 
      */
-    static iframeLoadArrive(iframeSelector, context = document) {
+    static waitIframeLoad(iframeSelector, context = document) {
         return new Promise(resolve => {
             context.arrive(iframeSelector, { existing: true }, (/** @type {HTMLIFrameElement} */ iframe) => {
-                if (iframe.contentDocument?.readyState == DocumentReadyState.COMPLETE) resolve(iframe);
-                else iframe.addEventListener(GlobalEvents.LOAD, () => resolve(iframe));
+                resolve(this.#waitIframeLoad(iframe));
             });
         });
     }
@@ -199,7 +209,12 @@ export class FutureHelper {
                 context.arrive(selector, { existing: true }, (element) => {
                     if (remainingSelectors.length > 0) this.#chainArrive(element, remainingSelectors.shift(), remainingSelectors)
                         .then(result => resolve([element].concat(result)), result => reject(result));
-                    else resolve([element]);
+                    else {
+                        if (element instanceof HTMLIFrameElement) {
+                            this.#waitIframeLoad(element).then(iframe => resolve([iframe]));
+                        }
+                        else resolve([element]);
+                    }
                 });
             });
         });
