@@ -79,3 +79,15 @@ export class ArrayUtils {
         return minEle;
     }
 }
+
+export class StringUtils {
+    /**
+     * Replace line feed and trailing spaces of {@link s} with {@link replacement}.
+     * @param {string} s 
+     * @param {string} replacement - Default to empty string.
+     * @returns A new string if {@link s} is a string, {@link s} itself otherwise.
+     */
+    static replaceLFTrailingSpaces(s, replacement = '') {
+        return util.isString(s) ? s.replace(/\n\s*/g, replacement) : s;
+    }
+}
