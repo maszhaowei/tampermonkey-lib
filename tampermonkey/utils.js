@@ -1,5 +1,5 @@
 import { ApplyMethodSignature, LooseMap, Couple } from "../common/class";
-import { GlobalEvents } from "../common/enum";
+import { DocumentReadyState, GlobalEvents } from "../common/enum";
 import { util } from "./util";
 export class ObjectCacheHelper {
     /** @type {LooseMap<Couple<object,string>,ApplyMethodSignature>} */
@@ -166,6 +166,20 @@ export class GMStorageHelper {
 }
 
 export class FutureHelper {
+    /**
+     * 
+     * @param {string} iframeSelector 
+     * @param {Document|Element} [context] 
+     * @returns {Promise<HTMLIFrameElement>} 
+     */
+    static iframeLoadArrive(iframeSelector, context = document) {
+        return new Promise(resolve => {
+            context.arrive(iframeSelector, { existing: true }, (/** @type {HTMLIFrameElement} */ iframe) => {
+                if (iframe.contentDocument?.readyState == DocumentReadyState.COMPLETE) resolve(iframe);
+                else iframe.addEventListener(GlobalEvents.LOAD, () => resolve(iframe));
+            });
+        });
+    }
     /**
      * 
      * @param {Element|Document} context
