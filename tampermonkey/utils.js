@@ -193,6 +193,7 @@ export class FutureHelper {
     /**
      * 
      * @param {string[]} selectors 
+     * @returns {Promise<Element[]>}
      */
     static chainArrive(selectors = []) {
         if (selectors.length == 0) return Promise.resolve([]);
