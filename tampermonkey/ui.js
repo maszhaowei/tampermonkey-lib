@@ -67,10 +67,10 @@ export const ui = {
      * Apply functions on selectors or elements in order.
      * @param {Array<ApplyMethodSignature>} sigs 
      * @param {number} interval - Interval(ms) between each operation. Default to be 0.
-     * @param {number} waitTimeout - Wait timeout(ms) for each step of the operation. Default to be 2000.
+     * @param {number} waitTimeout - Wait timeout(ms) for each step of the operation. Default to be 0(never time out).
      * @returns 
      */
-    asyncChainFn: function (sigs, interval = 0, waitTimeout = 2000) {
+    asyncChainFn: function (sigs, interval = 0, waitTimeout = 0) {
         if (!Array.isArray(sigs) || sigs.length == 0) return Promise.resolve([]);
         return asyncRecursiveFn(sigs.shift(), sigs, interval, waitTimeout);
     },
@@ -78,9 +78,9 @@ export const ui = {
      * Click elements in order.
      * @param {Array<string|Element>} contexts - Array of selectors or elements.
      * @param {number} interval - Interval(ms) between each click. Default to be 0.
-     * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 2000.
+     * @param {number} waitTimeout - Wait timeout(ms) for each click. Default to be 0(never time out).
      */
-    asyncChainClick: function (contexts, interval = 0, waitTimeout = 2000) {
+    asyncChainClick: function (contexts, interval = 0, waitTimeout = 0) {
         if (!Array.isArray(contexts)) throw new TypeError('contexts is not an array.')
         return ui.asyncChainFn(contexts.map((context) => new ApplyMethodSignature(HTMLElement.prototype.click, context)), interval, waitTimeout);
     },
