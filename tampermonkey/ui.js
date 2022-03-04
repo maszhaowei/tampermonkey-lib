@@ -1,7 +1,8 @@
 import { util as cutil } from '../common/util';
-import { ApplyMethodSignature } from '../common/class';
+import { ApplyMethodSignature, CustomError } from '../common/class';
 import { FORCE_HIDDEN_CLASSNAME } from './const';
 import '../css/common.css';
+import { ErrorCode } from '../common/enum';
 
 function randomId() {
     return Math.random().toString().slice(2, 10);
@@ -53,10 +54,12 @@ function asyncRecursiveFn(applySig, restSigs, interval, waitTimeout) {
             }
             else resolve([context]);
         }
-        setTimeout(() => {
-            document.unbindArrive(context);
-            reject(new Error(context));
-        }, (restSigs.length + 1) * waitTimeout + restSigs.length * interval);
+        if (waitTimeout != 0) {
+            setTimeout(() => {
+                document.unbindArrive(context);
+                reject(new CustomError(ErrorCode.COMMON, 'Timed out when aiting for context.', undefined, context));
+            }, (restSigs.length + 1) * waitTimeout + restSigs.length * interval);
+        }
     })
 }
 export const ui = {

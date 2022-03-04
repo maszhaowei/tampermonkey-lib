@@ -334,16 +334,19 @@ export class CustomError extends Error {
     code;
     /** @type {CustomError[]} */
     subErrors;
+    errorObj;
     /**
      * 
      * @param {number} code 
      * @param {string} [message] 
      * @param {CustomError[]} [subErrors] 
+     * @param {*} [errorObj] 
      */
-    constructor(code, message, subErrors = []) {
+    constructor(code, message, subErrors = [], errorObj) {
         super(message);
         this.code = code;
         this.subErrors = subErrors;
+        this.errorObj = errorObj;
     }
     /**
      * 
