@@ -290,10 +290,7 @@
             }
         },
         {
-            "id": "APP_SAMPLE_GI_MAP",
-            "pathIframeSelectors": [
-                "iframe.youtube"
-            ]
+            "id": "APP_SAMPLE_GI_MAP"
         }
     ]
 }
