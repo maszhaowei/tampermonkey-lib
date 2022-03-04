@@ -288,9 +288,6 @@
                 "prevEpisodeSelector": "i.icon-rewind1",
                 "nextEpisodeSelector": "i.icon-fastforward"
             }
-        },
-        {
-            "id": "APP_SAMPLE_GI_MAP"
         }
     ]
 }
