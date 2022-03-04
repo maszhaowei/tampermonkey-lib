@@ -180,6 +180,7 @@ export const util = {
                 let newVideoPortalSite = new VideoPortalSite({
                     id: ps.id, baseSiteId: ps.baseSiteId, hrefRegEx: ps.hrefRegEx ? new RegExp(ps.hrefRegEx) : undefined,
                     videoCategories: ps.videoCategories,
+                    pathIframeSelectors: ps.pathIframeSelectors,
                     originWhitelist: ps.originWhitelist, additionalInfo: ps.additionalInfo
                 })
                 if (oriVideoPortalSite) cutil.assignNotEmpty(oriVideoPortalSite, [newVideoPortalSite], true, true);

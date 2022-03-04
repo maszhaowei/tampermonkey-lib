@@ -188,6 +188,7 @@ export class VideoSite extends Site {
  */
 export class VideoPortalSite extends Site {
     videoCategories;
+    pathIframeSelectors;
     additionalInfo;
     /**
      * @param {object} options
@@ -196,11 +197,13 @@ export class VideoPortalSite extends Site {
      * @param {RegExp} [options.hrefRegEx] 
      * @param {string[]} [options.videoCategories] 
      * @param {string[]} [options.originWhitelist] 
+     * @param {string[]} [options.pathIframeSelectors] 
      * @param {*} [options.additionalInfo] 
      */
-    constructor({ id, baseSiteId, hrefRegEx, videoCategories = [], originWhitelist = [], additionalInfo = {} }) {
+    constructor({ id, baseSiteId, hrefRegEx, videoCategories = [], originWhitelist = [], pathIframeSelectors = [], additionalInfo = {} }) {
         super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx, originWhitelist: originWhitelist });
         this.videoCategories = videoCategories;
+        this.pathIframeSelectors = pathIframeSelectors;
         this.additionalInfo = additionalInfo;
     }
     /**
