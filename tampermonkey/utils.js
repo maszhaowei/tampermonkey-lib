@@ -168,11 +168,12 @@ export class FutureHelper {
     /**
      * 
      * @param {string} selector 
+     * @param {boolean} [existing] - Default to true.
      * @returns {Promise<Element>}
      */
-    static arrive(selector) {
+    static arrive(selector, existing = true) {
         return new Promise((resolve) => {
-            document.arrive(selector, { existing: true }, function () {
+            document.arrive(selector, { existing: existing }, function () {
                 resolve(this);
             });
         })
