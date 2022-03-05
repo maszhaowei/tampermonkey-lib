@@ -36,14 +36,35 @@ export class KeyboardKeyCode {
     code;
     /** @readonly */
     key;
+    /** @readonly */
+    keyCode;
+    /** @readonly */
+    which;
     /**
      * 
      * @param {string} code 
      * @param {string} key 
+     * @param {number} [keyCode] 
+     * @param {number} [which] 
      */
-    constructor(code, key) {
+    constructor(code, key, keyCode, which) {
         this.code = code;
         this.key = key;
+        this.keyCode = keyCode;
+        this.which = which;
+    }
+    /**
+     * 
+     * @param {string} eventType 
+     * @returns 
+     */
+    convertToEvent(eventType) {
+        let keyboardEventInit = {};
+        for (let k in this) {
+            let v = this[k];
+            if (v != undefined) keyboardEventInit[k] = v;
+        }
+        return new KeyboardEvent(eventType, keyboardEventInit);
     }
 }
 
