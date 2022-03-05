@@ -1,7 +1,7 @@
 import '../css/video.css';
 import * as Const from './const';
 import { EventObserverWrapper, PositionOption } from '../common/class';
-import { MediaReadyState, MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
+import { MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
 import { ui as cui } from '../common/ui.js';
 import { util as tutil } from '../tampermonkey/util';
 import { CssCacheHelper, ObjectCacheHelper } from '../tampermonkey/utils';
@@ -222,10 +222,7 @@ export class VideoInstance extends EventObserverWrapper {
         }
         this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_ATTR_INITIALIZED, { volume: volume, progress: progress });
     }
-    #onLoadedMetadata() {
-        this.#initVideo();
-    }
-    async #bindEvent() {
+    #bindEvent() {
         let video = this.#video;
         this.registerVideoEventHandler(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
@@ -236,31 +233,19 @@ export class VideoInstance extends EventObserverWrapper {
         this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
             this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
         }, this);
-        return new Promise((resolve) => {
-            if (video.readyState >= MediaReadyState.HAVE_METADATA) {
-                this.#onLoadedMetadata();
-                resolve();
-            }
-            else {
-                this.registerVideoEventHandler(MediaEvents.LOADED_METADATA, () => {
-                    this.#onLoadedMetadata();
-                    resolve();
-                }, this);
-            }
-        });
+        this.#initVideo();
     }
     #init() {
-        return this.#bindEvent().then(() => {
-            let playerMetadata = this.#playerMetadata;
-            let ignoreList = playerMetadata.delegateIgnoreSelectors || [];
-            if (this.#playerMetadata.controlsSelector) ignoreList.push(playerMetadata.controlsSelector);
-            return VideoEventDelegate.getInstance(this.#video, playerMetadata.controlsSelector,
-                this.#playerMetadata.containerSelector, ignoreList, playerMetadata.delegateIgnoreMap)
-                .then((videoDelegate) => {
-                    this.#videoDelegate = videoDelegate;
-                    this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
-                });
-        });
+        this.#bindEvent();
+        let playerMetadata = this.#playerMetadata;
+        let ignoreList = playerMetadata.delegateIgnoreSelectors || [];
+        if (this.#playerMetadata.controlsSelector) ignoreList.push(playerMetadata.controlsSelector);
+        return VideoEventDelegate.getInstance(this.#video, playerMetadata.controlsSelector,
+            this.#playerMetadata.containerSelector, ignoreList, playerMetadata.delegateIgnoreMap)
+            .then((videoDelegate) => {
+                this.#videoDelegate = videoDelegate;
+                this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_READY);
+            });
     }
     /**
      * 
