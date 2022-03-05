@@ -1,6 +1,5 @@
 import { util as cutil } from "../common/util";
 import { UUID } from "../common/utils";
-import { MessageTypes } from "../tampermonkey/enum";
 import { util as tutil } from "../tampermonkey/util";
 
 /**
