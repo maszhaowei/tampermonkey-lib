@@ -30,6 +30,14 @@ export const MessageTypes = {
 /**
  * @enum {string}
  */
+export const PlayerMessageTypes = {
+    PREVIOUS_EPISODE: 'previous_episode',
+    NEXT_EPISODE: 'next_episode',
+    EXIT_PLAYER: 'exit_player'
+};
+/**
+ * @enum {string}
+ */
 export const EMOJIS = {
     angry: [
         ',,Ծ‸Ծ,,',
