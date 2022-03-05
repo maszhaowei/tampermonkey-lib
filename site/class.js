@@ -116,9 +116,9 @@ export class Site {
      */
     validateMessage(e) {
         let data = e.data;
-        if (!data || !data.type || !data.src || !data.srcSiteTag) return false;
+        if (!data || !data.type || !data.src || !UUID.validate(data.srcSiteTag)) return false;
         let srcOrigin = e.origin;
-        return (srcOrigin === window.location.origin || !!this.originWhitelist?.includes(srcOrigin)) && MessageTypes.hasValue(data.type)
+        return (srcOrigin === window.location.origin || !!this.originWhitelist?.includes(srcOrigin))
             && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
     }
     /**
