@@ -270,7 +270,8 @@
                 "https://genshin-impact.fandom.com"
             ],
             "delegateIgnoreSelectors": [
-                ".ytp-impression-link"
+                ".ytp-impression-link",
+                ".ytp-caption-window-container"
             ]
         }
     ],
