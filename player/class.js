@@ -222,8 +222,11 @@ export class VideoInstance extends EventObserverWrapper {
         }
         this.#triggerCustomEvent(_VideoCustomEventTypes.VIDEO_ATTR_INITIALIZED, { volume: volume, progress: progress });
     }
-    #bindEvent() {
+    #showVolume() {
         let video = this.#video;
+        this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
+    }
+    #bindEvent() {
         this.registerVideoEventHandler(MediaEvents.PLAY, () => {
             this.showTooltip("播放", TooltipPosition.TOP_CENTER, 15);
         }, this);
@@ -231,7 +234,7 @@ export class VideoInstance extends EventObserverWrapper {
             this.showTooltip("暂停", TooltipPosition.TOP_CENTER, 15);
         }, this);
         this.registerVideoEventHandler(MediaEvents.VOLUME_CHANGE, () => {
-            this.showTooltip((video.muted ? "静音" : "音量") + Math.round(video.volume * 100) + "%");
+            this.#showVolume();
         }, this);
         this.#initVideo();
     }
@@ -352,10 +355,13 @@ export class VideoInstance extends EventObserverWrapper {
     }
     changeVolume(deltaVolume) {
         let video = this.#video;
-        let volume;
-        if (deltaVolume >= 0) volume = Math.min(video.volume + deltaVolume, 1);
-        else volume = Math.max(video.volume + deltaVolume, 0);
-        video.volume = volume.toFixed(2);
+        let oriVolume = video.volume;
+        let newVolume;
+        if (deltaVolume >= 0) newVolume = Math.min(oriVolume + deltaVolume, 1);
+        else newVolume = Math.max(oriVolume + deltaVolume, 0);
+        newVolume = newVolume.toFixed(2);
+        if (oriVolume == newVolume) this.#showVolume();
+        else video.volume = newVolume;
     }
     saveVideoFrame(fileName = document.title) {
         cui.saveVideoFrame(this.#video, fileName);
