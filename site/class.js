@@ -132,12 +132,13 @@ export class Site {
         targetWindow.postMessage(message, targetOrigin);
     }
     /**
-     * Check if current site matches this window.
-     * @returns {boolean} 
+     * Check if {@link hrefOrOrigin} matches this site's hrefRegEx or origin (if hrefRegEx is not specified).
+     * @param {string} [hrefOrOrigin] 
+     * @returns 
      */
-    test() {
-        if (this.hrefRegEx) return this.hrefRegEx.test(window.location.href);
-        else if (this.origin) return this.origin == window.location.origin;
+    test(hrefOrOrigin) {
+        if (this.hrefRegEx) return this.hrefRegEx.test(hrefOrOrigin || window.location.href);
+        else if (this.origin) return this.origin == (hrefOrOrigin || window.location.origin);
         else return false;
     }
 }
