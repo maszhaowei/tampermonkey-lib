@@ -296,6 +296,24 @@ export class BilibiliLiveApiRequest {
 }
 
 export class BilibiliUtils {
+    /**
+     * 获取用户的关注列表
+     * @param {number} [uid]
+     */
+    static async getFollowings(uid) {
+        uid ??= (await BilibiliApiRequest.getNav()).mid;
+        let curPage = 1;
+        /** @type {FollowingMember[]} */
+        let followings = [];
+        let followingRsp;
+        do {
+            followingRsp = await BilibiliApiRequest.getFollowings(uid, curPage);
+            if (followingRsp.list) followings = followings.concat(followingRsp.list);
+            else break;
+            curPage++;
+        } while (followings.length < followingRsp.total)
+        return followings;
+    }
 
     /**
      * 
