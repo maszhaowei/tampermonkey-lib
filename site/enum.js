@@ -118,7 +118,7 @@ export const Sites = {
     }),
     BILIBILI_LIVE_LOTTERY: new Site({
         id: SiteIDs.BILIBILI_LIVE_LOTTERY, baseSiteId: SiteIDs.BILIBILI,
-        hrefRegEx: /^https:\/\/live\.bilibili\.com\/p\/html\/live-lottery\/anchor-join\.html/
+        origin: "https://live.bilibili.com", hrefRegEx: /^https:\/\/live\.bilibili\.com\/p\/html\/live-lottery\/anchor-join\.html/
     }),
     BUYCAR5: new Site({
         id: SiteIDs.BUYCAR5, baseSiteId: SiteIDs.BUYCAR5,

@@ -101,14 +101,6 @@ export class Site {
         return this.baseSiteId === this.id;
     }
     /**
-     * @typedef {object} SiteMessageData
-     * @property {string} SiteMessageData.type
-     * @property {*} [SiteMessageData.content]
-     * @property {string} SiteMessageData.src
-     * @property {string} SiteMessageData.srcSiteTag
-     * @property {string} [SiteMessageData.targetSiteTag]
-     */
-    /**
      * Validate if {@link e} is from a valid script of another {@link Site}.
      * @param {MessageEvent<SiteMessageData>} e 
      * @returns {boolean} 
@@ -125,7 +117,7 @@ export class Site {
      * @param {Window} targetWindow 
      * @param {string} targetOrigin 
      * @param {object} MessageDataOptions
-     * @param {string} MessageDataOptions.type - Value of {@link MessageTypes}.
+     * @param {string} MessageDataOptions.type 
      * @param {*} [MessageDataOptions.content] 
      * @param {string} [MessageDataOptions.targetSiteTag]
      * @returns 
