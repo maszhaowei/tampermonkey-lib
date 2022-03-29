@@ -79,12 +79,11 @@ export const util = {
     /**
      * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githack.com.
      * @param {'dev'|'master'} branch - Branch. Default to dev.
-     * @param {boolean} useCDN - Default to false. dev will use cdn.jsdelivr.net, master will use rawcdn.githack.com.
+     * @param {boolean} useCDN - Default to true. Will use cdn.jsdelivr.net.
      */
-    updateRemoteSiteConfig: async function (branch = 'dev', useCDN = false) {
+    updateRemoteSiteConfig: async function (branch = 'dev', useCDN = true) {
         if (branch != 'dev' && branch != 'master') return Promise.reject('Invalid branch');
-        let url = useCDN ? branch == 'master' ? `https://rawcdn.githack.com/maszhaowei/tampermonkey-lib/bbf745958f402774c33fc22181808109d3fc90e1/conf/site.json`
-            : `https://cdn.jsdelivr.net/gh/maszhaowei/tampermonkey-lib@dev/conf/site.json` :
+        let url = useCDN ? `https://cdn.jsdelivr.net/gh/maszhaowei/tampermonkey-lib@${branch}/conf/site.json` :
             `https://raw.githubusercontent.com/maszhaowei/tampermonkey-lib/${branch}/conf/site.json`;
         const res = await tutil.gmGet(url, undefined, undefined, true);
         /** @type {Error[]} */
