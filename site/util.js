@@ -77,7 +77,7 @@ export const util = {
         tutil.debug(`Can't find current search site: ${window.location.href}.`);
     },
     /**
-     * Update Enums from remote json. Dependency: GM_xmlhttpRequest and CORS whitelist: raw.githack.com.
+     * Update Enums from remote json. Dependency: GM_xmlhttpRequest.
      * @param {'dev'|'master'} branch - Branch. Default to dev.
      * @param {boolean} useCDN - Default to true. Will use cdn.jsdelivr.net.
      */
