@@ -18,7 +18,8 @@
         "MSI": "MSI",
         "MSI_MOTHERBOARD_SUPPORT": "MSI Motherboard Support",
         "BILIBILI_SPACE": "Bilibili Space",
-        "hongniujiexi_红牛云": "hongniujiexi"
+        "hongniujiexi_红牛云": "hongniujiexi",
+        "kuaibofang_大度云": "kuaibofang_大度云"
     },
     "sitecategories": {},
     "videocategories": {
@@ -254,6 +255,15 @@
             "playerMetadataTemplate": "DPLAYER"
         },
         {
+            "id": "kuaibofang_大度云",
+            "baseSiteId": "kuaibofang_大度云",
+            "hrefRegEx": "https://hls.kuaibofang.com",
+            "originWhitelist": [
+                "https://www.meijubs.com"
+            ],
+            "playerMetadataTemplate": "PRISM"
+        },
+        {
             "id": "JAVTRAILERS_VIDEO",
             "baseSiteId": "JavTrailers",
             "hrefRegEx": "^https://javtrailers\\.com/video/[^/]+",
@@ -286,7 +296,8 @@
                 "https://sod.bunediy.com",
                 "https://jx.huishij.com",
                 "https://zy.aoxtv.com",
-                "https://www.hongniujiexi.com"
+                "https://www.hongniujiexi.com",
+                "https://hls.kuaibofang.com"
             ],
             "additionalInfo": {
                 "prevEpisodeSelector": "i.icon-rewind1",
