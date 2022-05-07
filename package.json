@@ -41,7 +41,6 @@
     "eslint": "^7.32.0",
     "husky": "^7.0.2",
     "lodash": "^4.17.21",
-    "md5": "^2.3.0",
     "mini-css-extract-plugin": "^2.3.0",
     "minimist": "^1.2.6",
     "postcss": "^8.4.13",
