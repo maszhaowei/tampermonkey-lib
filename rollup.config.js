@@ -21,6 +21,8 @@ export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').ma
         input: path.join('packages', libdir, 'main.ts'),
         plugins: [
             postcss(),
+            nodeResolve({ extensions: extensions }),
+            commonjs(),
             babel({
                 babelHelpers: 'bundled',
                 // plugins: [
@@ -32,8 +34,6 @@ export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').ma
                 exclude: ['node_modules/**'],
                 extensions: extensions
             }),
-            nodeResolve({ extensions: extensions }),
-            commonjs(),
             json({ compact: true }),
         ],
         output: [{
