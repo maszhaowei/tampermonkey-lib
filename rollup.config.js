@@ -46,7 +46,7 @@ export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').ma
             plugins: [terser()],
             name: libname
         },],
-        external: [/@babel\/runtime/],
+        external: [/@babel\/runtime/, 'uuid'],
         treeshake: "smallest"
     };
     return option;
