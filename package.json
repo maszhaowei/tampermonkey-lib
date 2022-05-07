@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:wp": "webpack --mode=development --devtool eval-source-map --output-pathinfo -o ./build",
     "prepublish": "npm run eslint && webpack --mode=production -o ./public",
-    "server": "webpack serve",
+    "server": "http-server umd",
     "eslint": "eslint common/** tampermonkey/** site/** player/**"
   },
   "repository": {

@@ -37,14 +37,19 @@ export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').ma
             json({ compact: true }),
         ],
         output: [{
-            file: `build/${libname}.js`,
-            format: 'es',
-            name: libname
+            file: `es/${libname}.js`,
+            format: 'es'
         }, {
-            file: `public/${libname}.min.js`,
+            file: `es/${libname}.min.js`,
             format: 'es',
-            plugins: [terser()],
-            name: libname
+            plugins: [
+                terser()
+            ]
+        },
+        {
+            file: `umd/${libname}.js`,
+            format: 'umd',
+            name: libname,
         },],
         external: [/@babel\/runtime/, 'uuid'],
         treeshake: "smallest"
