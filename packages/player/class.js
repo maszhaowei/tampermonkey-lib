@@ -1,8 +1,8 @@
-import '../css/video.css';
+import './video.css';
 import * as Const from './const';
 import { EventObserverWrapper, PositionOption } from '../common/class';
 import { MediaEvents, TooltipPosition, GlobalEvents } from '../common/enum';
-import { ui as cui } from '../common/ui.js';
+import { ui as cui } from '../common/ui';
 import { util as tutil } from '../tampermonkey/util';
 import { CssCacheHelper, ObjectCacheHelper } from '../tampermonkey/utils';
 import { EnumHelper } from '../common/utils';

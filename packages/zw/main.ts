@@ -1,8 +1,8 @@
-import * as clib from './common/main';
-import * as tlib from './tampermonkey/main';
-import * as slib from './site/main';
-import * as plib from './player/main';
-import * as bllib from './bilibililive/main';
+import * as clib from '../common/main';
+import * as tlib from '../tampermonkey/main';
+import * as slib from '../site/main';
+import * as plib from '../player/main';
+import * as bllib from '../bilibililive/main';
 
 export const Class = Object.assign(clib.Class, slib.Class, plib.Class);
 export const Enum = Object.assign(clib.Enum, tlib.Enum, slib.Enum, plib.Enum);

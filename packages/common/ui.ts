@@ -1,5 +1,5 @@
-import '../css/tooltip.css';
-import '../css/linkmsg.css';
+import './tooltip.css';
+import './linkmsg.css';
 import { TooltipPosition, MessageLevel } from './enum';
 import { util } from './util';
 import { EnumHelper } from './utils';
@@ -8,8 +8,8 @@ import { EnumHelper } from './utils';
  * @param {Element} element 
  * @returns {Window}
  */
-function _getOwnerWindow(element) {
-    return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+function _getOwnerWindow(element: Element) {
+    return element.ownerDocument.defaultView;
 }
 /**
  * 

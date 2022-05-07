@@ -11,3 +11,5 @@ index.html
 types/globals.d.ts
 *.dat
 .gitignore
+public/
+.eslintignore

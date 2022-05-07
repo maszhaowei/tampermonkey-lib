@@ -1,34 +1,17 @@
 {
 	"compilerOptions": {
+		"target": "es2020",
+		"module": "es6",
+		"moduleResolution": "node",
 		// Tells TypeScript to read JS files, as
 		// normally they are ignored as source files
 		"allowJs": true,
 		// Generate d.ts files
-		"declaration": true,
-		// This compiler run should
-		// only output d.ts files
-		"emitDeclarationOnly": false,
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		// Types should go into this directory.
-		// Removing this would place the .d.ts files
-		// next to the .js files
-		"outDir": "dist",
-		"target": "ES2020",
-		"module": "ES2020",
-		"strictNullChecks": true,
-		"strictBindCallApply": true,
-		"noImplicitAny": true,
-		"useUnknownInCatchVariables": true
+		"declaration": false,
+		"outDir": "types"
 	},
-	"exclude": [
-		"build",
-		"dist",
-		"node_modules",
-		"public",
-		"webpack.config.js"
-	],
-	"$schema": "https://json.schemastore.org/tsconfig",
-	"display": "Recommended"
+	"extends": "@tsconfig/strictest/tsconfig.json",
+	"include": [
+		"packages/**/*.ts"
+	]
 }
