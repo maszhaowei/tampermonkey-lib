@@ -13,3 +13,5 @@ types/globals.d.ts
 .gitignore
 public/
 .eslintignore
+/es
+/umd
