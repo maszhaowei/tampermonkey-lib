@@ -14,14 +14,21 @@ const isProd = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test' || process.env.BABEL_ENV === 'test';
 
 let libDirs = fs.readdirSync('packages');
-export default libDirs.filter(libdir => libdir != 'css').map(libdir => {
+export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').map(libdir => {
     const libname = libdir + 'lib';
-    return {
+    /** @type {import('rollup').RollupOptions} */
+    let option = {
         input: path.join('packages', libdir, 'main.ts'),
         plugins: [
             postcss(),
             babel({
-                babelHelpers: 'runtime',
+                babelHelpers: 'bundled',
+                // plugins: [
+                //     [require.resolve('@babel/plugin-transform-runtime'), {
+                //         corejs: { version: 3, proposals: true },
+                //         version: '^7.17.9'
+                //     }]
+                // ],
                 exclude: ['node_modules/**'],
                 extensions: extensions
             }),
@@ -39,6 +46,8 @@ export default libDirs.filter(libdir => libdir != 'css').map(libdir => {
             plugins: [terser()],
             name: libname
         },],
+        external: [/@babel\/runtime/],
         treeshake: "smallest"
-    }
+    };
+    return option;
 })

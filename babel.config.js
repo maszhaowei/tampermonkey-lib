@@ -12,12 +12,9 @@ module.exports = {
     ],
     test: /\.tsx?$/
   }],
+  comments: false,
   targets: { 'firefox': '100.0' },
   plugins: [
-    [require.resolve('@babel/plugin-transform-runtime'), {
-      corejs: { version: 3, proposals: true },
-      version: '^7.17.9'
-    }],
     // stage-1
     '@babel/plugin-proposal-export-default-from',
     ['@babel/plugin-proposal-pipeline-operator', { proposal: 'hack', topicToken: '^^' }],
