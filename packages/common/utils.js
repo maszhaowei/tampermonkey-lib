@@ -1,7 +1,6 @@
 import { util } from "./util";
 import { CustomError } from "./class";
 import { ErrorCode } from "./enum";
-export * as UUID from 'uuid';
 
 export class EnumHelper {
     static #validateEnum(enumObject) {
