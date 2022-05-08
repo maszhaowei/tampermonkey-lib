@@ -1,30 +1,22 @@
 import { DefaultPlayerMetadatas, SearchSites, SiteCategories, SiteIDs, Sites, VideoCategories, VideoPortalSites, VideoSites } from './enum';
-import { PlayerMetadata, Site, VideoPortalSite, VideoSite } from './class';
+import { PlayerMetadata, Site, VideoPortalSite, VideoSite, type SiteMessageData } from './class';
 import { util as cutil } from '../common/util';
 import { util as tutil } from '../tampermonkey/util';
-/** @type {WeakMap<Site,(e:MessageEvent)=>void)>} */
-let messageHandlerMap = new WeakMap();
-/**
- * 
- * @param {Site} site 
- */
-function bindMessageHandler(site) {
+
+let messageHandlerMap: WeakMap<Site, (e: MessageEvent) => void> = new WeakMap();
+
+function bindMessageHandler(site: Site) {
     /** @type {(e:MessageEvent)=>void} */
     let handler;
     if (messageHandlerMap.has(site)) handler = messageHandlerMap.get(site);
     else {
-        handler = (e) => {
+        handler = (e: MessageEvent<SiteMessageData>) => {
             if (site.validateMessage(e)) tutil.printReceiveMessage(e);
         };
         messageHandlerMap.set(site, handler);
     }
     window.addEventListener('message', handler);
 }
-/**
- * 
- * @param {Site[]} sites 
- * @returns 
- */
 function findCurrentSite(sites) {
     let baseSiteCandidate;
     for (let s in sites) {
@@ -156,7 +148,7 @@ export const util = {
                 let oriVideoSite = VideoSites.get(siteid);
                 let newVideoSite = new VideoSite({
                     id: vs.id, baseSiteId: vs.baseSiteId, hrefRegEx: vs.hrefRegEx ? new RegExp(vs.hrefRegEx) : undefined,
-                    defaultPlayerMetadata: newPM, videoCategories: vs.videoCategories,
+                    playerMetadata: newPM, videoCategories: vs.videoCategories,
                     originWhitelist: vs.originWhitelist
                 });
                 if (oriVideoSite) {
