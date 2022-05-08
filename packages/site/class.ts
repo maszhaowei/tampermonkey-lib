@@ -1,55 +1,42 @@
-import { util as cutil } from "../common/util";
 import { v4, validate as uuidValidate } from "uuid";
 import { util as tutil } from "../tampermonkey/util";
-
-export class PlayerMetadata {
-    /**
-     * Selector for video container. Preferably the closest parent of video.
-     */
-    containerSelector;
-    /**
-     * Selector for video controls. Must be sibling of video's ancestor.
-     */
-    controlsSelector;
-    /**
-     * Selectors whose events shouldn't be delegated.
-     */
-    delegateIgnoreSelectors;
-    playButtonSelector;
-    fullscreenButtonSelector;
-    webFullscreenButtonSelector;
-    volumeButtonSelector;
-    /**
-     * <selector, event types>. Use this if not all of the event types of selector should be delegated. 
-     */
-    delegateIgnoreMap;
-    /**
-     * @param {object} options
-     * @param {string} options.containerSelector 
-     * @param {string} [options.controlsSelector] 
-     * @param {string[]} [options.delegateIgnoreSelectors] 
-     * @param {string} [options.playButtonSelector] 
-     * @param {string} [options.volumeButtonSelector] 
-     * @param {string} [options.fullscreenButtonSelector] 
-     * @param {string} [options.webFullscreenButtonSelector] 
-     * @param {Map<string,string[]>} [options.delegateIgnoreMap] 
-     */
-    constructor({ containerSelector, controlsSelector, delegateIgnoreSelectors = [],
-        playButtonSelector, volumeButtonSelector, fullscreenButtonSelector, webFullscreenButtonSelector, delegateIgnoreMap = new Map() }) {
-        this.containerSelector = containerSelector;
-        this.controlsSelector = controlsSelector;
-        this.delegateIgnoreSelectors = delegateIgnoreSelectors;
-        this.playButtonSelector = playButtonSelector;
-        this.volumeButtonSelector = volumeButtonSelector;
-        this.fullscreenButtonSelector = fullscreenButtonSelector;
-        this.webFullscreenButtonSelector = webFullscreenButtonSelector;
-        this.delegateIgnoreMap = delegateIgnoreMap;
+import type { SiteIDs, SiteCategories, VideoCategories } from './enum';
+export interface PlayerMetadata {
+    containerSelector: string,
+    controlsSelector: string,
+    playButtonSelector?: string,
+    fullscreenButtonSelector?: string,
+    webFullscreenButtonSelector?: string,
+    muteButtonSelector?: string,
+    delegateIgnoreSelectors?: string[],
+    delegateIgnoreEvents?: Array<{ selector: string, eventTypes: Array<keyof HTMLElementEventMap> }>
+}
+interface SiteCtorOptions {
+    id: ValueOf<typeof SiteIDs>,
+    baseSiteId: ValueOf<typeof SiteIDs>,
+    origin?: string,
+    hrefRegEx: RegExp,
+    siteCategories?: ValueOf<typeof SiteCategories>[],
+    originWhitelist?: string[],
+    additionalInfo?: {
+        paginationInfo?: {
+            firstBtnSelector?: string,
+            prevBtnSelector?: string,
+            nextBtnSelector?: string,
+            lastBtnSelector?: string,
+            currentBtnSelector?: string,
+            currentWrapperSelector?: string,
+            currentWrapperDescendantSelector?: string
+        },
+        inputFieldSelector?: string
     }
-    copy() {
-        let metadata = new PlayerMetadata({});
-        cutil.assignNotEmpty(metadata, [this]);
-        return metadata;
-    }
+}
+export interface SiteMessageData<T> {
+    type: string,
+    content: T,
+    src: string,
+    srcSiteTag: string,
+    targetSiteTag?: string | undefined
 }
 export class Site {
     id;
@@ -64,16 +51,8 @@ export class Site {
     /**
      * [origin] and [hrefRegEx] can't both be empty. [hrefRegex] has higher priority than origin in {@link test} function.
      * @hideconstructor
-     * @param {object} options
-     * @param {string} options.id 
-     * @param {string} options.baseSiteId 
-     * @param {string} [options.origin] 
-     * @param {RegExp} [options.hrefRegEx] 
-     * @param {string[]} [options.siteCategories] 
-     * @param {string[]} [options.originWhitelist] 
-     * @param {*} [options.additionalInfo]
      */
-    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], originWhitelist = [], additionalInfo = {} }) {
+    constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], originWhitelist = [], additionalInfo = {} }: SiteCtorOptions) {
         this.id = id;
         this.baseSiteId = baseSiteId;
         this.#uuid = v4();
@@ -91,10 +70,8 @@ export class Site {
     }
     /**
      * Validate if {@link e} is from a valid script of another {@link Site}.
-     * @param {MessageEvent<SiteMessageData>} e 
-     * @returns {boolean} 
      */
-    validateMessage(e) {
+    validateMessage<T>(e: MessageEvent<SiteMessageData<T>>) {
         let data = e.data;
         if (!data || !data.type || !data.src || !uuidValidate(data.srcSiteTag)) return false;
         let srcOrigin = e.origin;
@@ -111,9 +88,8 @@ export class Site {
      * @param {string} [MessageDataOptions.targetSiteTag]
      * @returns 
      */
-    postMessage(targetWindow, targetOrigin, { type, content, targetSiteTag }) {
-        /** @type {SiteMessageData} */
-        let message = {
+    postMessage<T>(targetWindow: Window, targetOrigin: string, { type, content, targetSiteTag }: SiteMessageData<T>) {
+        let message: SiteMessageData<T> = {
             type: type, content: content, src: window.location.href,
             srcSiteTag: this.#uuid, targetSiteTag: targetSiteTag
         };
@@ -121,15 +97,17 @@ export class Site {
         targetWindow.postMessage(message, targetOrigin);
     }
     /**
-     * Check if {@link hrefOrOrigin} matches this site's hrefRegEx or origin (if hrefRegEx is not specified).
-     * @param {string} [hrefOrOrigin] 
+     * Check if {@link href} matches this site's hrefRegEx or origin (if hrefRegEx is not specified).
+     * @param {string} [href] 
      * @returns 
      */
-    test(hrefOrOrigin) {
-        if (this.hrefRegEx) return this.hrefRegEx.test(hrefOrOrigin || window.location.href);
-        else if (this.origin) return this.origin == (hrefOrOrigin || window.location.origin);
-        else return false;
+    test(href?: string) {
+        return this.hrefRegEx.test(href || window.location.href);
     }
+}
+interface VideoSiteCtorOptions extends SiteCtorOptions {
+    playerMetadata: PlayerMetadata,
+    videoCategories?: ValueOf<typeof VideoCategories>[]
 }
 /**
  * 
@@ -137,30 +115,20 @@ export class Site {
  * {@link Site} 
  */
 export class VideoSite extends Site {
-    #defaultPlayerMetadata;
-    get defaultPlayerMetadata() { return this.#defaultPlayerMetadata }
+    #playerMetadata;
+    get playerMetadata() { return this.#playerMetadata }
     videoCategories;
-    /**
-     * @param {object} options
-     * @param {string} options.id 
-     * @param {string} options.baseSiteId 
-     * @param {RegExp} options.hrefRegEx 
-     * @param {PlayerMetadata} options.defaultPlayerMetadata 
-     * @param {string[]} [options.videoCategories] 
-     * @param {string[]} [options.originWhitelist] 
-     */
-    constructor({ id, baseSiteId, hrefRegEx, defaultPlayerMetadata, videoCategories = [], originWhitelist = [] }) {
-        super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx, originWhitelist: originWhitelist });
-        this.#defaultPlayerMetadata = defaultPlayerMetadata;
+    constructor({ id, baseSiteId, hrefRegEx, playerMetadata: playerMetadata, videoCategories = [], originWhitelist = [] }: VideoSiteCtorOptions) {
+        super({ id, baseSiteId, hrefRegEx, originWhitelist });
+        this.#playerMetadata = playerMetadata;
         this.videoCategories = videoCategories;
     }
-    /**
-     * @abstract
-     * @returns 
-     */
-    getCurrentPageCategories() {
-        return this.videoCategories;
-    }
+}
+interface VideoPortalSiteCtorOptions extends SiteCtorOptions {
+    videoCategories?: ValueOf<typeof VideoCategories>[],
+    pathIframeSelectors?: string[],
+    prevEpisodeSelector?: string,
+    nextEpisodeSelector?: string
 }
 /**
  * 
@@ -170,56 +138,32 @@ export class VideoSite extends Site {
 export class VideoPortalSite extends Site {
     videoCategories;
     pathIframeSelectors;
-    additionalInfo;
-    /**
-     * @param {object} options
-     * @param {string} options.id 
-     * @param {string} options.baseSiteId 
-     * @param {RegExp} [options.hrefRegEx] 
-     * @param {string[]} [options.videoCategories] 
-     * @param {string[]} [options.originWhitelist] 
-     * @param {string[]} [options.pathIframeSelectors] 
-     * @param {*} [options.additionalInfo] 
-     */
-    constructor({ id, baseSiteId, hrefRegEx, videoCategories = [], originWhitelist = [], pathIframeSelectors = [], additionalInfo = {} }) {
-        super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx, originWhitelist: originWhitelist });
+    prevEpisodeSelector;
+    nextEpisodeSelector;
+    constructor({ id, baseSiteId, hrefRegEx, videoCategories = [], originWhitelist = [], pathIframeSelectors = [],
+        prevEpisodeSelector, nextEpisodeSelector, additionalInfo = {} }: VideoPortalSiteCtorOptions) {
+        super({ id, baseSiteId, hrefRegEx, originWhitelist, additionalInfo });
         this.videoCategories = videoCategories;
         this.pathIframeSelectors = pathIframeSelectors;
-        this.additionalInfo = additionalInfo;
-    }
-    /**
-     * @abstract
-     * @returns 
-     */
-    getCurrentPageCategories() {
-        return this.videoCategories;
+        this.prevEpisodeSelector = prevEpisodeSelector;
+        this.nextEpisodeSelector = nextEpisodeSelector;
     }
 }
-
 export class SearchSite extends Site {
     #searchFieldSelector;
-    /**
-     * @returns {string|undefined}
-     */
     get searchKeyword() {
         if (this.#searchFieldSelector) {
             let searchField = document.querySelector(this.#searchFieldSelector);
-            return searchField.value || searchField.textContent;
+            return (searchField instanceof HTMLInputElement && searchField.value) || searchField?.textContent;
         }
         else {
             let urlMatch = window.location.href.match(this.hrefRegEx);
             if (urlMatch) return urlMatch[1];
         }
+        return;
     }
-    /**
-     * 
-     * @param {string} id 
-     * @param {string} baseSiteId 
-     * @param {RegExp} hrefRegEx 
-     * @param {string} [searchFieldSelector] 
-     */
-    constructor(id, baseSiteId, hrefRegEx, searchFieldSelector) {
-        super({ id: id, baseSiteId: baseSiteId, hrefRegEx: hrefRegEx });
+    constructor(id: ValueOf<typeof SiteIDs>, baseSiteId: ValueOf<typeof SiteIDs>, hrefRegEx: RegExp, searchFieldSelector?: string) {
+        super({ id, baseSiteId, hrefRegEx });
         this.#searchFieldSelector = searchFieldSelector;
     }
 }
