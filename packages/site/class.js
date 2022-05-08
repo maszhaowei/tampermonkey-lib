@@ -1,18 +1,7 @@
 import { util as cutil } from "../common/util";
-import { UUID } from "../common/utils";
+import { v4, validate as uuidValidate } from "uuid";
 import { util as tutil } from "../tampermonkey/util";
 
-/**
- * @enum {string}
- */
-export const _VideoCategories = {
-    GAMING: "Gaming",
-    JAV: "JAV",
-    TV_SERIES: "TV Series",
-    MOVIE: "Movie",
-    TRAILERS: "Trailers",
-    PORNOGRAPHIC_FILM: "Pornographic Film"
-};
 export class PlayerMetadata {
     /**
      * Selector for video container. Preferably the closest parent of video.
@@ -87,7 +76,7 @@ export class Site {
     constructor({ id, baseSiteId, origin, hrefRegEx, siteCategories = [], originWhitelist = [], additionalInfo = {} }) {
         this.id = id;
         this.baseSiteId = baseSiteId;
-        this.#uuid = UUID.v4();
+        this.#uuid = v4();
         this.origin = origin;
         this.hrefRegEx = hrefRegEx;
         this.siteCategories = siteCategories;
@@ -107,7 +96,7 @@ export class Site {
      */
     validateMessage(e) {
         let data = e.data;
-        if (!data || !data.type || !data.src || !UUID.validate(data.srcSiteTag)) return false;
+        if (!data || !data.type || !data.src || !uuidValidate(data.srcSiteTag)) return false;
         let srcOrigin = e.origin;
         return (srcOrigin === window.location.origin || !!this.originWhitelist?.includes(srcOrigin))
             && (!data.targetSiteTag || data.targetSiteTag == this.#uuid);
