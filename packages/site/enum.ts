@@ -1,20 +1,21 @@
 import { Site, VideoSite, VideoPortalSite, PlayerMetadata, _VideoCategories, SearchSite } from "./class";
+
 /**
  * @enum {string}
  */
-export const SiteCategories = {
-    COMPUTER_HARDWARE: "Computer Hardware",
-    DATABASE: "Database",
-    DICTIONARY: "Dictionary",
-    GAMING: "Gaming",
-    IMAGE_HOSTING: "Image Hosting",
-    JAV: "JAV",
-    LIVE_STREAMING: "Live Streaming",
-    VIDEO_HOSTING: "Video Hosting",
-    VIDEO_SHARING: "Video Sharing",
-    VIDEO_STREAMING: "Video Streaming",
-    WIKI: "Wiki"
-};
+export const enum SiteCategories {
+    COMPUTER_HARDWARE = "Computer Hardware",
+    DATABASE = "Database",
+    DICTIONARY = "Dictionary",
+    GAMING = "Gaming",
+    IMAGE_HOSTING = "Image Hosting",
+    JAV = "JAV",
+    LIVE_STREAMING = "Live Streaming",
+    VIDEO_HOSTING = "Video Hosting",
+    VIDEO_SHARING = "Video Sharing",
+    VIDEO_STREAMING = "Video Streaming",
+    WIKI = "Wiki"
+}
 /**
  * @enum {string}
  */
