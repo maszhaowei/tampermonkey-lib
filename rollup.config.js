@@ -50,7 +50,8 @@ export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').ma
             file: `umd/${libname}.js`,
             format: 'umd',
             name: libname,
-        },],
+            globals: { 'uuid': 'uuid' }
+        }],
         external: [/@babel\/runtime/, 'uuid'],
         treeshake: "smallest"
     };
