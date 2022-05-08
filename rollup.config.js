@@ -4,7 +4,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
-const fs = require('fs');
 const path = require('path');
 
 const extensions = ['.ts', '.tsx', '.mjs', '.js', '.jsx'];
@@ -13,8 +12,8 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const isProd = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test' || process.env.BABEL_ENV === 'test';
 
-let libDirs = fs.readdirSync('packages');
-export default libDirs.filter(libdir => libdir != 'css' && libdir != 'types').map(libdir => {
+let libDirs = ['bilibililive', 'common', 'player', 'site', 'tampermonkey'];
+export default libDirs.map(libdir => {
     const libname = libdir + 'lib';
     /** @type {import('rollup').RollupOptions} */
     let option = {
