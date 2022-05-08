@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "lint": "npx eslint --ext .ts,.tsx,.js packages",
+    "lint": "eslint --ext .ts,.tsx,.js packages",
     "clean": "trash es/**/* umd/**/*.js",
     "build:js": "rollup -c rollup.config.js",
     "build": "run-s lint clean build:js",
@@ -40,7 +40,6 @@
     "@typescript-eslint/parser": "^5.22.0",
     "babel-plugin-macros": "^3.1.0",
     "css-loader": "^6.2.0",
-    "eslint": "^7.32.0",
     "husky": "^7.0.2",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.3.0",
