@@ -9,6 +9,7 @@
 		"allowJs": true,
 		// Generate d.ts files
 		"declaration": false,
+		"resolveJsonModule": true,
 		"outDir": "types"
 	},
 	"extends": "@tsconfig/strictest/tsconfig.json",
