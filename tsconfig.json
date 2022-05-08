@@ -10,10 +10,11 @@
 		// Generate d.ts files
 		"declaration": false,
 		"resolveJsonModule": true,
-		"outDir": "types"
+		"outDir": "dist"
 	},
 	"extends": "@tsconfig/strictest/tsconfig.json",
 	"include": [
-		"packages/**/*.ts"
+		"packages/**/*.ts",
+		"types/**/*"
 	]
 }
