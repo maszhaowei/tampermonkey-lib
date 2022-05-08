@@ -3,20 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "rollup -c ./rollup.config.js",
+    "lint": "npx eslint --ext .ts,.tsx,.js packages",
+    "clean": "trash es/**/* umd/**/*.js",
+    "build:js": "rollup -c rollup.config.js",
+    "build": "run-s lint clean build:js",
     "dev": "rollup -wc ./rollup.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:wp": "webpack --mode=development --devtool eval-source-map --output-pathinfo -o ./build",
     "prepublish": "npm run eslint && webpack --mode=production -o ./public",
-    "server": "http-server umd",
-    "eslint": "eslint common/** tampermonkey/** site/** player/**"
+    "server": "http-server umd"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/maszhaowei/tampermonkey-lib"
   },
   "author": "maszhaowei@gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/plugin-proposal-decorators": "^7.17.9",
